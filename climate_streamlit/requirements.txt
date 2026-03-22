@@ -1,5 +1,5 @@
 streamlit==1.36.0
-pdfplumber==0.11.0
+beautifulsoup4==4.12.3
 chromadb==0.5.3
 sentence-transformers==3.0.1
 groq==0.9.0

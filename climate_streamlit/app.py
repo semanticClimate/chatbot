@@ -1,9 +1,12 @@
 """
+Author: Udita Agarwal 2026
+Licence Apache 2.0
+
 Climate Academy Chatbot — Streamlit + Groq API
 ===============================================
 Stack:
   - UI              : Streamlit
-  - PDF extraction  : pdfplumber
+  - Book source     : HTML (nested <section>, decimal § numbering)
   - Free embeddings : sentence-transformers (all-MiniLM-L6-v2) — 100% local
   - Vector database : ChromaDB (persistent on disk)
   - LLM             : Groq API (llama-3.3-70b) — FREE, no credit card needed
@@ -13,19 +16,22 @@ Run: streamlit run app.py
 """
 
 import os
-import re
-import streamlit as st
-import pdfplumber
+from pathlib import Path
+
 import chromadb
+import streamlit as st
 from groq import Groq
 from sentence_transformers import SentenceTransformer
+
+from html_sectioning import format_passage_for_prompt, parse_html_path_to_chunks
 
 # ─────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────
-PDF_PATH        = "ClimateAcademy_Book.pdf"
-CHROMA_DIR      = "./chroma_db"
-COLLECTION_NAME = "climate_academy"
+BASE_DIR        = Path(__file__).resolve().parent
+HTML_PATH       = BASE_DIR / "ClimateAcademyBook.html"
+CHROMA_DIR      = str(BASE_DIR / "chroma_db")
+COLLECTION_NAME = "climate_academy_book_html"
 CHUNK_SIZE      = 400
 CHUNK_OVERLAP   = 60
 TOP_K           = 5
@@ -84,7 +90,7 @@ def load_groq():
 def build_knowledge_base():
     """
     Full RAG pipeline — runs ONCE on first launch, loads from disk every restart.
-    PDF → extract text → chunk → embed → store in ChromaDB
+    HTML (nested sections) → decimal § numbering → chunk → embed → store in ChromaDB
     """
     embedder   = load_embedder()
     chroma     = chromadb.PersistentClient(path=CHROMA_DIR)
@@ -97,36 +103,42 @@ def build_knowledge_base():
     if collection.count() > 0:
         return collection, embedder
 
-    # ── Extract text from PDF ──────────────────────
-    with st.spinner("📄 Extracting text from PDF..."):
-        full_text = ""
-        with pdfplumber.open(PDF_PATH) as pdf:
-            for page in pdf.pages:
-                t = page.extract_text()
-                if t:
-                    full_text += t + "\n"
-        full_text = re.sub(r'\n{3,}', '\n\n', full_text)
-        full_text = re.sub(r' {2,}', ' ', full_text).strip()
+    if not HTML_PATH.is_file():
+        st.error(
+            f"⚠️ HTML book not found at `{HTML_PATH}`.\n\n"
+            "Add `ClimateAcademyBook.html` next to `app.py`, or update `HTML_PATH` in `app.py`."
+        )
+        st.stop()
 
-    # ── Chunk ──────────────────────────────────────
-    words, chunks, i = full_text.split(), [], 0
-    while i < len(words):
-        chunks.append(" ".join(words[i : i + CHUNK_SIZE]))
-        i += CHUNK_SIZE - CHUNK_OVERLAP
+    # ── Parse HTML → outline chunks ──────────────────────
+    with st.spinner(f"📄 Parsing HTML book `{HTML_PATH.name}`..."):
+        indexed = parse_html_path_to_chunks(HTML_PATH, CHUNK_SIZE, CHUNK_OVERLAP)
+    if not indexed:
+        st.error("No sections extracted from HTML — check structure in docs/HTML_SECTION_NESTING.md.")
+        st.stop()
 
     # ── Embed + store in ChromaDB ──────────────────
     bar = st.progress(0, text="🔄 Building knowledge base (first run only — ~2 min)...")
-    for i in range(0, len(chunks), 64):
-        batch = chunks[i : i + 64]
+    n = len(indexed)
+    for i in range(0, n, 64):
+        batch = indexed[i : i + 64]
+        docs = [c.document for c in batch]
         collection.add(
-            documents  = batch,
-            embeddings = embedder.encode(batch, show_progress_bar=False).tolist(),
-            ids        = [f"chunk_{j}" for j in range(i, i + len(batch))],
-            metadatas  = [{"chunk_index": j} for j in range(i, i + len(batch))]
+            documents  = docs,
+            embeddings = embedder.encode(docs, show_progress_bar=False).tolist(),
+            ids        = [f"html_chunk_{i + j}" for j in range(len(batch))],
+            metadatas  = [
+                {
+                    "section_number": c.section_number,
+                    "section_title": c.section_title or "",
+                    "chunk_index": str(c.chunk_index),
+                }
+                for c in batch
+            ],
         )
         bar.progress(
-            min(1.0, (i + 64) / len(chunks)),
-            text=f"🔄 Embedding... {min(100, int((i + 64) / len(chunks) * 100))}%"
+            min(1.0, (i + 64) / n),
+            text=f"🔄 Embedding... {min(100, int((i + 64) / n * 100))}%",
         )
 
     bar.empty()
@@ -143,11 +155,22 @@ def retrieve(query: str, collection, embedder) -> list:
     results      = collection.query(
         query_embeddings = [query_vector],
         n_results        = TOP_K,
-        include          = ["documents", "distances"]
+        include          = ["documents", "distances", "metadatas"],
     )
-    chunks, dists = results["documents"][0], results["distances"][0]
-    filtered = [c for c, d in zip(chunks, dists) if d < 1.5]
-    return filtered if filtered else chunks
+    docs   = results["documents"][0]
+    dists  = results["distances"][0]
+    metas  = results["metadatas"][0] if results.get("metadatas") else [{}] * len(docs)
+    triples = list(zip(docs, dists, metas))
+    filtered = [(doc, d, m) for doc, d, m in triples if d < 1.5]
+    use = filtered if filtered else triples
+    return [
+        format_passage_for_prompt(
+            m.get("section_number") or "",
+            m.get("section_title") or "",
+            doc,
+        )
+        for doc, _d, m in use
+    ]
 
 
 # ─────────────────────────────────────────────────────
@@ -165,6 +188,8 @@ Rules you MUST follow:
    "I couldn't find information about that in the Climate Academy book." — in the user's language.
 4. Be concise, clear and encouraging. Use bullet points when listing multiple items.
 5. Never invent facts or statistics not present in the context.
+6. When you use facts from a passage, cite its **book section number** in-line using the form \
+   **§ x.y.z** (and the short section title if helpful). Cite at least once per distinct section used.
 
 --- RETRIEVED BOOK PASSAGES ---
 {context}

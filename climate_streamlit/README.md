@@ -1,6 +1,6 @@
 # Climate Academy Chatbot — Streamlit + Groq
 
-Multilingual climate chatbot. One Python file. No HTML, no CSS, no JS.
+Multilingual climate chatbot. The Streamlit UI is one file; the book is **structured HTML** with nested `<section>` elements and automatic **§ decimal numbering** for citations. (Inline CSS only for chat styling.)
 
 ---
 
@@ -9,7 +9,7 @@ Multilingual climate chatbot. One Python file. No HTML, no CSS, no JS.
 | Layer           | Tool                                  | Cost              |
 |-----------------|---------------------------------------|-------------------|
 | UI              | Streamlit                             | Free              |
-| PDF extraction  | pdfplumber                            | Free              |
+| Book format     | HTML + BeautifulSoup (nested sections)| Free              |
 | Embeddings      | sentence-transformers (local)         | Free — no API key |
 | Vector database | ChromaDB (saved on disk)              | Free              |
 | LLM             | Groq API (llama-3.3-70b-versatile)    | Free tier         |
@@ -20,9 +20,14 @@ Multilingual climate chatbot. One Python file. No HTML, no CSS, no JS.
 
 ```
 climate_streamlit/
-├── app.py                     ← Entire app in one file
+├── app.py                     ← Streamlit UI + RAG wiring
+├── html_sectioning.py         ← HTML outline parser, § numbering, chunking
 ├── requirements.txt           ← Python packages
-├── ClimateAcademy_Book.pdf    ← Your book (place here)
+├── ClimateAcademyBook.html    ← Your book (replace prototype; same folder as app.py)
+├── docs/
+│   └── HTML_SECTION_NESTING.md← How to structure HTML for outlines
+├── tests/
+│   └── test_html_sectioning.py← Parser / chunker tests (pytest)
 ├── chroma_db/                 ← Auto-created on first run
 └── .streamlit/
     └── secrets.toml           ← Your Groq API key goes here
@@ -63,8 +68,14 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Step 5 — Place your PDF
-Copy `ClimateAcademy_Book.pdf` into the project folder (same level as `app.py`).
+### Step 5 — Place your HTML book
+Copy your full export to `ClimateAcademyBook.html` (same folder as `app.py`), or edit `HTML_PATH` in `app.py`. See `docs/HTML_SECTION_NESTING.md` for the nesting scheme. A small **prototype** ships with the repo for testing.
+
+**Switched from the old PDF pipeline?** Remove the old vector store so chunks rebuild:
+
+```bash
+rm -rf chroma_db
+```
 
 ### Step 6 — Run
 ```bash
@@ -79,7 +90,7 @@ Browser opens automatically at `http://localhost:8501`
 
 **First run (~2 minutes):**
 ```
-📄 Extracting text from PDF...
+📄 Parsing HTML book ...
 🔄 Embedding chunks... 10%
 🔄 Embedding chunks... 45%
 🔄 Embedding chunks... 100%
@@ -100,11 +111,11 @@ User asks a question
         ↓
 Embed question → vector numbers (free local model)
         ↓
-ChromaDB finds top 5 most similar book chunks (semantic search)
+ChromaDB finds top 5 most similar chunks (semantic search); each chunk is tagged with **§ section number**
         ↓
-System prompt = rules + 5 retrieved chunks
+System prompt = rules + retrieved chunks (passages show § x.y.z — title)
         ↓
-Groq API (llama-3.3-70b) reads chunks → answers in user's language
+Groq API (llama-3.3-70b) reads chunks → answers in user's language **with § citations**
         ↓
 Answer shown in chat
 ```
@@ -144,7 +155,7 @@ More than enough for a student chatbot.
 ---
 
 ## Reset knowledge base
-To rebuild ChromaDB (e.g. if you change the PDF):
+To rebuild ChromaDB (e.g. if you change the HTML book):
 ```bash
 # Mac / Linux
 rm -rf ./chroma_db
@@ -179,7 +190,7 @@ streamlit run app.py
 4. Add `GROQ_API_KEY` in the Secrets section (same format as secrets.toml)
 5. Deploy — your chatbot gets a public URL anyone can access
 
-> Note: Do not commit `ClimateAcademy_Book.pdf` and `chroma_db/` to GitHub
+> Note: Do not commit private book HTML and `chroma_db/` to GitHub
 > if the book content is private.
 
 ---
