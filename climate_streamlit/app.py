@@ -29,8 +29,9 @@ from html_sectioning import format_passage_for_prompt, parse_html_path_to_chunks
 # CONFIG
 # ─────────────────────────────────────────────────────
 BASE_DIR        = Path(__file__).resolve().parent
-HTML_PATH       = BASE_DIR / "ClimateAcademyBook.html"
-CHROMA_DIR      = str(BASE_DIR / "chroma_db")
+ROOT_DIR        = BASE_DIR.parent
+HTML_PATH       = Path(ROOT_DIR, "input", "sample_ca_book.html")
+CHROMA_DIR      = str(Path(ROOT_DIR, "chroma_db"))
 COLLECTION_NAME = "climate_academy_book_html"
 CHUNK_SIZE      = 400
 CHUNK_OVERLAP   = 60
@@ -106,7 +107,7 @@ def build_knowledge_base():
     if not HTML_PATH.is_file():
         st.error(
             f"⚠️ HTML book not found at `{HTML_PATH}`.\n\n"
-            "Add `ClimateAcademyBook.html` next to `app.py`, or update `HTML_PATH` in `app.py`."
+            "Add `sample_ca_book.html` to `<root>/input/`, or update `HTML_PATH` in `app.py`."
         )
         st.stop()
 
@@ -114,7 +115,10 @@ def build_knowledge_base():
     with st.spinner(f"📄 Parsing HTML book `{HTML_PATH.name}`..."):
         indexed = parse_html_path_to_chunks(HTML_PATH, CHUNK_SIZE, CHUNK_OVERLAP)
     if not indexed:
-        st.error("No sections extracted from HTML — check structure in docs/HTML_SECTION_NESTING.md.")
+        st.error(
+            f"No sections extracted from HTML — check structure in "
+            f"`{Path(ROOT_DIR, 'docs', 'HTML_SECTION_NESTING.md')}`."
+        )
         st.stop()
 
     # ── Embed + store in ChromaDB ──────────────────

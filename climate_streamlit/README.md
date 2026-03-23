@@ -18,19 +18,19 @@ Multilingual climate chatbot. The Streamlit UI is one file; the book is **struct
 
 ## Project structure
 
-```
-climate_streamlit/
-├── app.py                     ← Streamlit UI + RAG wiring
-├── html_sectioning.py         ← HTML outline parser, § numbering, chunking
-├── requirements.txt           ← Python packages
-├── ClimateAcademyBook.html    ← Your book (replace prototype; same folder as app.py)
-├── docs/
-│   └── HTML_SECTION_NESTING.md← How to structure HTML for outlines
-├── tests/
-│   └── test_html_sectioning.py← Parser / chunker tests (pytest)
-├── chroma_db/                 ← Auto-created on first run
-└── .streamlit/
-    └── secrets.toml           ← Your Groq API key goes here
+```text
+chatbot/
+├── climate_streamlit/
+│   ├── app.py
+│   ├── html_sectioning.py
+│   ├── requirements.txt
+│   └── .streamlit/secrets.toml
+├── input/
+│   ├── sample_ca_book.html
+│   └── climate_academy_book.pdf
+├── docs/HTML_SECTION_NESTING.md
+├── tests/test_html_sectioning.py
+└── chroma_db/
 ```
 
 ---
@@ -68,13 +68,14 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Step 5 — Place your HTML book
-Copy your full export to `ClimateAcademyBook.html` (same folder as `app.py`), or edit `HTML_PATH` in `app.py`. See `docs/HTML_SECTION_NESTING.md` for the nesting scheme. A small **prototype** ships with the repo for testing.
+### Step 5 — HTML files
+The repository includes a subset sample at `input/sample_ca_book.html`.  
+When you locate the full HTML export, place it in `input/` and update `HTML_PATH` in `app.py`.
 
 **Switched from the old PDF pipeline?** Remove the old vector store so chunks rebuild:
 
 ```bash
-rm -rf chroma_db
+rm -rf ../chroma_db
 ```
 
 ### Step 6 — Run
@@ -158,10 +159,10 @@ More than enough for a student chatbot.
 To rebuild ChromaDB (e.g. if you change the HTML book):
 ```bash
 # Mac / Linux
-rm -rf ./chroma_db
+rm -rf ../chroma_db
 
 # Windows
-rmdir /s /q chroma_db
+rmdir /s /q ..\chroma_db
 ```
 Then run `streamlit run app.py` again.
 
@@ -190,7 +191,7 @@ streamlit run app.py
 4. Add `GROQ_API_KEY` in the Secrets section (same format as secrets.toml)
 5. Deploy — your chatbot gets a public URL anyone can access
 
-> Note: Do not commit private book HTML and `chroma_db/` to GitHub
+> Note: Do not commit private book files from `input/` and `chroma_db/` to GitHub
 > if the book content is private.
 
 ---
