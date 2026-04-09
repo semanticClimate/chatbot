@@ -32,7 +32,7 @@ e.g. Zoom and similar technology. It is VERY important to be as fluent as possib
 
 ## software
 
-All software is Open Source and where possible we use Local Open models 
+All software is Open Source and where possible we use Local Open models (e.g. HuggingFace) rather than cloud services.
 
 ## content testing and validation
 
