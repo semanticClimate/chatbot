@@ -14,7 +14,7 @@ Interns will work *as a a team*, validating each other's work and practising goo
 
 ### **synchronously** 
 
-e.g. Zoom and similar technology. It is VERY important to make this as fluent as possible:
+e.g. Zoom and similar technology. It is VERY important to be as fluent as possible:
   * microphone and video *switched ON by default*
   * talking conversationally, no pauses.  There is no hierarchy , we are all equals
   * recording ON by default. We publish to the group (not the world)
@@ -29,3 +29,14 @@ e.g. Zoom and similar technology. It is VERY important to make this as fluent as
    - `pull` and `push`
    - `branch` (to create/select a branch). All interns will create their own branch
    - `merge` (with project agreement)
+
+## software
+
+All software is Open Source and where possible we use Local Open models 
+
+## content testing and validation
+
+**This is critical**
+
+AIs frequently hallucinate and give answers that look right but are wrong in one or more respects. We are using RAG (Retrieval Augmented Generation https://en.wikipedia.org/wiki/Retrieval-augmented_generation) to constrain the answers to be based on our ground truth documents (CA Book, IPCC, Wikimedia). Every answer should point to core references and contain paragraph IDs. We will provide hyperlinks which means the user can **validate** the answers. 
+
