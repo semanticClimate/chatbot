@@ -1,5 +1,6 @@
 
 # INTRODUCTION to CABot
 
-* NOTE: Prospective interns should read this **before** interviews! *
+_ NOTE: Prospective interns should read this **before** interviews! _
+
 
