@@ -40,3 +40,19 @@ All software is Open Source and where possible we use Local Open models
 
 AIs frequently hallucinate and give answers that look right but are wrong in one or more respects. We are using RAG (Retrieval Augmented Generation https://en.wikipedia.org/wiki/Retrieval-augmented_generation) to constrain the answers to be based on our ground truth documents (CA Book, IPCC, Wikimedia). Every answer should point to core references and contain paragraph IDs. We will provide hyperlinks which means the user can **validate** the answers. 
 
+## teamwork and collaborative discipline
+
+This short chatbot project depends on everyone collaborating. This includes:
+
+* **publishing all progress daily**. This is critical. We record:
+  - what I/we did since last time
+  - what I/we are going to do
+  - what's blocking me/us
+ If you don't do this it **actually harms** the project
+* agreed structure and naming of files. 
+* testing and validating current work before doing new stuff
+* reviewing code and documents. 100 lines of good output is better than 10000 lines of AI slop.
+
+## helping others learn, including tutorials
+
+We'll have many people using the chatbot who are ignorant of how AI works and how to use it. Helping others learn, often with notebook or video tutorials,  is one of the most valuable contributions. 
