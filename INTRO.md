@@ -1,7 +1,7 @@
 
 # INTRODUCTION to CABot
 
-** NOTE: Prospective interns should read this BEFORE interviews! **
+**NOTE: Prospective interns should read this BEFORE interviews!**
 
 ## Why this wokshop is different!
 
