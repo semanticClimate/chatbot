@@ -13,7 +13,7 @@ who create and support learning about climate - systems and philosophy.
     
   have created a unique approach to learning about climate, aimed at late-high-school and citizens in general to understand the climate crisis and what to do.
 
-### Semantic climate (https://semanticclimate.github.io/p/en/ and https://github.com/semanticclimate)
+### SemanticClimate (https://semanticclimate.github.io/p/en/ and https://github.com/semanticclimate)
 
 SemanticClimate is a globally distributed volunteer group which make climate knowledge understandable by humans and machines. They run 6-month internships and create new resources for learning and computing climate knowledge.
  - Gitanjali Yadav
@@ -22,8 +22,6 @@ SemanticClimate is a globally distributed volunteer group which make climate kno
  - Udita Agarwal
    
 run synchrobous and asynchronous projects.
-
-
 
 
 ### Open Knowledge (https://okfn.org/en/) 
