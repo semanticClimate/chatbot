@@ -9,7 +9,8 @@ We bring together three proven groups working to create Open knowledge in a time
 ### Climate Academy (https://theclimateacademy.org) 
 who create and support learning about climate - systems and philosophy.
   - Matthew Pye
-  - Jules pye
+  - Jules Pye
+    
   have created a unique approach to learning about climate, aimed at late-high-school and citizens in general to understand the climate crisis and what to do.
 
 ### Semantic climate (https://semanticclimate.github.io/p/en/ and https://github.com/semanticclimate)
