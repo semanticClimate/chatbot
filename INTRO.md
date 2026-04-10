@@ -1,11 +1,40 @@
 
-# INTRODUCTION to CABot
+# INTRODUCTION to ClimateAcademy chatbot
 
 **NOTE: Prospective interns should read this BEFORE interviews!**
 
 ## Why this workshop is different!
 
-Everyone can now *ask* an AI a question but it's much harder to be sure the answer is *correct*! We're building this chatbot to be **trustable**. That's why the interns are not only building the bot, but *testing* it and *validating* the output.
+We bring together three proven groups working to create Open knowledge in a time of super-rapid change:
+### Climate Academy (https://theclimateacademy.org) 
+who create and support learning about climate - systems and philosophy.
+  - Matthew Pye
+  - Jules pye
+  have created a unique approach to learning about climate, aimed at late-high-school and citizens in general to understand the climate crisis and what to do.
+
+### Semantic climate (https://semanticclimate.github.io/p/en/ and https://github.com/semanticclimate)
+
+SemanticClimate is a globally distributed volunteer group which make climate knowledge understandable by humans and machines. They run 6-month internships and create new resources for learning and computing climate knowledge.
+ - Gitanjali Yadav
+ - Peter Murray-Rust
+ - Renu Kumari
+ - Udita Agarwal
+run synchrobous and asynchronous projects
+
+
+
+
+### Open Knowledge (https://okfn.org/en/) 
+
+Founded by Rufus Pollock, OKFN has pioneered Open over 20+ years in many areas and is a world leader in code, data, and society. Their CKAN, FrictionlessData and SchoolOfData projects are leading the global development of interoperable data. SemanticClimate has worked with them (TheTechWeNeed).
+ - Renata Avila
+ - Solana Larsen
+ are coordinating this workshop, part of funding from Patrick McGovern Foundation to develop multilingual AI literacy (https://blog.okfn.org/2025/12/16/announcement-of-strategic-funding-to-enhance-multilingual-sector-specific-ai-literacy-and-develop-trustworthy-ai-for-open-data/) 
+
+# Motivation
+
+Everyone can now *ask* an AI a question but it's much harder to be sure the answer is *correct*! We're building this chatbot to be **trustable**. That's why our community is not only building the bot, but *testing* it and *validating* the output.
+
 
 ## for (prospective) interns
 Interns will have a background in using a Python IDE, developing code, testing it, and making it available publicly on Github. Interns will help each other when difficulties arise.
