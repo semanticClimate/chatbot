@@ -50,9 +50,17 @@ This short chatbot project depends on everyone collaborating. This includes:
   - what's blocking me/us
  If you don't do this it **actually harms** the project
 * agreed structure and naming of files. 
-* testing and validating current work before doing new stuff
+* testing and validating current work before doing new stuff.
 * reviewing code and documents. 100 lines of good output is better than 10000 lines of AI slop.
+* reporting errors fully and carefully.
+* using agreed libraries, versions, and other semantics.
 
 ## helping others learn, including tutorials
 
-We'll have many people using the chatbot who are ignorant of how AI works and how to use it. Helping others learn, often with notebook or video tutorials,  is one of the most valuable contributions. 
+We'll have many people using the chatbot who are ignorant of how AI works and how to use it. Helping others learn, often with notebook or video tutorials, is one of the most valuable contributions. 
+
+## innovations
+
+Over the last 6 years interns have made very valuable new contributions (`pygetpapers`, `docanalysis`, notebooks, etc.) but they need to be integrated into the system. So pitch your ideas to us, but no AI slop, please!
+
+
