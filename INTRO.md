@@ -20,7 +20,8 @@ SemanticClimate is a globally distributed volunteer group which make climate kno
  - Peter Murray-Rust
  - Renu Kumari
  - Udita Agarwal
-run synchrobous and asynchronous projects
+   
+run synchrobous and asynchronous projects.
 
 
 
@@ -30,6 +31,7 @@ run synchrobous and asynchronous projects
 Founded by Rufus Pollock, OKFN has pioneered Open over 20+ years in many areas and is a world leader in code, data, and society. Their CKAN, FrictionlessData and SchoolOfData projects are leading the global development of interoperable data. SemanticClimate has worked with them (TheTechWeNeed).
  - Renata Avila
  - Solana Larsen
+   
  are coordinating this workshop, part of funding from Patrick McGovern Foundation to develop multilingual AI literacy (https://blog.okfn.org/2025/12/16/announcement-of-strategic-funding-to-enhance-multilingual-sector-specific-ai-literacy-and-develop-trustworthy-ai-for-open-data/) 
 
 # Motivation
