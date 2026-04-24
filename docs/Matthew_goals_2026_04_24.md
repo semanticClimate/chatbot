@@ -68,6 +68,7 @@ The bot will ideally be :
 
 The bot will ideally be :
 
+| a | b | c | d |
 | --- | --- | --- | --- |
 | able to answer questions specific to the Climate Academy student book and how political, social, psychological, historical, philosophical and cultural issues relate to the climate crisis and our understanding of it.| 
 able to make connections between the natural sciences and human sciences of the crisis.|
