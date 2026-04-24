@@ -9,7 +9,7 @@ This is what it might look like from the summit.
 
 # The Semantic Climate Academy AI bot 
 
-##Accessible systems perspective on Climate Change 
+## Accessible systems perspective on Climate Change 
 
 The bot will ideally be :
 
