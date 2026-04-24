@@ -1,10 +1,10 @@
 From an email from Matthew Pye:
 
 Ideas from @Matthew Pye
-It is in response to Peter's request to set the high level expectations up for the bot.
-I know we are at base camp.
-This is what it might look like from the summit.
 
+_It is in response to Peter's request to set the high level expectations up for the bot.
+I know we are at base camp.
+This is what it might look like from the summit_
 
 
 # The Semantic Climate Academy AI bot 
