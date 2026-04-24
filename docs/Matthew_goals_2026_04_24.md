@@ -43,8 +43,8 @@ The bot will ideally be :
 
 * be attentive to the potential of Earth systems to go over tipping points
    - tipping points = irreversible on human timescales, abrupt, lead to cascading effects
-   = undermining of human civilisation on vast scale
-   = environmental disasters will impact
+   - undermining of human civilisation on vast scale
+   - environmental disasters will impact
      o Global South more heavily than Global North
      o vulnerable more than the wealthy in any nation
      o women more than men
@@ -68,7 +68,7 @@ The bot will ideally be :
 
 The bot will ideally be :
 
-
+|---|---|---|---|
 |able to answer questions specific to the Climate Academy student book and how political, social, psychological, historical, philosophical and cultural issues relate to the climate crisis and our understanding of it.| 
 able to make connections between the natural sciences and human sciences of the crisis.|
 is able to correctly use the concept "systems understanding"  |
