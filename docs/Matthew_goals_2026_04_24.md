@@ -30,9 +30,9 @@ The bot will ideally be :
   - assumes an age of 16 years upwards
   - does not crop out important qualifications of scientific technical detail
 
-• able to point at which articles / sources it got its answer from.
+* able to point at which articles / sources it got its answer from.
 
-• able to connect the levels of greenhouse gas concentrations in the atmosphere to levels of global warming
+* able to connect the levels of greenhouse gas concentrations in the atmosphere to levels of global warming
 
   - (inc. dry land and sea surface temperatures)  
 
@@ -53,9 +53,9 @@ The bot will ideally be :
 * be aware that there are different layers of probability embedded in our future emission pathways
    - it can be emphatic were needed, tentative when needed, and admit areas of understanding that are little understood
 
-• be aware that there are different probabilities involved in our understanding of the different Earth Systems
+* be aware that there are different probabilities involved in our understanding of the different Earth Systems
 
-• be aware that all NDCs and targets published by countries are not plugged into the remaining carbon budget
+* be aware that all NDCs and targets published by countries are not plugged into the remaining carbon budget
 
    - and should use the CUTx index to measure the relative truth of any political promise or statement about that countries commitment to emissions/resource extraction reductions. 
 
