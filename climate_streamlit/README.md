@@ -1,208 +1,151 @@
-# Climate Academy Chatbot — Streamlit + Groq
+﻿# Climate Streamlit Chatbot
 
-Multilingual climate chatbot. The Streamlit UI is one file; the book is **structured HTML** with nested `<section>` elements and automatic **§ decimal numbering** for citations. (Inline CSS only for chat styling.)
+A Streamlit-based Climate Academy chatbot with:
+- semantic search over the book content (ChromaDB + local ONNX embeddings)
+- grounded answers with source links
+- Groq LLM responses (`llama-3.3-70b-versatile`)
 
----
+## 1) Prerequisites
 
-## Stack — everything is free
+Install these first:
+- Python 3.10+ (3.11/3.12 recommended)
+- Git (optional, for cloning)
+- A free Groq API key from [console.groq.com](https://console.groq.com)
 
-| Layer           | Tool                                  | Cost              |
-|-----------------|---------------------------------------|-------------------|
-| UI              | Streamlit                             | Free              |
-| Book format     | HTML + BeautifulSoup (nested sections)| Free              |
-| Embeddings      | sentence-transformers (local)         | Free — no API key |
-| Vector database | ChromaDB (saved on disk)              | Free              |
-| LLM             | Groq API (llama-3.3-70b-versatile)    | Free tier         |
+## 2) Project Layout (expected)
 
----
-
-## Project structure
+This app expects this structure:
 
 ```text
 chatbot/
-├── climate_streamlit/
-│   ├── app.py
-│   ├── html_sectioning.py
-│   ├── requirements.txt
-│   └── .streamlit/secrets.toml
-├── input/
-│   ├── sample_ca_book.html
-│   └── climate_academy_book.pdf
-├── docs/HTML_SECTION_NESTING.md
-├── tests/test_html_sectioning.py
-└── chroma_db/
+  climate_streamlit/
+    app.py
+    requirements.txt
+    .streamlit/
+      secrets.toml
+  input/
+    full_student_book.html
+    2025_10/
+      climate_academy_book.pdf
+  chroma_db/
 ```
 
----
+Important:
+- `app.py` reads the HTML from: `../input/full_student_book.html`
+- `app.py` optionally reads the PDF from: `../input/2025_10/climate_academy_book.pdf`
 
-## Setup — step by step
+## 3) Setup
 
-### Step 1 — Get your free Groq API key
-1. Go to https://console.groq.com
-2. Sign up free — no credit card needed
-3. Click **API Keys** → **Create API Key**
-4. Copy the key (starts with `gsk_...`)
+From the repository root (`chatbot`), run:
 
-### Step 2 — Add key to secrets.toml
-Edit `.streamlit/secrets.toml`:
-```toml
-GROQ_API_KEY = "gsk_...your_key_here"
-```
+### Windows (PowerShell)
 
-### Step 3 — Create virtual environment (recommended)
-
-**Mac / Linux:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-**Windows:**
 ```powershell
-python -m venv venv
-venv\Scripts\activate
-```
-
-### Step 4 — Install packages
-```bash
+cd <path-to-your-project>\chatbot\climate_streamlit
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install --upgrade pip
 pip install -r requirements.txt
+pip install pymupdf
 ```
 
-### Step 5 — HTML files
-The repository includes a subset sample at `input/sample_ca_book.html`.  
-When you locate the full HTML export, place it in `input/` and update `HTML_PATH` in `app.py`.
-
-**Switched from the old PDF pipeline?** Remove the old vector store so chunks rebuild:
+### macOS / Linux
 
 ```bash
-rm -rf ../chroma_db
+cd /path/to/your/project/chatbot/climate_streamlit
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+pip install pymupdf
 ```
 
-### Step 6 — Run
+Why `pymupdf`?
+- The app imports `fitz` (PyMuPDF) for PDF mapping.
+
+## 4) Add your Groq API key
+
+Create/edit this file:
+- `climate_streamlit/.streamlit/secrets.toml`
+
+Add:
+
+```toml
+GROQ_API_KEY = "gsk_your_key_here"
+```
+
+The app also supports `GROQ_API_KEY` from environment variables, but `secrets.toml` is the easiest.
+
+## 5) Ensure input files exist
+
+Required:
+- `input/full_student_book.html`
+
+Optional but recommended:
+- `input/2025_10/climate_academy_book.pdf`
+
+If your files are in different locations, update `HTML_PATH` and `PDF_PATH` in `app.py`.
+
+## 6) Run the app
+
+From `climate_streamlit/`:
+
 ```bash
 streamlit run app.py
 ```
 
-Browser opens automatically at `http://localhost:8501`
+Then open:
+- [http://localhost:8501](http://localhost:8501)
 
----
+## 7) First run behavior
 
-## First run vs every run after
+On first run, the app builds embeddings and indexes chunks into `../chroma_db`.
+This can take a little time depending on machine speed.
 
-**First run (~2 minutes):**
-```
-📄 Parsing HTML book ...
-🔄 Embedding chunks... 10%
-🔄 Embedding chunks... 45%
-🔄 Embedding chunks... 100%
-✅ Knowledge base ready — 912 chunks indexed!
-```
+Later runs are much faster because it reuses the saved vector DB.
 
-**Every run after (instant — loads from disk):**
-```
-✅ ChromaDB already has 912 chunks — skipping re-embedding.
-```
+## 8) Reset / rebuild the vector database
 
----
+If you change the source HTML and want a full re-index, delete `chroma_db` and run again.
 
-## How it works
-
-```
-User asks a question
-        ↓
-Embed question → vector numbers (free local model)
-        ↓
-ChromaDB finds top 5 most similar chunks (semantic search); each chunk is tagged with **§ section number**
-        ↓
-System prompt = rules + retrieved chunks (passages show § x.y.z — title)
-        ↓
-Groq API (llama-3.3-70b) reads chunks → answers in user's language **with § citations**
-        ↓
-Answer shown in chat
+### Windows
+```powershell
+cd <path-to-your-project>\chatbot
+Remove-Item -Recurse -Force .\chroma_db
 ```
 
----
-
-## Languages supported
-- English → click EN or type in English
-- Hindi → click हि or type in Hindi
-- French → click FR or type in French
-- Any other language → Groq auto-detects and replies in it
-
----
-
-## Groq free tier limits
-
-| Limit | Value |
-|---|---|
-| Requests per minute | 30 |
-| Requests per day | 1,000 |
-| Tokens per minute | 6,000 |
-
-More than enough for a student chatbot.
-
----
-
-## Common errors and fixes
-
-| Error | Cause | Fix |
-|---|---|---|
-| `GROQ_API_KEY not set` | secrets.toml missing or wrong path | check `.streamlit/secrets.toml` location |
-| `rate_limit` | too many requests | wait 1 minute and try again |
-| `invalid_api_key` | wrong key | check key at console.groq.com |
-| `proxies` error | groq/httpx version conflict | run `pip install groq httpx==0.27.0` |
-| ChromaDB telemetry warnings | known ChromaDB bug | harmless, add `os.environ["ANONYMIZED_TELEMETRY"]="False"` at top of app.py |
-
----
-
-## Reset knowledge base
-To rebuild ChromaDB (e.g. if you change the HTML book):
+### macOS / Linux
 ```bash
-# Mac / Linux
-rm -rf ../chroma_db
-
-# Windows
-rmdir /s /q ..\chroma_db
+cd /path/to/your/project/chatbot
+rm -rf ./chroma_db
 ```
-Then run `streamlit run app.py` again.
 
----
+## 9) Common issues
 
-## Every time you come back to work on it
+- `GROQ_API_KEY not set`
+  - Confirm `climate_streamlit/.streamlit/secrets.toml` exists and contains `GROQ_API_KEY`.
 
-```bash
-# Mac / Linux
-cd /path/to/climate_streamlit
-source venv/bin/activate
-streamlit run app.py
+- `HTML book not found`
+  - Confirm `input/full_student_book.html` exists, or update `HTML_PATH` in `app.py`.
 
-# Windows
-cd D:\climate_streamlit
-venv\Scripts\activate
+- Import error for `fitz`
+  - Run `pip install pymupdf` in your active virtual environment.
+
+- Rate limit / temporary Groq errors
+  - Wait briefly and retry.
+
+## 10) Run again later
+
+### Windows
+```powershell
+cd <path-to-your-project>\chatbot\climate_streamlit
+.\.venv\Scripts\Activate.ps1
 streamlit run app.py
 ```
 
----
-
-## Deploy to Streamlit Cloud (free public hosting)
-1. Push your code to a GitHub repo
-2. Go to https://share.streamlit.io
-3. Connect your repo
-4. Add `GROQ_API_KEY` in the Secrets section (same format as secrets.toml)
-5. Deploy — your chatbot gets a public URL anyone can access
-
-> Note: Do not commit private book files from `input/` and `chroma_db/` to GitHub
-> if the book content is private.
-
----
-
-## Health check
-Open in browser after running:
+### macOS / Linux
+```bash
+cd /path/to/your/project/chatbot/climate_streamlit
+source .venv/bin/activate
+streamlit run app.py
 ```
-http://localhost:8501
-```
-Sidebar shows:
-- LLM: Llama 3.3 70B via Groq (free)
-- Embeddings: all-MiniLM-L6-v2 (local)
-- Vector DB: ChromaDB
-- Total chunks indexed
