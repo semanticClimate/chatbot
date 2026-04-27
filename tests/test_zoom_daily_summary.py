@@ -43,3 +43,21 @@ def test_anonymize_utterances_replaces_speakers_and_contact_info():
     assert mapping.people["Alice Smith"] == "PERSON_01", (
         f"Expected deterministic mapping for Alice Smith, got {mapping.people}"
     )
+
+
+def test_anonymize_utterances_replaces_first_name_alias_mentions():
+    utterances = [
+        ("Alice Smith", "I reviewed this with Bob."),
+        ("Bob Jones", "Thanks Alice, I agree."),
+    ]
+    anonymized, _ = anonymize_utterances(utterances)
+
+    assert "Alice" not in anonymized and "Bob" not in anonymized, (
+        f"Expected first-name mentions to be anonymized, got: {anonymized}"
+    )
+    assert anonymized.count("PERSON_01") >= 2, (
+        f"Expected PERSON_01 for both speaker and alias mentions, got: {anonymized}"
+    )
+    assert anonymized.count("PERSON_02") >= 2, (
+        f"Expected PERSON_02 for both speaker and alias mentions, got: {anonymized}"
+    )

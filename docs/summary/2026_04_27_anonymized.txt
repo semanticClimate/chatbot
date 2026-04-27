@@ -1,0 +1,1890 @@
+[Peter Murray-Rust] 09:03:15
+Okay. How are you, Renu?
+[Renu Kumari] 09:03:17
+Yeah. So, um, I created a installation.md for my, uh,
+[Renu Kumari] 09:03:19
+Yes, I'm fine, Peter.
+[Peter Murray-Rust] 09:03:22
+And as I say, I… I'm…
+[Peter Murray-Rust] 09:03:24
+you know, I feel…
+[Peter Murray-Rust] 09:03:27
+your pain, uh, about the heat.
+[Peter Murray-Rust] 09:03:30
+10,000 kilometers.
+[Renu Kumari] 09:03:31
+Yes, yes, yes, that is, like, heat waves and everything are getting worse.
+[Peter Murray-Rust] 09:03:37
+And that's why we do semantic climate, to tell the world the truth.
+[Renu Kumari] 09:03:39
+Mm-hmm.
+[Renu Kumari] 09:03:43
+Yes.
+[Peter Murray-Rust] 09:03:43
+Uh, because it's outside, um, and so on. Anyway…
+[Peter Murray-Rust] 09:03:47
+Um, uh…
+[Peter Murray-Rust] 09:03:50
+Let's go through, um…
+[Peter Murray-Rust] 09:03:52
+I want to talk about this workshop for Renault, but let's start off with the
+[Peter Murray-Rust] 09:03:58
+daily, um…
+[Peter Murray-Rust] 09:04:00
+stand up, so what I did since last time…
+[Peter Murray-Rust] 09:04:05
+What I'm going to do,
+[Peter Murray-Rust] 09:04:06
+and what's blocking me.
+[Peter Murray-Rust] 09:04:09
+So, Alina.
+[Aleena Harold Peter] 09:04:19
+find out of the chatbot.
+[Aleena Harold Peter] 09:04:22
+And I'll say what's blocking me is, uh, I just changed my laptop to my brothers, because my laptop wasn't working anymore.
+[Aleena Harold Peter] 09:04:29
+So when I tried pushing it to my branch, uh, there was an error, and I didn't know how to fix it.
+[Aleena Harold Peter] 09:04:35
+And I'm… and what I'll do next is I'll figure it out somehow, like…
+[Aleena Harold Peter] 09:04:40
+you know, push it to my branch today. I know it's silly, but…
+[Peter Murray-Rust] 09:04:42
+Well, I mean, it may be that if you share it with us, we can help. I don't know, I mean…
+[Peter Murray-Rust] 09:04:48
+You can get into terrible, uh, mess with Git, um, which is why we…
+[Peter Murray-Rust] 09:04:53
+Um, take a fairly simple regime.
+[Peter Murray-Rust] 09:04:58
+Um, that's excellent. So, you're blocked, um, that's objective.
+[Peter Murray-Rust] 09:05:03
+Um, and you're trying to sort out the block,
+[Peter Murray-Rust] 09:05:06
+Um, that's absolutely fine.
+[Peter Murray-Rust] 09:05:09
+Renault, um, what I did, what I'm going to do, what's blocking?
+[Renu Kumari] 09:05:12
+Yes, yeah.
+[Renu Kumari] 09:05:14
+So, Peter, I was doing the update on the page, web page, Symmetry Climate, uh, in the orientation document, uh, that I have, like, written about the ME climate and everywhere, so I'm updating those informations.
+[Renu Kumari] 09:05:28
+And also, I'm trying to get the summary of the daily transcript.
+[Renu Kumari] 09:05:33
+So what, uh, and I'm going to do that only, uh, and the blocking is… I'm not able to figure it out how to summarize the whole transcript, because it's a very, very long…
+[Renu Kumari] 09:05:43
+So, I wanted to get some important point for whatever the project we are doing.
+[Peter Murray-Rust] 09:05:48
+Right, okay, excellent.
+[Peter Murray-Rust] 09:05:51
+And this is why we have stand-ups, Alina, because…
+[Peter Murray-Rust] 09:05:54
+Uh, what I did is I've also looked at summarizing the transcript.
+[Peter Murray-Rust] 09:06:00
+Um, and, um…
+[Peter Murray-Rust] 09:06:02
+Uh, so that's what I did since last time. Um…
+[Peter Murray-Rust] 09:06:06
+I've also been, um,
+[Peter Murray-Rust] 09:06:09
+generally preparing for this workshop, I want to talk about that.
+[Peter Murray-Rust] 09:06:15
+Uh, what I'm going to do, uh, really depends on this meeting, but…
+[Peter Murray-Rust] 09:06:20
+I would like to, um…
+[Peter Murray-Rust] 09:06:23
+contribute things to the workshop.
+[Peter Murray-Rust] 09:06:25
+Uh, what's blocking me is I'm not quite sure what's going on in the workshop. Right, okay.
+[Peter Murray-Rust] 09:06:31
+So, well done, everybody. So, um, what I did, what I'm…
+[Peter Murray-Rust] 09:06:37
+going to do what I'm blocked on, right?
+[Peter Murray-Rust] 09:06:39
+So, um…
+[Peter Murray-Rust] 09:06:42
+Let's just try and look at the strategic stuff.
+[Peter Murray-Rust] 09:06:47
+Um, Gita posted that you're not going to be, um, at the workshop, is that right, Renu?
+[Renu Kumari] 09:06:55
+Uh, yes, Peter, we are traveling, like, uh, Preeti and me are traveling to attend, uh, like, participate in the hackathon. I have already told you in the last month when you go.
+[Peter Murray-Rust] 09:07:03
+Yeah, indeed. Absolutely.
+[Renu Kumari] 09:07:05
+It's a replication study, so… so we were participating there.
+[Renu Kumari] 09:07:09
+And so… but I think it's not required that we will join the, uh, this meeting of OKF, because it will be moderated by Dr. Gitanli and Solana.
+[Renu Kumari] 09:07:20
+And the others will be giving the input by presentation, so maybe the speakers from the OKF or from the Climate Academy, or from the Semantic Climate.
+[Peter Murray-Rust] 09:07:28
+Right. Okay, well…
+[Peter Murray-Rust] 09:07:31
+Uh, it, you know…
+[Peter Murray-Rust] 09:07:32
+Um, I have reserved today, so…
+[Peter Murray-Rust] 09:07:36
+I will need to know how to join the meeting at some stage.
+[Peter Murray-Rust] 09:07:40
+I won't contribute, but I need to know what's going on.
+[Renu Kumari] 09:07:44
+Maybe the feedback, they will… when the discussions or panel discussions will be going on, you know, maybe the feedback from you or anybody who has joined, so…
+[Renu Kumari] 09:07:54
+There will be some… this kind of discussion only, because, uh, we don't have the program yet.
+[Peter Murray-Rust] 09:07:54
+Right, well…
+[Renu Kumari] 09:08:00
+But from the email, I got to know that there will be the few speakers, and they will be studying, like, discussing the strategy for the better AI and
+[Peter Murray-Rust] 09:08:10
+Right. Do you know who the speakers are?
+[Renu Kumari] 09:08:14
+Not yet, uh, because she has written, like, it will be from the OKF, and also from the Climate Academy. She has asked Matthew to do that also.
+[Peter Murray-Rust] 09:08:23
+Right. Uh, when you say she, do you mean Gita or Solana?
+[Renu Kumari] 09:08:30
+Uh, it is in the same email, like, I got, uh, get some idea from the same email you have been CC'd, so…
+[Peter Murray-Rust] 09:08:35
+Yes, okay, right.
+[Peter Murray-Rust] 09:08:40
+Um, right, okay, well, uh, I'm, uh, I'm very happy not to,
+[Peter Murray-Rust] 09:08:46
+contribute, but I certainly need to know what's going on, because, um,
+[Peter Murray-Rust] 09:08:53
+Uh…
+[Peter Murray-Rust] 09:08:53
+We, you know, the people on this screen are rarely delivering the mechanics of this project, so…
+[Peter Murray-Rust] 09:09:00
+We need to know what the expectations are.
+[Peter Murray-Rust] 09:09:03
+Um, Alina, did you, uh, read
+[Peter Murray-Rust] 09:09:06
+Um, Matthews, um…
+[Peter Murray-Rust] 09:09:09
+Were you copied into that, Matthews?
+[Peter Murray-Rust] 09:09:11
+Uh, requirements for
+[Peter Murray-Rust] 09:09:13
+Um, the semantic chatbots.
+[Renu Kumari] 09:09:16
+Hmm…
+[Peter Murray-Rust] 09:09:17
+Have you seen that or not?
+[Aleena Harold Peter] 09:09:19
+I did. I have a rough idea of it. I think I read it on Friday, like, right after the meeting.
+[Peter Murray-Rust] 09:09:26
+Right, okay. Um…
+[Peter Murray-Rust] 09:09:28
+So, my comments about that are that I think
+[Peter Murray-Rust] 09:09:32
+Um, what Matthew has put down is an excellent wish list.
+[Peter Murray-Rust] 09:09:36
+But it's actually quite a lot of work.
+[Peter Murray-Rust] 09:09:39
+Uh, you know, and it can't… I don't think, be done in…
+[Renu Kumari] 09:09:43
+Yes, yes, yeah, very yes, because with the Uddhita also. The Uditha said, like,
+[Renu Kumari] 09:09:47
+So, we told, like, for the initial month, we can, uh, achieve the, first of all, the answer, like, answer whatever answer it is giving.
+[Renu Kumari] 09:09:56
+it would be some label correct, and the resources, if we can tag the resources
+[Renu Kumari] 09:10:01
+From where it is coming. So, this should be the, like, initial objectives.
+[Renu Kumari] 09:10:05
+they're creating.
+[Peter Murray-Rust] 09:10:07
+So, the initial, um…
+[Peter Murray-Rust] 09:10:11
+Uh, the initial…
+[Peter Murray-Rust] 09:10:13
+approach, I think, was that, um,
+[Peter Murray-Rust] 09:10:17
+Uh, uh, is that, um…
+[Peter Murray-Rust] 09:10:20
+we would make a chatbot for the Chimage Academy book, right? Okay.
+[Peter Murray-Rust] 09:10:26
+Now, I'll bring up what Matthew has written.
+[Peter Murray-Rust] 09:10:30
+Um, and it's perfectly reasonable for him
+[Peter Murray-Rust] 09:10:33
+Uh, to do so, uh, but he's not, um…
+[Peter Murray-Rust] 09:10:37
+an engineer, where engineers.
+[Peter Murray-Rust] 09:10:40
+And, um, a need to…
+[Peter Murray-Rust] 09:10:44
+Show…
+[Peter Murray-Rust] 09:10:46
+Right. So…
+[Peter Murray-Rust] 09:10:48
+I'm going to share this.
+[Peter Murray-Rust] 09:11:11
+Okay, can you see the screen?
+[Peter Murray-Rust] 09:11:16
+Okay, so…
+[Peter Murray-Rust] 09:11:24
+Right.
+[Peter Murray-Rust] 09:11:29
+So, this is, you know, a…
+[Peter Murray-Rust] 09:11:31
+medium-term vision. It goes beyond this project simply because
+[Peter Murray-Rust] 09:11:36
+it asks for an awful lot, but let's see. The bot will be able to answer questions about sustainability that's framed by
+[Peter Murray-Rust] 09:11:44
+Um, the cut index.
+[Peter Murray-Rust] 09:11:46
+Now, um, the cut index, do you know about that, uh,
+[Peter Murray-Rust] 09:11:52
+Reno and Alina.
+[Aleena Harold Peter] 09:11:54
+I have no idea.
+[Renu Kumari] 09:11:55
+No, no.
+[Peter Murray-Rust] 09:11:57
+This is something that, um, Matthew has described in the book.
+[Peter Murray-Rust] 09:12:02
+Um, and it's about the actual amount that each, um,
+[Renu Kumari] 09:12:07
+Absolutely. Is it a calculation? Is it a calculation, or it's a date?
+[Peter Murray-Rust] 09:12:10
+It's a calculation, yes.
+[Peter Murray-Rust] 09:12:13
+It's a calculation as to how much each country
+[Renu Kumari] 09:12:13
+Okay
+[Peter Murray-Rust] 09:12:18
+should, um…
+[Peter Murray-Rust] 09:12:20
+Uh, be responsible for emissions and climate change.
+[Peter Murray-Rust] 09:12:25
+Um, it's only described in the book, I think.
+[Peter Murray-Rust] 09:12:31
+In other words, there isn't a website for it, it's not widely used, as far as I know. I don't know that anybody other than Matthew uses it.
+[Renu Kumari] 09:12:34
+Mm-hmm, hmm.
+[Renu Kumari] 09:12:37
+Yes.
+[Renu Kumari] 09:12:39
+No, uh… hmm.
+[Peter Murray-Rust] 09:12:41
+Uh, so…
+[Peter Murray-Rust] 09:12:43
+Um, I don't see how the bot can answer that unless we put the calculation
+[Peter Murray-Rust] 09:12:50
+Into it, okay?
+[Renu Kumari] 09:12:51
+Uh, yes.
+[Peter Murray-Rust] 09:12:53
+The proximity and dangers of various planetary boundaries. Do you know what planetary boundaries are, Alina?
+[Peter Murray-Rust] 09:13:07
+I'm very happy if you say no.
+[Peter Murray-Rust] 09:13:11
+to, uh, knowledge questions.
+[Peter Murray-Rust] 09:13:13
+Um…
+[Peter Murray-Rust] 09:13:20
+Planetary boundaries. Um…
+[Peter Murray-Rust] 09:13:23
+There are 9 planetary boundaries,
+[Peter Murray-Rust] 09:13:25
+Um, defining a safe operating system for humanity,
+[Peter Murray-Rust] 09:13:30
+Uh, the idea came up, um,
+[Peter Murray-Rust] 09:13:36
+15 years ago, 17 years ago,
+[Peter Murray-Rust] 09:13:39
+Um, and there are 9 boundaries.
+[Peter Murray-Rust] 09:13:42
+Um, let's have a look at them.
+[Peter Murray-Rust] 09:13:51
+may not be big enough. Oh, come on.
+[Peter Murray-Rust] 09:14:03
+Come on, here, here you are.
+[Peter Murray-Rust] 09:14:06
+Um…
+[Peter Murray-Rust] 09:14:12
+Bioshift, right, in no particular order, uh, let's go from the top. Climate change,
+[Peter Murray-Rust] 09:14:17
+novel entities, that means new chemicals, you know, so things like
+[Peter Murray-Rust] 09:14:23
+Uh, perfluorocarbons, um, and, um…
+[Peter Murray-Rust] 09:14:28
+all the new chemicals.
+[Peter Murray-Rust] 09:14:31
+Stratospheric ozone depletion.
+[Peter Murray-Rust] 09:14:33
+Um, which would lead to increased, um, ultraviolet, um,
+[Peter Murray-Rust] 09:14:41
+And many other things. Atmospheric aerosol loading, that's the…
+[Peter Murray-Rust] 09:14:47
+particle… articulates in the, um, atmosphere.
+[Peter Murray-Rust] 09:14:51
+Ocean acidification.
+[Peter Murray-Rust] 09:14:53
+Um, so one of the effects of carbon dioxide, which is completely unrelated to
+[Peter Murray-Rust] 09:14:59
+Um, uh, the atmosphere really is…
+[Peter Murray-Rust] 09:15:03
+Well, it's not unrelated, because the carbon dioxide's in the atmosphere, but it's not related to, um,
+[Peter Murray-Rust] 09:15:09
+global heating, um, is, um,
+[Peter Murray-Rust] 09:15:13
+ocean acidification. So, the oceans are getting more acidic because of the carbon dioxide. It's a weak acid.
+[Peter Murray-Rust] 09:15:20
+Um, and that means it's harder for marine organisms
+[Peter Murray-Rust] 09:15:25
+Um, uh, to live, because…
+[Peter Murray-Rust] 09:15:28
+It dissolves the shells, um…
+[Peter Murray-Rust] 09:15:31
+of organisms with shells and so forth.
+[Peter Murray-Rust] 09:15:37
+Biogeochemical flows,
+[Peter Murray-Rust] 09:15:39
+Um, now…
+[Peter Murray-Rust] 09:15:48
+This is, I think, phosphorus and nitrogen.
+[Peter Murray-Rust] 09:15:51
+Um, so these are important nutrients, and if we put too much of them into the
+[Peter Murray-Rust] 09:15:59
+environment, it will cause rapid growth and probably growth of the wrong things.
+[Peter Murray-Rust] 09:16:05
+Um, freshwater change.
+[Peter Murray-Rust] 09:16:08
+Green and blue. Green and blue fresh water are, um,
+[Peter Murray-Rust] 09:16:15
+Uh, blue means, um…
+[Peter Murray-Rust] 09:16:17
+fresh water in lakes and things of that sort. Green is fresh water, which is
+[Peter Murray-Rust] 09:16:23
+Um, hung up in ecosystems.
+[Peter Murray-Rust] 09:16:30
+Van system change, so this is the…
+[Peter Murray-Rust] 09:16:32
+Uh, deforestation,
+[Peter Murray-Rust] 09:16:35
+The increase in agriculture,
+[Peter Murray-Rust] 09:16:37
+Um, and Biosphere…
+[Peter Murray-Rust] 09:16:40
+Uh, integrity, so…
+[Peter Murray-Rust] 09:16:43
+the, uh, change in genetics and…
+[Peter Murray-Rust] 09:16:46
+Um, uh…
+[Peter Murray-Rust] 09:16:50
+the functioning of the biosphere. So, these are very important here, and um…
+[Peter Murray-Rust] 09:16:58
+Matthew is quite right, uh, that this is, uh, something key.
+[Peter Murray-Rust] 09:17:03
+Um, and it is caused by, um,
+[Peter Murray-Rust] 09:17:06
+fossil fuel emissions,
+[Peter Murray-Rust] 09:17:08
+Um, and, uh, unfortunately, as you can see, um,
+[Peter Murray-Rust] 09:17:14
+We have, um, overstepped
+[Peter Murray-Rust] 09:17:17
+Uh, 6 of the nine.
+[Peter Murray-Rust] 09:17:19
+Um, and that's very serious.
+[Peter Murray-Rust] 09:17:24
+Um, so Matthew once sat included.
+[Peter Murray-Rust] 09:17:29
+Um…
+[Peter Murray-Rust] 09:17:34
+Right, this is about, uh, climate equity.
+[Peter Murray-Rust] 09:17:38
+Um, so this is a global problem, uh, and, um,
+[Peter Murray-Rust] 09:17:44
+the world should be doing this on a global basis.
+[Peter Murray-Rust] 09:17:48
+Um, and, uh, sharing resources equally, and clearly that's not happening at the moment.
+[Peter Murray-Rust] 09:17:57
+Um…
+[Peter Murray-Rust] 09:18:00
+All resources are finite,
+[Peter Murray-Rust] 09:18:02
+Um…
+[Peter Murray-Rust] 09:18:06
+Yes, I'm not sure how easy this is to…
+[Peter Murray-Rust] 09:18:11
+Uh, put into a chat bot.
+[Peter Murray-Rust] 09:18:14
+Um, I'm not immediately sure how easy this is, but we can clearly put planetary boundaries into a chatbot.
+[Peter Murray-Rust] 09:18:24
+Questions using the content of IPCC.
+[Peter Murray-Rust] 09:18:29
+AR, that's what we've been doing over the last 3 years.
+[Peter Murray-Rust] 09:18:32
+Um, IPP…
+[Peter Murray-Rust] 09:18:35
+IPBES, what does that stand for, Renu?
+[Renu Kumari] 09:18:39
+Uh, I don't know, because I was supposed to, like, I'm going to ask this, what is IPBS?
+[Peter Murray-Rust] 09:18:45
+Right? Well…
+[Peter Murray-Rust] 09:18:47
+it's see…
+[Peter Murray-Rust] 09:18:51
+Incheon, um…
+[Peter Murray-Rust] 09:18:53
+panel on biology and
+[Peter Murray-Rust] 09:18:56
+I think energy systems, um…
+[Peter Murray-Rust] 09:19:00
+environment. Biology and environment.
+[Renu Kumari] 09:19:03
+So they also create the resources, like reports and everything.
+[Peter Murray-Rust] 09:19:06
+Biodiversity and ecosystem, yes.
+[Renu Kumari] 09:19:09
+Oh, in the intergovernmental Science Policy Platform.
+[Peter Murray-Rust] 09:19:13
+Yes. Uh, IPCC for biodiversity, right?
+[Renu Kumari] 09:19:14
+So…
+[Peter Murray-Rust] 09:19:17
+So, that's all about biodiversity.
+[Renu Kumari] 09:19:22
+Hmm.
+[Peter Murray-Rust] 09:19:22
+Um…
+[Peter Murray-Rust] 09:19:24
+Right, let's go back to, um, Matthew.
+[Peter Murray-Rust] 09:19:28
+Um, peer-reviewed journals, right.
+[Peter Murray-Rust] 09:19:31
+Now, he happens to pick ones, most of which are behind paywalls, so we can't do that.
+[Renu Kumari] 09:19:38
+Hmm. Hmm.
+[Peter Murray-Rust] 09:19:38
+Um, but we can do half of them.
+[Peter Murray-Rust] 09:19:42
+Basically, uh, so I'm not sure what he wants to do here.
+[Peter Murray-Rust] 09:19:47
+Um, and I'm not sure what's feasible, but we have to discuss it.
+[Peter Murray-Rust] 09:19:51
+Um, and what we can do, I think, is to say that we can extract
+[Peter Murray-Rust] 09:19:57
+Um, the latest open source
+[Peter Murray-Rust] 09:20:01
+papers from old, um, open, uh, journals.
+[Peter Murray-Rust] 09:20:05
+All journals which publish open source,
+[Peter Murray-Rust] 09:20:08
+Um, and, uh, to…
+[Peter Murray-Rust] 09:20:12
+build that into
+[Peter Murray-Rust] 09:20:14
+a, um, uh, chatbot, so that would certainly be possible.
+[Renu Kumari] 09:20:19
+Hmm.
+[Peter Murray-Rust] 09:20:19
+Um… able to reconcile possible conflicts between
+[Peter Murray-Rust] 09:20:25
+touch, index framing, and scientific publications.
+[Peter Murray-Rust] 09:20:29
+Um, that is difficult. Um…
+[Peter Murray-Rust] 09:20:33
+It would mean that you would have to get
+[Peter Murray-Rust] 09:20:37
+Concepts which, uh, were well identified in
+[Peter Murray-Rust] 09:20:41
+touch index, and remember, Matthew is the only person, really, who uses this.
+[Peter Murray-Rust] 09:20:46
+and scientific publications.
+[Peter Murray-Rust] 09:20:49
+Um, so that's a lot of work, uh…
+[Peter Murray-Rust] 09:20:53
+Um…
+[Peter Murray-Rust] 09:20:55
+And that will rely on Matthew doing that.
+[Peter Murray-Rust] 09:20:58
+Uh, because we don't have the resources to do that.
+[Renu Kumari] 09:21:00
+Hm.
+[Peter Murray-Rust] 09:21:01
+Okay.
+[Renu Kumari] 09:21:02
+Yes, yes.
+[Peter Murray-Rust] 09:21:04
+Able to answer in readable English or other languages,
+[Peter Murray-Rust] 09:21:07
+that does not require a degree in a scientific subject, absolutely, assumes an age of 16 years up.
+[Peter Murray-Rust] 09:21:15
+does not crop out.
+[Peter Murray-Rust] 09:21:17
+important qualifications of scientific technical detail.
+[Peter Murray-Rust] 09:21:21
+Absolutely. So, in other words, if we're reading about
+[Peter Murray-Rust] 09:21:25
+Um, uh…
+[Peter Murray-Rust] 09:21:28
+environment, if we're reading about
+[Peter Murray-Rust] 09:21:30
+Um, ocean, if we're reading about things like this, there are a lot of things that we can
+[Peter Murray-Rust] 09:21:37
+understand if we have the right help.
+[Peter Murray-Rust] 09:21:39
+Um, I think it's fair to say that we can't comment on
+[Peter Murray-Rust] 09:21:44
+Um, atmospheric and ocean models.
+[Peter Murray-Rust] 09:21:47
+Uh, because these are complex, and there's no way that…
+[Renu Kumari] 09:21:51
+what is, like, I am not able to get it, uh, exactly. It does not crop out important qualifications of
+[Peter Murray-Rust] 09:21:58
+What it means, doesn't oversimplify it.
+[Peter Murray-Rust] 09:22:02
+So, in other words, it doesn't say,
+[Peter Murray-Rust] 09:22:05
+Um, uh, it doesn't talk at…
+[Peter Murray-Rust] 09:22:08
+Uh, what I would call a popular newspaper level.
+[Peter Murray-Rust] 09:22:13
+In other words, if it talks about a planetary boundary, it tells us what they are,
+[Renu Kumari] 09:22:13
+Okay.
+[Renu Kumari] 09:22:18
+Hmm.
+[Peter Murray-Rust] 09:22:19
+And it gives us links into the science.
+[Renu Kumari] 09:22:20
+Hmm.
+[Renu Kumari] 09:22:23
+Okay.
+[Peter Murray-Rust] 09:22:25
+Um, and all of this we would do with the encyclopedia.
+[Peter Murray-Rust] 09:22:29
+So, if we take our planetary boundaries,
+[Peter Murray-Rust] 09:22:32
+Uh, then we would, uh, come up with the encyclopedia pages for those planetary boundaries,
+[Peter Murray-Rust] 09:22:39
+And that would give people
+[Peter Murray-Rust] 09:22:41
+the ability to understand the discourse, right? And remember, we're also…
+[Renu Kumari] 09:22:45
+Yes.
+[Peter Murray-Rust] 09:22:46
+Um, aiming to annotate, um, these articles.
+[Peter Murray-Rust] 09:22:51
+Um, and I think with the new generation of, um,
+[Peter Murray-Rust] 09:22:55
+code development were a long way towards that.
+[Peter Murray-Rust] 09:22:59
+able to point at which articles
+[Peter Murray-Rust] 09:23:02
+It got its answer from absolutely.
+[Peter Murray-Rust] 09:23:05
+Um, able to connect the levels of greenhouse gas concentrations
+[Peter Murray-Rust] 09:23:13
+that is…
+[Peter Murray-Rust] 09:23:16
+at best, that is…
+[Peter Murray-Rust] 09:23:21
+pulling data from
+[Peter Murray-Rust] 09:23:23
+people who've already done this. We're not a data…
+[Peter Murray-Rust] 09:23:27
+organization, um, unless we get, you know, it would be nice to do this, because some of the, um…
+[Peter Murray-Rust] 09:23:34
+Uh, things which are published are
+[Peter Murray-Rust] 09:23:37
+not, I think, very, um…
+[Peter Murray-Rust] 09:23:40
+well-published.
+[Peter Murray-Rust] 09:23:42
+Uh, let me just…
+[Peter Murray-Rust] 09:23:43
+show me… I'm gonna show you…
+[Peter Murray-Rust] 09:23:47
+Uh, my, um…
+[Peter Murray-Rust] 09:23:52
+So my ex-Twitter…
+[Peter Murray-Rust] 09:23:55
+Uh, as, um…
+[Peter Murray-Rust] 09:23:58
+almost all…
+[Peter Murray-Rust] 09:24:01
+on, um…
+[Peter Murray-Rust] 09:24:05
+climate. So, this is…
+[Peter Murray-Rust] 09:24:08
+come out. What we need to do, for example, is if we're looking at this,
+[Peter Murray-Rust] 09:24:14
+Uh, climate over the last, um,
+[Peter Murray-Rust] 09:24:21
+20,000… 2,000 years.
+[Peter Murray-Rust] 09:24:23
+Um…
+[Peter Murray-Rust] 09:24:28
+This is what I read, and which I…
+[Peter Murray-Rust] 09:24:31
+repost, right? So…
+[Peter Murray-Rust] 09:24:34
+Each in Africa,
+[Peter Murray-Rust] 09:24:37
+talks about renewables,
+[Peter Murray-Rust] 09:24:45
+This is Spain.
+[Peter Murray-Rust] 09:24:55
+warming in the US.
+[Peter Murray-Rust] 09:25:02
+But the point is, let me… let's find a graph or two.
+[Peter Murray-Rust] 09:25:10
+Having said that,
+[Peter Murray-Rust] 09:25:13
+Right, here's a global…
+[Peter Murray-Rust] 09:25:16
+I mean, sea level rise, okay?
+[Peter Murray-Rust] 09:25:20
+2023. You see, this sort of thing
+[Peter Murray-Rust] 09:25:24
+Uh, it doesn't say what the x-axis is, otherwise…
+[Peter Murray-Rust] 09:25:28
+or the x-axis is, um…
+[Peter Murray-Rust] 09:25:30
+It's, uh…
+[Peter Murray-Rust] 09:25:33
+January to December, but it doesn't say that, so it's hard to understand that.
+[Peter Murray-Rust] 09:25:39
+It doesn't.
+[Peter Murray-Rust] 09:25:45
+say what these different lines are.
+[Peter Murray-Rust] 09:25:48
+I think there are…
+[Peter Murray-Rust] 09:25:50
+they're different years, but it doesn't tell you.
+[Peter Murray-Rust] 09:25:52
+You know, so…
+[Renu Kumari] 09:25:53
+Uh, not the different years, because they are saying the 2023 only, so maybe the different months, or…
+[Peter Murray-Rust] 09:25:57
+Oh yeah, we're right.
+[Peter Murray-Rust] 09:26:00
+Yes! Absolutely.
+[Renu Kumari] 09:26:00
+Months, yes, months are everywhere.
+[Peter Murray-Rust] 09:26:03
+Yes, well done, Renu. Uh, yes, so, you know, this is not…
+[Peter Murray-Rust] 09:26:09
+This is a bad graph.
+[Peter Murray-Rust] 09:26:12
+Um…
+[Peter Murray-Rust] 09:26:15
+And there's a level of discourse.
+[Peter Murray-Rust] 09:26:18
+from the climate scientists,
+[Peter Murray-Rust] 09:26:20
+Where they put things out which…
+[Peter Murray-Rust] 09:26:23
+You need to know their language.
+[Peter Murray-Rust] 09:26:26
+Uh, and it's not just
+[Peter Murray-Rust] 09:26:29
+texts, but numbers and graphics.
+[Peter Murray-Rust] 09:26:31
+Um,
+[Peter Murray-Rust] 09:26:36
+This sort of thing, you know.
+[Peter Murray-Rust] 09:26:38
+Uh, what is…
+[Peter Murray-Rust] 09:26:42
+What is this? Well, this is about the El Nino. Have you heard of El Nino?
+[Peter Murray-Rust] 09:26:55
+These are the sorts of things that I think we need to alert people to.
+[Peter Murray-Rust] 09:27:01
+Um, so…
+[Peter Murray-Rust] 09:27:04
+Uh…
+[Peter Murray-Rust] 09:27:06
+So, I would, uh, I mean, I have no idea what…
+[Peter Murray-Rust] 09:27:10
+Uh, CFSV2 is…
+[Peter Murray-Rust] 09:27:15
+Um, I think it's a model.
+[Peter Murray-Rust] 09:27:18
+Uh, so this is the El Nino…
+[Peter Murray-Rust] 09:27:21
+Uh, this is a timescale.
+[Peter Murray-Rust] 09:27:24
+Um, and these are the different…
+[Peter Murray-Rust] 09:27:27
+forecasts as to what's happened.
+[Peter Murray-Rust] 09:27:29
+And…
+[Peter Murray-Rust] 09:27:32
+I believe that these are… this is an anomaly. Anomaly is a very common thing in this, um,
+[Peter Murray-Rust] 09:27:39
+And it, um, uh, relates to
+[Peter Murray-Rust] 09:27:44
+deviation from…
+[Peter Murray-Rust] 09:27:46
+normality. So there's an idea that there's a sort of baseline, and then there are deviations from it.
+[Peter Murray-Rust] 09:27:52
+Um, and then often,
+[Peter Murray-Rust] 09:27:54
+those are anomalies, but sometimes, um, the deviations are predictable and regular, in which case you try and flatten them out.
+[Peter Murray-Rust] 09:28:15
+Right.
+[Peter Murray-Rust] 09:28:21
+Extreme weather is…
+[Peter Murray-Rust] 09:28:24
+decreasing. Now, I would guess that this was a climate denier.
+[Peter Murray-Rust] 09:28:29
+Um, of some form.
+[Peter Murray-Rust] 09:28:32
+So I would look at the…
+[Peter Murray-Rust] 09:28:34
+discussion here.
+[Peter Murray-Rust] 09:28:42
+If there's any…
+[Peter Murray-Rust] 09:28:44
+And I would look and see who this person is,
+[Peter Murray-Rust] 09:28:50
+Uh…
+[Peter Murray-Rust] 09:29:05
+Right, so this is an online discussion.
+[Peter Murray-Rust] 09:29:09
+I would say that this is a climate denier.
+[Peter Murray-Rust] 09:29:13
+Um…
+[Peter Murray-Rust] 09:29:14
+I don't know who this person is…
+[Peter Murray-Rust] 09:29:22
+challenging, um…
+[Peter Murray-Rust] 09:29:25
+all sorts of things here.
+[Peter Murray-Rust] 09:29:27
+So this is the level at which we would expect people to be
+[Peter Murray-Rust] 09:29:31
+able to engage. Does that make sense?
+[Peter Murray-Rust] 09:29:36
+a leaner and Reno.
+[Aleena Harold Peter] 09:29:38
+Yes.
+[Peter Murray-Rust] 09:29:40
+So, it's a debate.
+[Peter Murray-Rust] 09:29:43
+I don't think it's going to be a very, um…
+[Peter Murray-Rust] 09:29:48
+useful debate. Um…
+[Peter Murray-Rust] 09:29:55
+But it's, uh…
+[Peter Murray-Rust] 09:29:57
+Using science and data to
+[Peter Murray-Rust] 09:30:01
+challenge a statement, and that's very much what
+[Peter Murray-Rust] 09:30:04
+Our role is to try and make it easier.
+[Peter Murray-Rust] 09:30:07
+Um, uh, to do this.
+[Peter Murray-Rust] 09:30:10
+Um…
+[Peter Murray-Rust] 09:30:19
+Bye! Sorry, that wasn't the… uh…
+[Peter Murray-Rust] 09:30:31
+Right. And so…
+[Peter Murray-Rust] 09:30:34
+This is the sort of world we're in.
+[Peter Murray-Rust] 09:30:37
+Um…
+[Peter Murray-Rust] 09:30:40
+We… I…
+[Peter Murray-Rust] 09:30:41
+Because I believe in, uh, science, and I believe in
+[Peter Murray-Rust] 09:30:45
+Um, you know, a number of…
+[Peter Murray-Rust] 09:30:48
+people whose views I take very seriously, and they're the ones I repost.
+[Peter Murray-Rust] 09:30:55
+Um…
+[Peter Murray-Rust] 09:31:08
+I have no idea who this person is.
+[Peter Murray-Rust] 09:31:15
+But he's followed by he or she.
+[Peter Murray-Rust] 09:31:18
+Uh, is followed by Elliot Jacobson.
+[Peter Murray-Rust] 09:31:21
+Uh, and others that I follow. Elliot Jacobson is a very…
+[Peter Murray-Rust] 09:31:27
+Um, uh, respected…
+[Peter Murray-Rust] 09:31:30
+Um, uh, senior scientist on this.
+[Peter Murray-Rust] 09:31:34
+Um, and I often post what he's talking about.
+[Peter Murray-Rust] 09:31:37
+Um, and one of the things that I think we can probably do
+[Peter Murray-Rust] 09:31:42
+Uh, is to…
+[Peter Murray-Rust] 09:31:45
+get a bot to
+[Peter Murray-Rust] 09:31:47
+harvest some of these things here,
+[Peter Murray-Rust] 09:31:49
+Um, and…
+[Peter Murray-Rust] 09:31:52
+summarize, and we'll come to summarization in a minute.
+[Peter Murray-Rust] 09:32:10
+Right, no, the climate one here.
+[Peter Murray-Rust] 09:32:15
+Right, this is another one who…
+[Peter Murray-Rust] 09:32:17
+Um…
+[Peter Murray-Rust] 09:32:20
+You say yes. Timex out Crisis Advisory Group.
+[Peter Murray-Rust] 09:32:24
+And so on. So, there is a group of us, there's always a danger of groupthink when you do this.
+[Peter Murray-Rust] 09:32:32
+Um, confirmation bias that…
+[Peter Murray-Rust] 09:32:34
+You know, I select the people I listen to.
+[Peter Murray-Rust] 09:32:38
+Um, on Twitter.
+[Peter Murray-Rust] 09:32:41
+X. Um…
+[Peter Murray-Rust] 09:32:44
+And because I'm a scientist, and many of them are scientists,
+[Peter Murray-Rust] 09:32:48
+Um, you know, I…
+[Peter Murray-Rust] 09:32:50
+speak the same language, um…
+[Peter Murray-Rust] 09:33:02
+But you have to be very careful.
+[Peter Murray-Rust] 09:33:10
+And I…
+[Peter Murray-Rust] 09:33:13
+I do tweets on one or two other things, so if you follow me,
+[Peter Murray-Rust] 09:33:17
+you will pick up one or two other things, right?
+[Peter Murray-Rust] 09:33:20
+This is one which I…
+[Peter Murray-Rust] 09:33:22
+pick up frequently.
+[Peter Murray-Rust] 09:33:25
+Uh, there are a number of things like this, like Arctic and Antarctic,
+[Peter Murray-Rust] 09:33:29
+sea ice and temperatures, and so on.
+[Peter Murray-Rust] 09:33:33
+Uh, and you can see here,
+[Peter Murray-Rust] 09:33:36
+Uh, the previous year. So that's, um, data which I…
+[Peter Murray-Rust] 09:33:41
+Follow. So let's go back to what, um…
+[Peter Murray-Rust] 09:33:49
+The most I think we can do is…
+[Peter Murray-Rust] 09:33:53
+in all of this is to find
+[Peter Murray-Rust] 09:33:57
+authors, uh, that we trust.
+[Peter Murray-Rust] 09:33:58
+So, I would…
+[Peter Murray-Rust] 09:34:01
+work with, um…
+[Peter Murray-Rust] 09:34:05
+Semantic climate and climate academy, uh, to say,
+[Peter Murray-Rust] 09:34:09
+Who can we trust, and are we able to
+[Peter Murray-Rust] 09:34:13
+Um, to a summary of what they're saying at the moment.
+[Peter Murray-Rust] 09:34:19
+Um…
+[Peter Murray-Rust] 09:34:22
+Right. Again, this is…
+[Peter Murray-Rust] 09:34:25
+important, but difficult, um…
+[Peter Murray-Rust] 09:34:29
+I think we would have to choose our sources for that.
+[Peter Murray-Rust] 09:34:33
+Um…
+[Peter Murray-Rust] 09:34:36
+And tipping points…
+[Peter Murray-Rust] 09:34:47
+different probability.
+[Peter Murray-Rust] 09:34:51
+Yeah, so we should try and give out…
+[Peter Murray-Rust] 09:34:55
+a, um… an estimate of…
+[Peter Murray-Rust] 09:34:58
+how confident we are about various things.
+[Peter Murray-Rust] 09:35:05
+That's about the future emission.
+[Peter Murray-Rust] 09:35:09
+Um, that's about understanding Earth systems,
+[Peter Murray-Rust] 09:35:15
+Right, and this is Catex.
+[Peter Murray-Rust] 09:35:18
+NDCs, um…
+[Peter Murray-Rust] 09:35:20
+Do you know what an NDC is?
+[Peter Murray-Rust] 09:35:31
+Alina, if you don't know,
+[Peter Murray-Rust] 09:35:33
+Say, I don't know, because that's valuable.
+[Aleena Harold Peter] 09:35:35
+Oh, I, uh, I unmuted myself, but I think I was an audible, uh, I don't…
+[Peter Murray-Rust] 09:35:44
+Right. So, NDCs is National, um…
+[Peter Murray-Rust] 09:35:50
+I can't remember what the second word is.
+[Peter Murray-Rust] 09:35:53
+contributions.
+[Peter Murray-Rust] 09:35:55
+It's what each country has
+[Peter Murray-Rust] 09:35:58
+agreed.
+[Renu Kumari] 09:35:59
+disaster, National Disaster Committee? No.
+[Peter Murray-Rust] 09:36:01
+No, no, no, no. Uh, it's contributions in terms of cutting
+[Peter Murray-Rust] 09:36:06
+greenhouse gases. Nationally determined contributions, right?
+[Renu Kumari] 09:36:08
+Okay.
+[Peter Murray-Rust] 09:36:11
+Climate action plans submitted by countries under the Paris Agreement
+[Peter Murray-Rust] 09:36:16
+to reduce greenhouse gases and adapt to climate change.
+[Peter Murray-Rust] 09:36:21
+Um, and so these plans outline national targets,
+[Peter Murray-Rust] 09:36:27
+Um…
+[Peter Murray-Rust] 09:36:32
+The next critical round,
+[Peter Murray-Rust] 09:36:34
+due to a line.
+[Peter Murray-Rust] 09:36:36
+with that. Well,
+[Peter Murray-Rust] 09:36:39
+1.5 Celsius is unfortunately…
+[Peter Murray-Rust] 09:36:45
+not going to be determined, right?
+[Peter Murray-Rust] 09:36:48
+If we look at UNFCCC, which is…
+[Peter Murray-Rust] 09:36:51
+part of what we've looked at, the United Nations,
+[Peter Murray-Rust] 09:36:56
+Um…
+[Peter Murray-Rust] 09:36:58
+uh… framework on…
+[Peter Murray-Rust] 09:37:01
+climate change.
+[Peter Murray-Rust] 09:37:04
+Uh, and which we, um…
+[Peter Murray-Rust] 09:37:07
+Uh… we started to analyze at one stage.
+[Peter Murray-Rust] 09:37:14
+Okay, so…
+[Peter Murray-Rust] 09:37:17
+You can see there's…
+[Peter Murray-Rust] 09:37:19
+a great deal there. And I would say that to do that well,
+[Peter Murray-Rust] 09:37:25
+would require a funding of
+[Peter Murray-Rust] 09:37:29
+you know, something like…
+[Peter Murray-Rust] 09:37:31
+Um…
+[Peter Murray-Rust] 09:37:34
+I would say something like, um…
+[Peter Murray-Rust] 09:37:38
+one director, um…
+[Peter Murray-Rust] 09:37:44
+two postdocs,
+[Peter Murray-Rust] 09:37:46
+Two graduate students,
+[Peter Murray-Rust] 09:37:48
+Um, and…
+[Peter Murray-Rust] 09:37:51
+several interns, right? Okay?
+[Peter Murray-Rust] 09:37:54
+And I'm probably underestimating it. So this is a huge ask.
+[Peter Murray-Rust] 09:37:59
+So we got to prioritize. Does that make sense, Renu?
+[Renu Kumari] 09:38:03
+Yes, yes, yes, that is what I'm going to ask now.
+[Peter Murray-Rust] 09:38:06
+So, we need to… when you're leaving Renault?
+[Renu Kumari] 09:38:13
+Second.
+[Peter Murray-Rust] 09:38:14
+Second, okay. Uh, uh, remind us where you're going.
+[Renu Kumari] 09:38:18
+It's noonster, Neonster, Germany.
+[Peter Murray-Rust] 09:38:21
+Munchdale, yes. And, um, what's the topic?
+[Renu Kumari] 09:38:23
+Hmm.
+[Renu Kumari] 09:38:26
+replication Study Hackathon.
+[Renu Kumari] 09:38:28
+So, they are…
+[Peter Murray-Rust] 09:38:29
+Right.
+[Renu Kumari] 09:38:31
+Hmm.
+[Peter Murray-Rust] 09:38:32
+Well, that'll be very interesting. It's a bit peripheral to what we're doing, I think.
+[Renu Kumari] 09:38:37
+Hmm, yes, yes, that is why we have, like, attempted this.
+[Peter Murray-Rust] 09:38:41
+Sure. Um…
+[Peter Murray-Rust] 09:38:44
+So, what…
+[Renu Kumari] 09:38:45
+So it's one week long, one week long, so we will be resuming from the…
+[Renu Kumari] 09:38:50
+11th of the May, so…
+[Peter Murray-Rust] 09:38:52
+Right. Okay.
+[Peter Murray-Rust] 09:38:55
+So, at the moment,
+[Peter Murray-Rust] 09:38:59
+Our project is slightly disconnected because
+[Peter Murray-Rust] 09:39:03
+Uh…
+[Peter Murray-Rust] 09:39:06
+does us here, and we've got, um, uh,
+[Peter Murray-Rust] 09:39:11
+Udicha and, um, Sai, uh, when they're available. Udita might come in later today.
+[Peter Murray-Rust] 09:39:17
+Uh, she said, uh,
+[Renu Kumari] 09:39:18
+Yes, yes.
+[Peter Murray-Rust] 09:39:20
+And we… we don't know precisely what we're doing for this workshop.
+[Peter Murray-Rust] 09:39:24
+And we don't know precisely what we're doing for, um, the, uh,
+[Peter Murray-Rust] 09:39:30
+two-month study. I'll call it two months, right?
+[Peter Murray-Rust] 09:39:33
+Um…
+[Renu Kumari] 09:39:33
+For the workshop, I can… I just have idea that they are going to discuss only.
+[Renu Kumari] 09:39:40
+the discussions. Discussion on how the AI system, and…
+[Renu Kumari] 09:39:44
+like, ethical or responsible, or whatever. There's many terms are there.
+[Peter Murray-Rust] 09:39:48
+Yes, but somebody has to implement it.
+[Renu Kumari] 09:39:53
+After that workshop, if they're talking about it with perspectives of Climate Academy book,
+[Peter Murray-Rust] 09:39:55
+Yes.
+[Renu Kumari] 09:39:59
+So, they will be giving the points similar to the Matthew, that, like, Matthew has listed out all the points, so maybe the other speakers will list out the things that… how the AI should look like, chatbots should look.
+[Peter Murray-Rust] 09:40:10
+Sure, absolutely.
+[Renu Kumari] 09:40:10
+give the answer. So, I…
+[Peter Murray-Rust] 09:40:11
+And then who… how… who is going to… who's going to implement the AI?
+[Renu Kumari] 09:40:13
+And…
+[Renu Kumari] 09:40:17
+Yes, so the development…
+[Renu Kumari] 09:40:20
+I think we… we are going to develop the technology, so…
+[Peter Murray-Rust] 09:40:23
+Yes.
+[Renu Kumari] 09:40:23
+under your guidance, so…
+[Peter Murray-Rust] 09:40:25
+Yes, so we have to know…
+[Renu Kumari] 09:40:29
+Hmm.
+[Peter Murray-Rust] 09:40:31
+I'm happy for them to come up with, um,
+[Peter Murray-Rust] 09:40:35
+Uh… I'm happy for them to come up with a big shopping list of things that they want in the AI.
+[Peter Murray-Rust] 09:40:43
+But we cannot say, yes, we'll do all of these.
+[Renu Kumari] 09:40:43
+Ah, yes, they are going to do this.
+[Renu Kumari] 09:40:46
+Yes, yes, no, no, no, we have to prioritize the…
+[Renu Kumari] 09:40:50
+2-3 points first, because it's a very short…
+[Peter Murray-Rust] 09:40:53
+It's very short. We've got people who are not experts in
+[Renu Kumari] 09:40:53
+duration.
+[Renu Kumari] 09:40:59
+Mm, hmm.
+[Peter Murray-Rust] 09:40:59
+climate. Uh, we've got people who've never built a chatbot before.
+[Renu Kumari] 09:41:04
+chatbot. Yes.
+[Peter Murray-Rust] 09:41:06
+Uh, MP…
+[Peter Murray-Rust] 09:41:07
+So, uh, we have to…
+[Peter Murray-Rust] 09:41:10
+pick a very small…
+[Renu Kumari] 09:41:10
+So, from the, uh, from the Matthews list, what you should prioritize, like…
+[Renu Kumari] 09:41:16
+According to you.
+[Peter Murray-Rust] 09:41:17
+Well, let's make it us, right? Okay.
+[Renu Kumari] 09:41:20
+Mm-hmm.
+[Peter Murray-Rust] 09:41:21
+Uh…
+[Peter Murray-Rust] 09:41:24
+Right. He hasn't actually mentioned the Climate Academy book
+[Peter Murray-Rust] 09:41:29
+here at all.
+[Renu Kumari] 09:41:33
+It is in the title only, like, semantic climate academy AI Board, so…
+[Peter Murray-Rust] 09:41:37
+Yes, but that Timmage Academy is the organization
+[Peter Murray-Rust] 09:41:42
+Not the book. Right. Okay.
+[Renu Kumari] 09:41:42
+Hmm.
+[Peter Murray-Rust] 09:41:44
+So, um…
+[Peter Murray-Rust] 09:41:52
+I'm going to have to… we're going to have to talk to Matthew. Now, the problem with Matthew is that
+[Peter Murray-Rust] 09:41:58
+Uh, you know, he works during the day, and he works from…
+[Peter Murray-Rust] 09:42:02
+Um, oh, H…
+[Peter Murray-Rust] 09:42:06
+Oh, 900.
+[Peter Murray-Rust] 09:42:11
+fee, is that right?
+[Peter Murray-Rust] 09:42:15
+No. Uh, 0800UTC, because, um,
+[Peter Murray-Rust] 09:42:19
+France…
+[Peter Murray-Rust] 09:42:25
+Francis…
+[Peter Murray-Rust] 09:42:31
+I think he works from 0700 UTC.
+[Peter Murray-Rust] 09:42:36
+Right, which means that
+[Peter Murray-Rust] 09:42:38
+If I'm going to talk to him,
+[Peter Murray-Rust] 09:42:41
+It needs to be outside that day, so it may mean
+[Peter Murray-Rust] 09:42:46
+that we have to have meetings, um…
+[Peter Murray-Rust] 09:42:52
+I will… so when did you…
+[Peter Murray-Rust] 09:42:57
+Right, so let's have a look at the discussion.
+[Peter Murray-Rust] 09:43:04
+The bot will be able to answer questions specifically to the Climate Academy student book.
+[Peter Murray-Rust] 09:43:11
+And how…
+[Peter Murray-Rust] 09:43:14
+these things… I'm not wild about
+[Peter Murray-Rust] 09:43:17
+the formatting, um…
+[Peter Murray-Rust] 09:43:19
+It's not very clear.
+[Peter Murray-Rust] 09:43:21
+I tried to format this, um, manually.
+[Peter Murray-Rust] 09:43:24
+Um…
+[Peter Murray-Rust] 09:43:27
+What he's done is he's made a table and pasted it into
+[Peter Murray-Rust] 09:43:31
+Uh… the mail system, and so this is a…
+[Peter Murray-Rust] 09:43:36
+is our staff?
+[Peter Murray-Rust] 09:43:39
+Um…
+[Peter Murray-Rust] 09:43:40
+So, uh, this is not a criticism of Matthew, but he and Jules
+[Peter Murray-Rust] 09:43:45
+don't have… really have any technical expertise.
+[Peter Murray-Rust] 09:43:49
+So anything they do, we are going to have to build for them, right?
+[Peter Murray-Rust] 09:43:54
+Um…
+[Peter Murray-Rust] 09:43:58
+It needs to be able to make connections here.
+[Peter Murray-Rust] 09:44:02
+is able to correctly use the system.
+[Peter Murray-Rust] 09:44:04
+Uh, the systems understanding.
+[Peter Murray-Rust] 09:44:08
+Now,
+[Peter Murray-Rust] 09:44:10
+That is a tall order.
+[Peter Murray-Rust] 09:44:16
+Ah, right, okay. So this…
+[Peter Murray-Rust] 09:44:18
+You see, I don't… you've got…
+[Peter Murray-Rust] 09:44:21
+different, uh, this is a mess.
+[Peter Murray-Rust] 09:44:24
+Um, interconnection dimensions could be called a system's understanding.
+[Peter Murray-Rust] 09:44:31
+Then, uh…
+[Peter Murray-Rust] 09:44:35
+Answer a question about Climate Academy program.
+[Peter Murray-Rust] 09:44:38
+I think that's, uh, out of scope, because we've no idea.
+[Peter Murray-Rust] 09:44:43
+what the program is,
+[Peter Murray-Rust] 09:44:45
+Um, the three pillars certification program,
+[Peter Murray-Rust] 09:44:49
+Uh, he's got a Moodle system, Moodle, um, if you haven't come across it, is an educational…
+[Peter Murray-Rust] 09:44:56
+an online educational system.
+[Peter Murray-Rust] 09:45:02
+Right. So…
+[Peter Murray-Rust] 09:45:10
+I tried to transfer it…
+[Peter Murray-Rust] 09:45:27
+I've said to Jules, we should move to Slack rather than email, because you can see the difficulty of, um,
+[Peter Murray-Rust] 09:45:42
+Right.
+[Peter Murray-Rust] 09:45:48
+Okay, so that's the data, the workshop.
+[Peter Murray-Rust] 09:45:56
+So it's clear that Gita and Matthew
+[Peter Murray-Rust] 09:46:00
+are running the workshop, right, and Solana.
+[Peter Murray-Rust] 09:46:03
+Um, but it's clear that the purpose of the workshop is to tell us what to do.
+[Peter Murray-Rust] 09:46:14
+And that needs a lot of careful…
+[Renu Kumari] 09:46:14
+Yes, yes.
+[Peter Murray-Rust] 09:46:17
+Um, diplomacy from us, because
+[Peter Murray-Rust] 09:46:21
+Uh, we're going to have to say we can't do most of this, right?
+[Renu Kumari] 09:46:27
+Mm-hmm.
+[Peter Murray-Rust] 09:46:28
+Um…
+[Peter Murray-Rust] 09:46:41
+Right, so the workshop, uh, will appear to be mainly verbal.
+[Peter Murray-Rust] 09:46:46
+Um…
+[Peter Murray-Rust] 09:46:52
+You haven't been copied into this, Alina, I think.
+[Peter Murray-Rust] 09:46:57
+Um…
+[Renu Kumari] 09:46:57
+Yeah, so…
+[Renu Kumari] 09:46:58
+2-3 peoples are there as the main one, but…
+[Renu Kumari] 09:47:05
+Okay, so…
+[Peter Murray-Rust] 09:47:06
+a sense of the ambition and grounding, and we can then build from there into the design and technique.
+[Peter Murray-Rust] 09:47:11
+So, structure the session so that your input connects directly into the product.
+[Peter Murray-Rust] 09:47:16
+Shalana and I will open the workshop with short speeches,
+[Peter Murray-Rust] 09:47:19
+Okay, I have invited a few expert guests.
+[Peter Murray-Rust] 09:47:23
+Um, to speak about use cases and responsible AI.
+[Peter Murray-Rust] 09:47:28
+Um…
+[Peter Murray-Rust] 09:47:31
+Brock.
+[Peter Murray-Rust] 09:47:34
+So, I wrote to Gita and said, I assume I am the current students.
+[Peter Murray-Rust] 09:47:40
+Um, are invited. That includes you, um,
+[Peter Murray-Rust] 09:47:44
+Uh, Oditra.
+[Peter Murray-Rust] 09:47:46
+Um,
+[Peter Murray-Rust] 09:47:51
+Okay.
+[Renu Kumari] 09:47:56
+Hmm.
+[Peter Murray-Rust] 09:47:58
+So, that's a situation where we're in.
+[Peter Murray-Rust] 09:48:01
+Um, any thoughts, Renault and Alina?
+[Renu Kumari] 09:48:11
+Paulina, you go ahead.
+[Aleena Harold Peter] 09:48:13
+So, uh, may I… I didn't catch the time in the workshop.
+[Peter Murray-Rust] 09:48:17
+Timing is May the 4th.
+[Peter Murray-Rust] 09:48:19
+Um, you… UTC…
+[Peter Murray-Rust] 09:48:23
+Um, 1200 to 1500.
+[Peter Murray-Rust] 09:48:26
+Uh, that's, uh, 17, 30…
+[Peter Murray-Rust] 09:48:33
+Um, 2030,
+[Peter Murray-Rust] 09:48:36
+In that tier.
+[Aleena Harold Peter] 09:48:39
+Yeah, that was beautiful.
+[Peter Murray-Rust] 09:48:45
+Okay, um…
+[Peter Murray-Rust] 09:48:54
+Any thoughts, Alina?
+[Aleena Harold Peter] 09:49:00
+I mean, I really haven't thought, like, I'm looking forward to it.
+[Aleena Harold Peter] 09:49:05
+That's the only thing that's going on in my mind.
+[Peter Murray-Rust] 09:49:08
+So, um…
+[Peter Murray-Rust] 09:49:10
+Let's see what happens, um…
+[Peter Murray-Rust] 09:49:13
+Uh… it's always, uh…
+[Peter Murray-Rust] 09:49:16
+you know, when the world is doing new things, um, then, um,
+[Peter Murray-Rust] 09:49:23
+They're often chaotic, so…
+[Peter Murray-Rust] 09:49:25
+you know, we have big ambitions,
+[Peter Murray-Rust] 09:49:28
+We have a powerful partner in OKFN,
+[Peter Murray-Rust] 09:49:32
+Um,
+[Peter Murray-Rust] 09:49:39
+But we're dealing with
+[Peter Murray-Rust] 09:49:41
+I think it was called Fragile Organizations, and they… they accept this, right?
+[Peter Murray-Rust] 09:49:49
+is actually supporting fragile organizations, because
+[Renu Kumari] 09:49:49
+Hmm.
+[Peter Murray-Rust] 09:49:52
+you know, we don't have an income.
+[Renu Kumari] 09:49:55
+Yes.
+[Peter Murray-Rust] 09:49:56
+Um… this is the first bit of the income.
+[Peter Murray-Rust] 09:49:59
+If you're able, Renard, to talk to Gita at any stage, it would be valuable.
+[Renu Kumari] 09:50:04
+Hmm. Hmm.
+[Peter Murray-Rust] 09:50:06
+I keep asking to talk to her.
+[Peter Murray-Rust] 09:50:08
+Uh, and…
+[Renu Kumari] 09:50:08
+I told her, yes, like, the day… on Friday,
+[Peter Murray-Rust] 09:50:12
+Yeah, and does she say anything?
+[Renu Kumari] 09:50:14
+That… that you need.
+[Renu Kumari] 09:50:15
+And she just smiled, and then…
+[Renu Kumari] 09:50:17
+She has not commented anything.
+[Peter Murray-Rust] 09:50:20
+No. Well…
+[Renu Kumari] 09:50:20
+She said, okay.
+[Peter Murray-Rust] 09:50:21
+It causes me a lot of difficulty trying to guess
+[Peter Murray-Rust] 09:50:26
+what she's thinking of, right? And a few sentences would help, right?
+[Renu Kumari] 09:50:29
+Hmm.
+[Renu Kumari] 09:50:32
+Mm, hmm.
+[Peter Murray-Rust] 09:50:32
+Because I have to guess
+[Peter Murray-Rust] 09:50:35
+What is, uh, organization with OKF, and I'm… I'm going to write something before the, um…
+[Peter Murray-Rust] 09:50:43
+the meeting.
+[Renu Kumari] 09:50:43
+workshop. Hmm.
+[Peter Murray-Rust] 09:50:44
+But yes, absolutely. Um, because, um,
+[Peter Murray-Rust] 09:50:50
+Uh…
+[Renu Kumari] 09:50:51
+like, the agenda is in some kind of agenda.
+[Peter Murray-Rust] 09:50:51
+you know, it…
+[Peter Murray-Rust] 09:50:56
+Uh, my…
+[Peter Murray-Rust] 09:50:58
+response to, um…
+[Peter Murray-Rust] 09:51:01
+Uh, my response to Matthew, right?
+[Renu Kumari] 09:51:04
+Okay.
+[Peter Murray-Rust] 09:51:04
+Um, and so on. Along the lines of what we talked about today.
+[Peter Murray-Rust] 09:51:11
+Um, because…
+[Renu Kumari] 09:51:12
+Hmm, hmm.
+[Peter Murray-Rust] 09:51:13
+I mean, I know quite a lot about project management,
+[Peter Murray-Rust] 09:51:17
+Um, and, um…
+[Renu Kumari] 09:51:19
+Hmm.
+[Peter Murray-Rust] 09:51:21
+One of the common failures of projects is trying to do too much.
+[Peter Murray-Rust] 09:51:26
+And the second problem is lack of communication.
+[Renu Kumari] 09:51:26
+Yes, yes.
+[Renu Kumari] 09:51:30
+Yes, yes, I think the two major things, yeah.
+[Peter Murray-Rust] 09:51:31
+Those two…
+[Peter Murray-Rust] 09:51:34
+Those two things will kill a project, and we are in that situation at the moment.
+[Renu Kumari] 09:51:36
+Yes, agree.
+[Renu Kumari] 09:51:39
+Yes, yes, because we have different…
+[Renu Kumari] 09:51:42
+parts, but they are not joining together.
+[Peter Murray-Rust] 09:51:44
+Yeah, and you can tell her that it's, um, you know, it's causing me a bit of stress, as you can see.
+[Renu Kumari] 09:51:45
+Somewhere.
+[Renu Kumari] 09:51:51
+Yes, yes, I know, I know, hmm, hmm.
+[Renu Kumari] 09:51:53
+Yeah. I'll try, I'll try.
+[Peter Murray-Rust] 09:51:53
+Yep. Okay.
+[Peter Murray-Rust] 09:51:56
+You'll try, uh, and so on.
+[Renu Kumari] 09:51:58
+Yes.
+[Peter Murray-Rust] 09:52:00
+The other thing, does she have any idea
+[Peter Murray-Rust] 09:52:02
+When she's going to London or not.
+[Renu Kumari] 09:52:07
+Not yet.
+[Renu Kumari] 09:52:09
+Like, maybe others are saying, not directly, uh, came from her.
+[Peter Murray-Rust] 09:52:09
+No.
+[Renu Kumari] 09:52:15
+Maybe October or something, so I heard from the Institute only, not from the
+[Peter Murray-Rust] 09:52:20
+Oh, the Institute thinks she might go in October.
+[Renu Kumari] 09:52:20
+dump the foundation
+[Renu Kumari] 09:52:25
+other faculty members, so maybe…
+[Peter Murray-Rust] 09:52:27
+That's very useful, Renault, thank you very much, because, uh…
+[Peter Murray-Rust] 09:52:32
+That means that if she's going to be
+[Peter Murray-Rust] 09:52:35
+in NIPGR for…
+[Peter Murray-Rust] 09:52:37
+several months, we can…
+[Peter Murray-Rust] 09:52:39
+you know, uh…
+[Peter Murray-Rust] 09:52:41
+We can rely on her as part of the project. I mean, she was meant to go in April,
+[Renu Kumari] 09:52:45
+Mm-hmm. Yeah, because she is associated because the Preeti and Mandeep are still the students.
+[Renu Kumari] 09:52:52
+And they are submitting in the next year, so…
+[Peter Murray-Rust] 09:52:54
+Right.
+[Renu Kumari] 09:52:55
+She's good.
+[Peter Murray-Rust] 09:52:57
+Okay, I mean, does she see pretty as part of this project?
+[Peter Murray-Rust] 09:53:02
+I mean, I don't see why…
+[Renu Kumari] 09:53:02
+No, no, no, no.
+[Peter Murray-Rust] 09:53:04
+She mentioned pretty, but I don't see that…
+[Renu Kumari] 09:53:08
+So, procedures for the information that we are not together, just for the information.
+[Peter Murray-Rust] 09:53:12
+Okay, fine. Okay, uh, I mean, Rena and Alina, we're going to make a success of this, don't worry.
+[Renu Kumari] 09:53:14
+Hmm.
+[Peter Murray-Rust] 09:53:20
+But, um, uh, we've got to be very, uh, we've got to think ahead,
+[Peter Murray-Rust] 09:53:26
+Uh, not wait to be told things, and certainly not, uh…
+[Peter Murray-Rust] 09:53:31
+and try and be, um,
+[Renu Kumari] 09:53:34
+Yeah, so I have a question for, like, what Alina and Shai are going to, like, currently they are going to focus on.
+[Renu Kumari] 09:53:41
+So they are going to read it, read or do some development, or test the tool.
+[Peter Murray-Rust] 09:53:47
+Right. I think we'll come to that in the second session, right?
+[Renu Kumari] 09:53:52
+Okay, fine.
+[Peter Murray-Rust] 09:53:53
+Um, uh…
+[Peter Murray-Rust] 09:53:56
+And, uh,
+[Peter Murray-Rust] 09:53:58
+you know, and that will be building a robust
+[Peter Murray-Rust] 09:54:03
+believable tool, and that will be Phase 1 of the project. Now, whether…
+[Peter Murray-Rust] 09:54:08
+Uh, they want to put more than one phase into two weeks.
+[Peter Murray-Rust] 09:54:12
+into two months, I don't know. It would be madness.
+[Peter Murray-Rust] 09:54:15
+Um, but we will call this Phase 1.
+[Peter Murray-Rust] 09:54:19
+Since nobody else is telling us
+[Peter Murray-Rust] 09:54:21
+Uh, where… where we're at.
+[Peter Murray-Rust] 09:54:23
+Um, okay, so I'm going to say something about summarization.
+[Peter Murray-Rust] 09:54:28
+And, uh, what I did here…
+[Renu Kumari] 09:54:29
+Hmm, yes.
+[Peter Murray-Rust] 09:54:31
+is, uh, I'm going to get cursor up.
+[Peter Murray-Rust] 09:54:36
+Um, I use cursor to write code.
+[Peter Murray-Rust] 09:54:39
+Um, I'm told that…
+[Peter Murray-Rust] 09:54:43
+Claude coat is now.
+[Peter Murray-Rust] 09:54:45
+Very good, um…
+[Peter Murray-Rust] 09:54:48
+Uh, my son told me that.
+[Peter Murray-Rust] 09:54:51
+Um…
+[Peter Murray-Rust] 09:55:01
+Let's see… watch…
+[Peter Murray-Rust] 09:55:04
+25…
+[Peter Murray-Rust] 09:55:05
+Yes. I think I did…
+[Peter Murray-Rust] 09:55:08
+It's… often this thing is bad on, um,
+[Peter Murray-Rust] 09:55:13
+times. Uh, but what you're seeing here, Elena, is
+[Peter Murray-Rust] 09:55:18
+Um, me interacting with the, um,
+[Peter Murray-Rust] 09:55:23
+uh… cursor.
+[Peter Murray-Rust] 09:55:25
+Uh, tool which, um, helps to write code.
+[Peter Murray-Rust] 09:55:28
+Now, um…
+[Peter Murray-Rust] 09:55:31
+I'm… we're all very happy to use AI, it's part of the project.
+[Peter Murray-Rust] 09:55:37
+But we have to do it with constraints, right? Okay.
+[Peter Murray-Rust] 09:55:42
+So, the things that we have to do is we have to tell people what we're doing.
+[Peter Murray-Rust] 09:55:47
+Right? Uh, and we have to tell people,
+[Peter Murray-Rust] 09:55:51
+what we did, because if we don't do that, we'll end up with an AI system
+[Peter Murray-Rust] 09:55:56
+which somebody has developed,
+[Peter Murray-Rust] 09:56:00
+somebody has left the project, and it's completely unmaintainable.
+[Peter Murray-Rust] 09:56:04
+So, yes, anybody in the world can sit down and say, I want to create a chatbot
+[Peter Murray-Rust] 09:56:10
+Uh, from, um, semantic climate… from Climate Academy book,
+[Peter Murray-Rust] 09:56:16
+Um, and, uh, it should answer these sorts of questions.
+[Peter Murray-Rust] 09:56:20
+And the AI will do it.
+[Renu Kumari] 09:56:21
+Yes.
+[Peter Murray-Rust] 09:56:23
+But it will not be reliable, it won't be tested,
+[Peter Murray-Rust] 09:56:28
+And it won't be maintainedable. So in 3 months' time, when the person who did it
+[Peter Murray-Rust] 09:56:33
+disappears, the next person will have to do it all over again. Does that make sense, Alina?
+[Renu Kumari] 09:56:39
+Thank you.
+[Peter Murray-Rust] 09:56:40
+So, we work as a team. I'm telling you everything I'm doing, and I'm asking everybody else.
+[Aleena Harold Peter] 09:56:41
+Yes.
+[Peter Murray-Rust] 09:56:48
+Uh, to do the same.
+[Peter Murray-Rust] 09:56:50
+So, I use, um…
+[Peter Murray-Rust] 09:56:55
+cursor, uh…
+[Peter Murray-Rust] 09:56:57
+It's good. I don't know whether I should move to something else.
+[Peter Murray-Rust] 09:57:02
+Uh…
+[Peter Murray-Rust] 09:57:12
+That's the 25th of April, which was Saturday. I'm not sure I did this on Saturday.
+[Peter Murray-Rust] 09:57:19
+Um…
+[Peter Murray-Rust] 09:57:25
+must be.
+[Peter Murray-Rust] 09:57:28
+I don't remember doing that on Saturday.
+[Peter Murray-Rust] 09:57:30
+Let me just see what the date is on that, um…
+[Peter Murray-Rust] 09:57:36
+Apologies for this.
+[Peter Murray-Rust] 09:57:41
+Uh, because I don't trust this thing to give the date.
+[Renu Kumari] 09:57:52
+The document says it is the 24th of, uh…
+[Peter Murray-Rust] 09:57:57
+Yes, I think it's given me the wrong date there.
+[Renu Kumari] 09:58:01
+Uh, yeah, 24, 20, and it's not the Saturday, but…
+[Peter Murray-Rust] 09:58:01
+Um…
+[Renu Kumari] 09:58:13
+What'd you keep saying?
+[Peter Murray-Rust] 09:58:18
+No? 25ths.
+[Renu Kumari] 09:58:19
+Oh, maybe.
+[Peter Murray-Rust] 09:58:21
+of April 1021.
+[Peter Murray-Rust] 09:58:25
+Saturday. I must have, uh… so this is a quick query.
+[Renu Kumari] 09:58:29
+Hmm…
+[Peter Murray-Rust] 09:58:31
+to this, which, um…
+[Peter Murray-Rust] 09:58:36
+I've asked it to review the project, so this is a review of
+[Peter Murray-Rust] 09:58:41
+the project as it sees it as
+[Peter Murray-Rust] 09:58:43
+At the moment, right.
+[Peter Murray-Rust] 09:58:45
+Now…
+[Peter Murray-Rust] 09:58:51
+I think…
+[Peter Murray-Rust] 09:58:54
+Which, it's quite short.
+[Peter Murray-Rust] 09:58:56
+I have not committed it, which is, um…
+[Peter Murray-Rust] 09:59:00
+somewhat of a sin, uh, but I'm going to commit it now.
+[Peter Murray-Rust] 09:59:15
+So, this is how we work.
+[Peter Murray-Rust] 09:59:18
+Alina.
+[Peter Murray-Rust] 09:59:47
+Right, so these are the things…
+[Peter Murray-Rust] 09:59:49
+daily summary.
+[Peter Murray-Rust] 09:59:52
+Uh, I'll come to that in a minute, because it's, um…
+[Peter Murray-Rust] 10:00:00
+put it in the wrong place. This is one of the problems, Alina, that often happens.
+[Peter Murray-Rust] 10:00:05
+When you ask it to write code,
+[Peter Murray-Rust] 10:00:07
+It will stick it just somewhere. It doesn't have an idea as to where it ought to go, you've got to give it the, um…
+[Peter Murray-Rust] 10:00:15
+guidelines. Uh…
+[Peter Murray-Rust] 10:00:16
+Okay,
+[Peter Murray-Rust] 10:00:53
+And you'll see, oh, this is on Uditor.
+[Peter Murray-Rust] 10:00:57
+I shouldn't be there.
+[Peter Murray-Rust] 10:01:00
+Uh… at all.
+[Renu Kumari] 10:01:04
+Oh, maybe, yes, the branch, if we have not seen the branch, is exactly the branch in Hudita.
+[Renu Kumari] 10:01:10
+in the cursor.
+[Peter Murray-Rust] 10:01:10
+Yes. So, I should…
+[Peter Murray-Rust] 10:01:16
+This is… right, so…
+[Peter Murray-Rust] 10:01:18
+I've got models. Uh, you can see how easy it is to get muddled. We have Uditor,
+[Peter Murray-Rust] 10:01:24
+PMR, right, okay. So what I'm going to do is…
+[Peter Murray-Rust] 10:01:29
+I'm going to merge
+[Peter Murray-Rust] 10:01:32
+fish into PMR, seeing a move.
+[Peter Murray-Rust] 10:02:02
+So I'm going to do a git merge here, so I'm going to…
+[Peter Murray-Rust] 10:02:05
+bring Udata's branch into mind.
+[Peter Murray-Rust] 10:02:08
+Um, and we should always discuss with people when we do merges.
+[Peter Murray-Rust] 10:02:14
+Uh, so now I've got…
+[Peter Murray-Rust] 10:02:17
+Ujitsu's branch in
+[Peter Murray-Rust] 10:02:19
+mine, and that means that I can now commit
+[Peter Murray-Rust] 10:02:22
+without fouling up, um, Utic's…
+[Peter Murray-Rust] 10:02:26
+Um…
+[Peter Murray-Rust] 10:02:36
+So, it's an easy thing to do, and um…
+[Peter Murray-Rust] 10:02:43
+So, if you can always check that
+[Peter Murray-Rust] 10:02:45
+I'm on the right branch.
+[Peter Murray-Rust] 10:02:47
+Uh, then that would be valuable.
+[Peter Murray-Rust] 10:02:50
+So I'm on Branch, it's the head of…
+[Peter Murray-Rust] 10:02:53
+my current branch, Orange Inn,
+[Peter Murray-Rust] 10:02:59
+So, I'm going to…
+[Peter Murray-Rust] 10:03:02
+Ditch push.
+[Peter Murray-Rust] 10:03:14
+Uh, how much ditch, uh, work have you done, Alina?
+[Aleena Harold Peter] 10:03:22
+So I was told to create an installation.md,
+[Aleena Harold Peter] 10:03:25
+Um, throughout the chat.
+[Peter Murray-Rust] 10:03:25
+No, what I mean is, how familiar… sorry, bad…
+[Peter Murray-Rust] 10:03:31
+Bad question. How familiar are you with Git?
+[Aleena Harold Peter] 10:03:32
+Yeah.
+[Aleena Harold Peter] 10:03:35
+I am quite comfortable with Git, but some advanced commands, I do have a hard time grasping.
+[Peter Murray-Rust] 10:03:42
+We shouldn't ask, uh, right, we have about 7 or 8 commands, and we shouldn't use any others.
+[Aleena Harold Peter] 10:03:43
+But those sticks are pretty good.
+[Aleena Harold Peter] 10:03:52
+Okay, yeah, I'm pretty comfortable with it.
+[Peter Murray-Rust] 10:03:54
+Yep. That's excellent. Okay, I mean, um, I just wanted to check. So, we have pushed this there.
+[Peter Murray-Rust] 10:04:02
+Um, and we can actually see the history of this project.
+[Peter Murray-Rust] 10:04:20
+If I… I'd quite like to do this online.
+[Peter Murray-Rust] 10:04:24
+I notice it's come up to…
+[Peter Murray-Rust] 10:04:27
+Tea time. Um…
+[Peter Murray-Rust] 10:04:29
+Let me just explain…
+[Peter Murray-Rust] 10:04:32
+what I've committed,
+[Peter Murray-Rust] 10:04:33
+Um,
+[Peter Murray-Rust] 10:04:35
+So that was the review of the project, so that wasn't what I…
+[Peter Murray-Rust] 10:04:39
+Um, wanted to show you, we have a daily summary here.
+[Peter Murray-Rust] 10:04:44
+Um,
+[Peter Murray-Rust] 10:04:46
+There's a tool called Daily Summary, right?
+[Peter Murray-Rust] 10:04:50
+Uh, and what this does…
+[Peter Murray-Rust] 10:04:53
+Uh, did you say you also tried to write a tool?
+[Peter Murray-Rust] 10:05:01
+Okay, so…
+[Peter Murray-Rust] 10:05:03
+This is a local daily Zoom transcript.
+[Peter Murray-Rust] 10:05:07
+Uh, we take the transcript,
+[Peter Murray-Rust] 10:05:10
+anonymize and summarize, right?
+[Peter Murray-Rust] 10:05:13
+And we put in…
+[Peter Murray-Rust] 10:05:17
+fish, and the output
+[Peter Murray-Rust] 10:05:19
+is…
+[Peter Murray-Rust] 10:05:22
+that, right? I'm not sure it's correct.
+[Peter Murray-Rust] 10:05:31
+Oh, crap.
+[Peter Murray-Rust] 10:05:33
+which imports properly.
+[Peter Murray-Rust] 10:05:37
+Um…
+[Peter Murray-Rust] 10:05:43
+So, it's… it wrote all this for me.
+[Peter Murray-Rust] 10:05:46
+And let's see what date that was.
+[Peter Murray-Rust] 10:05:52
+I don't know why this thing will…
+[Peter Murray-Rust] 10:06:15
+Zoom daily summary is what I wrote.
+[Peter Murray-Rust] 10:06:23
+Put it there, which is not where we want it.
+[Peter Murray-Rust] 10:06:34
+I have to go back and…
+[Peter Murray-Rust] 10:06:37
+look at the, um…
+[Peter Murray-Rust] 10:06:40
+commit to see about that.
+[Peter Murray-Rust] 10:06:45
+But anyway, this is the code that makes a daily summary. And then here,
+[Peter Murray-Rust] 10:06:50
+is a test that runs it,
+[Peter Murray-Rust] 10:06:54
+And this is…
+[Peter Murray-Rust] 10:06:57
+the output. So, the output…
+[Peter Murray-Rust] 10:07:00
+And
+[Renu Kumari] 10:07:06
+the output will go to the docs.
+[Peter Murray-Rust] 10:07:09
+The output is in docs, but it hasn't put the date.
+[Peter Murray-Rust] 10:07:13
+Uh…
+[Renu Kumari] 10:07:13
+Okay.
+[Peter Murray-Rust] 10:07:15
+Yeah. So this…
+[Peter Murray-Rust] 10:07:17
+No, that's…
+[Peter Murray-Rust] 10:07:24
+I did it quickly.
+[Renu Kumari] 10:07:26
+So, so…
+[Peter Murray-Rust] 10:07:26
+And, uh, it needs…
+[Renu Kumari] 10:07:27
+So where… where we are giving the input, like the…
+[Renu Kumari] 10:07:31
+Transcript.
+[Renu Kumari] 10:07:35
+Okay, here.
+[Peter Murray-Rust] 10:07:35
+Uh…
+[Peter Murray-Rust] 10:07:44
+Let me… let's go through this systematically after tea, okay?
+[Renu Kumari] 10:07:45
+Mm-hmm.
+[Renu Kumari] 10:07:47
+Hmm, yes, yes, yes, that will work.
+[Peter Murray-Rust] 10:07:50
+Right. So…
+[Peter Murray-Rust] 10:07:53
+Stop, chef!
+[Peter Murray-Rust] 10:08:00
+Um…

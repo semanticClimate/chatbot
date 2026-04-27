@@ -15,7 +15,7 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Iterable, List, Sequence, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 import httpx
 
@@ -27,6 +27,19 @@ SPEAKER_PREFIX_RE = re.compile(
     r"^\s*(?:(?:\d{1,2}:){1,2}\d{2}(?:\.\d+)?\s+)?([A-Za-z][A-Za-z .'\-]{1,60}):\s*(.+)\s*$"
 )
 WHITESPACE_RE = re.compile(r"\s+")
+MIN_ALIAS_LEN = 3
+NAME_STOPWORDS = {
+    "and",
+    "the",
+    "for",
+    "with",
+    "from",
+    "team",
+    "meeting",
+    "group",
+    "everyone",
+    "all",
+}
 
 
 @dataclass
@@ -37,6 +50,7 @@ class PlaceholderMap:
 
 
 def _normalize_space(text: str) -> str:
+    """Collapse whitespace to a single space and trim both ends."""
     return WHITESPACE_RE.sub(" ", text).strip()
 
 
@@ -72,6 +86,12 @@ def parse_speaker_utterances(lines: Sequence[str]) -> List[Tuple[str | None, str
 
 
 def _build_entity_maps(utterances: Sequence[Tuple[str | None, str]]) -> PlaceholderMap:
+    """
+    Create deterministic placeholder maps from known speaker names.
+
+    `people` maps each unique speaker label to PERSON_XX in first-seen order.
+    `orgs` and `misc` are reserved for future entity classes.
+    """
     people: Dict[str, str] = {}
     orgs: Dict[str, str] = {}
     misc: Dict[str, str] = {}
@@ -84,6 +104,7 @@ def _build_entity_maps(utterances: Sequence[Tuple[str | None, str]]) -> Placehol
 
 
 def _replace_pattern(text: str, pattern: re.Pattern[str], label: str) -> str:
+    """Replace every match in `text` with sequential LABEL_XX placeholders."""
     index = 0
 
     def _repl(_: re.Match[str]) -> str:
@@ -94,16 +115,59 @@ def _replace_pattern(text: str, pattern: re.Pattern[str], label: str) -> str:
     return pattern.sub(_repl, text)
 
 
+def _name_aliases(full_name: str) -> List[str]:
+    """
+    Return replaceable aliases for a speaker name.
+
+    We include the full label and meaningful tokens (for example first/last name)
+    so that in-text mentions such as "Alice" are anonymized, not only
+    exact full-name matches like "Alice Smith".
+    """
+    aliases: List[str] = [full_name]
+    for part in re.split(r"[\s.\-']+", full_name):
+        token = part.strip()
+        if len(token) < MIN_ALIAS_LEN:
+            continue
+        lowered = token.lower()
+        if lowered in NAME_STOPWORDS:
+            continue
+        aliases.append(token)
+    # Preserve insertion order while deduplicating.
+    return list(dict.fromkeys(aliases))
+
+
+def _build_people_patterns(mapping: PlaceholderMap) -> List[Tuple[str, re.Pattern[str], str]]:
+    """
+    Compile regex patterns for speaker name aliases.
+
+    Output items are `(speaker_name, compiled_pattern, alias)` and are ordered
+    by alias length descending to avoid partial replacement collisions.
+    """
+    pattern_rows: List[Tuple[str, re.Pattern[str], str]] = []
+    for speaker_name in mapping.people:
+        for alias in _name_aliases(speaker_name):
+            pattern_rows.append(
+                (
+                    speaker_name,
+                    re.compile(rf"\b{re.escape(alias)}\b", flags=re.IGNORECASE),
+                    alias,
+                )
+            )
+    return sorted(pattern_rows, key=lambda row: len(row[2]), reverse=True)
+
+
 def anonymize_utterances(utterances: Sequence[Tuple[str | None, str]]) -> Tuple[str, PlaceholderMap]:
+    """
+    Anonymize transcript lines while preserving conversational structure.
+
+    - Speaker labels are rewritten to PERSON_XX.
+    - In-text references to known speakers are rewritten using the same PERSON_XX.
+    - Email, phone and URL literals are replaced with type-specific placeholders.
+    """
     mapping = _build_entity_maps(utterances)
     lines: List[str] = []
 
-    # Replace longer names first to avoid partial replacement.
-    sorted_people = sorted(mapping.people.keys(), key=len, reverse=True)
-    people_patterns = [
-        (name, re.compile(rf"\b{re.escape(name)}\b", flags=re.IGNORECASE))
-        for name in sorted_people
-    ]
+    people_patterns = _build_people_patterns(mapping)
 
     for speaker, text in utterances:
         safe = text
@@ -111,8 +175,8 @@ def anonymize_utterances(utterances: Sequence[Tuple[str | None, str]]) -> Tuple[
         safe = _replace_pattern(safe, PHONE_RE, "PHONE")
         safe = _replace_pattern(safe, URL_RE, "URL")
 
-        for name, pattern in people_patterns:
-            safe = pattern.sub(mapping.people[name], safe)
+        for speaker_name, pattern, _ in people_patterns:
+            safe = pattern.sub(mapping.people[speaker_name], safe)
 
         if speaker:
             line = f"{mapping.people[speaker]}: {safe}"
@@ -174,6 +238,12 @@ def _ollama_generate(prompt: str, model: str, ollama_url: str, timeout_s: int) -
 
 
 def summarize_anonymized_text(anonymized_text: str, model: str, ollama_url: str, timeout_s: int) -> str:
+    """
+    Summarize anonymized transcript text using two-stage local LLM prompting.
+
+    Stage 1 summarizes each chunk. Stage 2 merges chunk summaries into the
+    final report shape expected by downstream docs.
+    """
     chunks = _chunk_text(anonymized_text, max_chars=7000)
     partial_summaries: List[str] = []
 
@@ -182,6 +252,8 @@ def summarize_anonymized_text(anonymized_text: str, model: str, ollama_url: str,
             "You summarize anonymized Zoom meeting transcripts.\n"
             "The transcript uses placeholders (PERSON_01, EMAIL_01, etc.).\n"
             "Never infer or invent real identities.\n"
+            "Do not resolve pronouns to a person unless the same line explicitly names a PERSON_XX.\n"
+            "If attribution is unclear (including quotes), use neutral wording such as 'an attendee stated'.\n"
             "Return concise bullet points under:\n"
             "- Key Updates\n- Decisions\n- Risks/Blockers\n- Action Items\n\n"
             f"Transcript chunk {i}/{len(chunks)}:\n{chunk}\n"
@@ -193,6 +265,7 @@ def summarize_anonymized_text(anonymized_text: str, model: str, ollama_url: str,
     final_prompt = (
         "You are producing the final daily summary from chunk summaries.\n"
         "Keep all placeholders anonymized exactly as provided.\n"
+        "Do not expand or reinterpret pronouns into named speakers unless explicitly supported by PERSON_XX references.\n"
         "Output strict markdown with these sections only:\n"
         "## Daily Summary\n"
         "## Key Updates\n"
