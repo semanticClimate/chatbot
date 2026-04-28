@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -40,6 +41,10 @@ NAME_STOPWORDS = {
     "everyone",
     "all",
 }
+SUMMARY_WARNING = (
+    "WARNING Summary created from transcript of Zoom Session audio. "
+    "May contain errors, particularly names."
+)
 
 
 @dataclass
@@ -83,6 +88,83 @@ def parse_speaker_utterances(lines: Sequence[str]) -> List[Tuple[str | None, str
             continue
         utterances.append((None, line))
     return utterances
+
+
+def normalize_speaker_name(name: str, alias_map: Dict[str, str]) -> str:
+    """
+    Normalize a speaker name with optional alias overrides.
+
+    Matching is case-insensitive on exact full labels. If no alias is found,
+    the original normalized name is returned.
+    """
+    normalized = _normalize_space(name)
+    if not normalized:
+        return normalized
+    lookup = {k.lower(): _normalize_space(v) for k, v in alias_map.items()}
+    return lookup.get(normalized.lower(), normalized)
+
+
+def collect_session_attendees(
+    utterances: Sequence[Tuple[str | None, str]], alias_map: Dict[str, str] | None = None
+) -> List[Tuple[str, int]]:
+    """
+    Return attendee rows as (speaker, turns), sorted by turns descending.
+
+    Speaker names are canonicalized through `alias_map` before counting, which
+    allows simple typo fixes such as "Alina" -> "Aleena".
+    """
+    alias_map = alias_map or {}
+    counts: Counter[str] = Counter()
+    for speaker, _ in utterances:
+        if not speaker:
+            continue
+        canonical = normalize_speaker_name(speaker, alias_map)
+        if canonical:
+            counts[canonical] += 1
+    return sorted(counts.items(), key=lambda item: (-item[1], item[0].lower()))
+
+
+def attendees_markdown_table(attendees: Sequence[Tuple[str, int]]) -> str:
+    """Render attendees as a markdown table."""
+    if not attendees:
+        return "## Attendees\n\n_No speaker labels detected in transcript._\n"
+    rows = ["## Attendees", "", "| Speaker | Turns |", "|---|---:|"]
+    rows.extend(f"| {speaker} | {turns} |" for speaker, turns in attendees)
+    return "\n".join(rows) + "\n"
+
+
+def apply_name_aliases_to_text(text: str, alias_map: Dict[str, str]) -> str:
+    """
+    Replace known speaker-name variants in free text using alias_map.
+
+    Uses case-insensitive whole-word replacement and applies longer keys first
+    so that specific multi-token names are handled before shorter aliases.
+    """
+    if not alias_map:
+        return text
+
+    normalized_map: Dict[str, str] = {}
+    for source, target in alias_map.items():
+        source_norm = _normalize_space(str(source))
+        target_norm = _normalize_space(str(target))
+        if source_norm and target_norm:
+            normalized_map[source_norm] = target_norm
+
+    safe = text
+    for source in sorted(normalized_map.keys(), key=len, reverse=True):
+        target = normalized_map[source]
+        pattern = re.compile(rf"\b{re.escape(source)}\b", flags=re.IGNORECASE)
+        safe = pattern.sub(target, safe)
+    return safe
+
+
+def prepend_warning_and_attendees(summary_md: str, attendees_md: str = "") -> str:
+    """Build final summary output with required warning and optional attendees."""
+    sections = [SUMMARY_WARNING]
+    if attendees_md.strip():
+        sections.append(attendees_md.strip())
+    sections.append(summary_md.strip())
+    return "\n\n".join(section for section in sections if section)
 
 
 def _build_entity_maps(utterances: Sequence[Tuple[str | None, str]]) -> PlaceholderMap:
@@ -266,6 +348,44 @@ def summarize_anonymized_text(anonymized_text: str, model: str, ollama_url: str,
         "You are producing the final daily summary from chunk summaries.\n"
         "Keep all placeholders anonymized exactly as provided.\n"
         "Do not expand or reinterpret pronouns into named speakers unless explicitly supported by PERSON_XX references.\n"
+        "Output strict markdown with these sections only:\n"
+        "## Daily Summary\n"
+        "## Key Updates\n"
+        "## Decisions\n"
+        "## Risks and Blockers\n"
+        "## Action Items\n"
+        "## Open Questions\n\n"
+        "Chunk summaries:\n"
+        + "\n\n---\n\n".join(partial_summaries)
+    )
+    return _ollama_generate(
+        prompt=final_prompt, model=model, ollama_url=ollama_url, timeout_s=timeout_s
+    )
+
+
+def summarize_transcript_text(transcript_text: str, model: str, ollama_url: str, timeout_s: int) -> str:
+    """
+    Summarize raw transcript text (no anonymization assumptions).
+
+    Uses the same two-stage chunking strategy as anonymized summarization but
+    avoids prompt constraints that require placeholder-style speaker IDs.
+    """
+    chunks = _chunk_text(transcript_text, max_chars=7000)
+    partial_summaries: List[str] = []
+
+    for i, chunk in enumerate(chunks, start=1):
+        prompt = (
+            "You summarize Zoom meeting transcripts.\n"
+            "Return concise bullet points under:\n"
+            "- Key Updates\n- Decisions\n- Risks/Blockers\n- Action Items\n\n"
+            f"Transcript chunk {i}/{len(chunks)}:\n{chunk}\n"
+        )
+        partial_summaries.append(
+            _ollama_generate(prompt=prompt, model=model, ollama_url=ollama_url, timeout_s=timeout_s)
+        )
+
+    final_prompt = (
+        "You are producing the final daily summary from chunk summaries.\n"
         "Output strict markdown with these sections only:\n"
         "## Daily Summary\n"
         "## Key Updates\n"

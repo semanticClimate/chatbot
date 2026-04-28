@@ -1,7 +1,13 @@
 from zoom_daily_summary import (
+    SUMMARY_WARNING,
+    apply_name_aliases_to_text,
+    attendees_markdown_table,
     anonymize_utterances,
     clean_caption_lines,
+    collect_session_attendees,
+    normalize_speaker_name,
     parse_speaker_utterances,
+    prepend_warning_and_attendees,
 )
 
 
@@ -61,3 +67,44 @@ def test_anonymize_utterances_replaces_first_name_alias_mentions():
     assert anonymized.count("PERSON_02") >= 2, (
         f"Expected PERSON_02 for both speaker and alias mentions, got: {anonymized}"
     )
+
+
+def test_normalize_speaker_name_with_alias_map_is_case_insensitive():
+    alias_map = {"Alina": "Aleena"}
+    assert normalize_speaker_name("alina", alias_map) == "Aleena"
+    assert normalize_speaker_name(" Alina ", alias_map) == "Aleena"
+
+
+def test_collect_session_attendees_applies_alias_map():
+    utterances = [
+        ("Alina", "Thanks."),
+        ("Aleena", "Adding context."),
+        ("Bob", "Question."),
+        ("ALINA", "Follow-up."),
+    ]
+    attendees = collect_session_attendees(utterances, alias_map={"Alina": "Aleena"})
+    assert attendees[0] == ("Aleena", 3), f"Expected Aleena merge, got: {attendees}"
+    assert ("Bob", 1) in attendees, f"Expected Bob row, got: {attendees}"
+
+
+def test_attendees_markdown_table_has_expected_headers():
+    table = attendees_markdown_table([("Aleena", 3), ("Bob", 1)])
+    assert "| Speaker | Turns |" in table
+    assert "| Aleena | 3 |" in table
+
+
+def test_apply_name_aliases_to_text_replaces_case_insensitive_whole_words():
+    text = "Alina spoke. Later ALINA added detail. Malina should stay unchanged."
+    replaced = apply_name_aliases_to_text(text, {"Alina": "Aleena"})
+    assert "Aleena spoke." in replaced
+    assert "Later Aleena added detail." in replaced
+    assert "Malina should stay unchanged." in replaced
+
+
+def test_prepend_warning_and_attendees_places_warning_first():
+    attendees = attendees_markdown_table([("Aleena", 2)])
+    summary = "## Daily Summary\n- Item"
+    combined = prepend_warning_and_attendees(summary, attendees)
+    assert combined.startswith(SUMMARY_WARNING)
+    assert "## Attendees" in combined
+    assert "## Daily Summary" in combined
