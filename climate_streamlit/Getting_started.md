@@ -44,6 +44,9 @@ chatbot/
 4. Copy the key (starts with `gsk_...`)
 
 ### Step 2 — Add key to secrets.toml
+
+(Only needed if "GROQ_API_KEY" is not set as environment variable (recommended))
+
 Edit `.streamlit/secrets.toml`:
 ```toml
 GROQ_API_KEY = "gsk_...your_key_here"
