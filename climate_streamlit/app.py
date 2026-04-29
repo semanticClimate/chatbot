@@ -20,10 +20,15 @@ from pathlib import Path
 
 import chromadb
 import streamlit as st
+import streamlit.components.v1 as components
 from groq import Groq
 from sentence_transformers import SentenceTransformer
 
-from html_sectioning import format_passage_for_prompt, parse_html_path_to_chunks
+from html_sectioning import (
+    annotate_html_with_numbering,
+    format_passage_for_prompt,
+    parse_html_path_to_chunks,
+)
 
 # ─────────────────────────────────────────────────────
 # CONFIG
@@ -135,6 +140,7 @@ def build_knowledge_base():
                 {
                     "section_number": c.section_number,
                     "section_title": c.section_title or "",
+                    "paragraph_number": c.paragraph_number or "",
                     "chunk_index": str(c.chunk_index),
                 }
                 for c in batch
@@ -148,6 +154,13 @@ def build_knowledge_base():
     bar.empty()
     st.success(f"✅ Knowledge base ready — {collection.count():,} chunks indexed!")
     return collection, embedder
+
+
+@st.cache_data
+def get_numbered_html_preview(html_path: Path) -> str:
+    """Load source HTML and annotate it with section/paragraph numbering."""
+    raw_html = html_path.read_text(encoding="utf-8", errors="replace")
+    return annotate_html_with_numbering(raw_html)
 
 
 # ─────────────────────────────────────────────────────
@@ -171,6 +184,7 @@ def retrieve(query: str, collection, embedder) -> list:
         format_passage_for_prompt(
             m.get("section_number") or "",
             m.get("section_title") or "",
+            m.get("paragraph_number") or "",
             doc,
         )
         for doc, _d, m in use
@@ -252,18 +266,9 @@ groq_client          = load_groq()
 
 
 # ─────────────────────────────────────────────────────
-# HEADER
-# ─────────────────────────────────────────────────────
-st.markdown("""
-<div class="header">
-  <h2>🌍 Climate Academy Assistant</h2>
-  <p>Powered by the Climate Academy Student Book · Matthew Pye (2025)</p>
-</div>""", unsafe_allow_html=True)
-
-
-# ─────────────────────────────────────────────────────
 # SIDEBAR
 # ─────────────────────────────────────────────────────
+show_numbered_preview = False
 with st.sidebar:
     st.markdown("### 🌐 Language")
     lang = st.radio(
@@ -294,6 +299,34 @@ with st.sidebar:
     if st.button("🗑️ Clear chat", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
+
+    st.markdown("---")
+    show_numbered_preview = st.checkbox("Show numbered HTML preview", value=False)
+
+
+# ─────────────────────────────────────────────────────
+# HEADER
+# ─────────────────────────────────────────────────────
+st.markdown("""
+<div class="header">
+  <h2>🌍 Climate Academy Assistant</h2>
+  <p>Powered by the Climate Academy Student Book · Matthew Pye (2025)</p>
+</div>""", unsafe_allow_html=True)
+
+if show_numbered_preview:
+    if HTML_PATH.is_file():
+        numbered_html = get_numbered_html_preview(HTML_PATH)
+        with st.expander("📑 Numbered HTML Preview", expanded=False):
+            st.caption("Displays section and paragraph numbering injected into the source HTML.")
+            components.html(numbered_html, height=360, scrolling=True)
+            st.download_button(
+                label="Download numbered HTML",
+                data=numbered_html,
+                file_name=f"{HTML_PATH.stem}_numbered.html",
+                mime="text/html",
+            )
+    else:
+        st.warning(f"Numbered HTML preview unavailable: `{HTML_PATH}` not found.")
 
 
 # ─────────────────────────────────────────────────────

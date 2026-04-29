@@ -27,6 +27,9 @@ TIMESTAMP_RE = re.compile(r"^\s*(?:\d{1,2}:){1,2}\d{2}(?:\.\d+)?\s*$")
 SPEAKER_PREFIX_RE = re.compile(
     r"^\s*(?:(?:\d{1,2}:){1,2}\d{2}(?:\.\d+)?\s+)?([A-Za-z][A-Za-z .'\-]{1,60}):\s*(.+)\s*$"
 )
+BRACKET_SPEAKER_RE = re.compile(
+    r"^\s*\[([^\]]+)\]\s+(?:\d{1,2}:){1,2}\d{2}(?:\.\d+)?\s*$"
+)
 WHITESPACE_RE = re.compile(r"\s+")
 MIN_ALIAS_LEN = 3
 NAME_STOPWORDS = {
@@ -78,15 +81,30 @@ def parse_speaker_utterances(lines: Sequence[str]) -> List[Tuple[str | None, str
     If no speaker prefix exists, speaker is None.
     """
     utterances: List[Tuple[str | None, str]] = []
+    pending_speaker: str | None = None
     for line in lines:
+        bracket_match = BRACKET_SPEAKER_RE.match(line)
+        if bracket_match:
+            pending_speaker = _normalize_space(bracket_match.group(1))
+            continue
+
         match = SPEAKER_PREFIX_RE.match(line)
         if match:
             speaker = _normalize_space(match.group(1))
             text = _normalize_space(match.group(2))
             if text:
                 utterances.append((speaker, text))
+            pending_speaker = None
             continue
-        utterances.append((None, line))
+
+        text = _normalize_space(line)
+        if not text:
+            continue
+        if pending_speaker:
+            utterances.append((pending_speaker, text))
+            pending_speaker = None
+            continue
+        utterances.append((None, text))
     return utterances
 
 
@@ -104,8 +122,27 @@ def normalize_speaker_name(name: str, alias_map: Dict[str, str]) -> str:
     return lookup.get(normalized.lower(), normalized)
 
 
+def apply_regex_name_corrections_to_text(
+    text: str, regex_corrections: Sequence[Tuple[str, str]] | None = None
+) -> str:
+    """
+    Apply regex-based name corrections to free text.
+
+    Corrections are applied in-order and use case-insensitive matching.
+    """
+    if not regex_corrections:
+        return text
+    corrected = text
+    for pattern, replacement in regex_corrections:
+        compiled = re.compile(pattern, flags=re.IGNORECASE)
+        corrected = compiled.sub(replacement, corrected)
+    return corrected
+
+
 def collect_session_attendees(
-    utterances: Sequence[Tuple[str | None, str]], alias_map: Dict[str, str] | None = None
+    utterances: Sequence[Tuple[str | None, str]],
+    alias_map: Dict[str, str] | None = None,
+    regex_corrections: Sequence[Tuple[str, str]] | None = None,
 ) -> List[Tuple[str, int]]:
     """
     Return attendee rows as (speaker, turns), sorted by turns descending.
@@ -119,6 +156,7 @@ def collect_session_attendees(
         if not speaker:
             continue
         canonical = normalize_speaker_name(speaker, alias_map)
+        canonical = apply_regex_name_corrections_to_text(canonical, regex_corrections)
         if canonical:
             counts[canonical] += 1
     return sorted(counts.items(), key=lambda item: (-item[1], item[0].lower()))
@@ -446,18 +484,20 @@ def run_pipeline(
     raw_text = input_path.read_text(encoding="utf-8", errors="replace")
     lines = clean_caption_lines(raw_text)
     utterances = parse_speaker_utterances(lines)
+    attendees = collect_session_attendees(utterances)
+    attendees_md = attendees_markdown_table(attendees)
     anonymized_text, mapping = anonymize_utterances(utterances)
     summary_md = summarize_anonymized_text(
         anonymized_text=anonymized_text, model=model, ollama_url=ollama_url, timeout_s=timeout_s
     )
+    full_summary_md = prepend_warning_and_attendees(summary_md=summary_md, attendees_md=attendees_md)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     anonymized_path = Path(output_dir, f"{run_date}_anonymized.txt")
     summary_path = Path(output_dir, f"{run_date}_summary.md")
     mapping_path = Path(output_dir, f"{run_date}_anonymization_map.json")
 
-    anonymized_path.write_text(anonymized_text + "\n", encoding="utf-8")
-    summary_path.write_text(summary_md.strip() + "\n", encoding="utf-8")
+    summary_path.write_text(full_summary_md.strip() + "\n", encoding="utf-8")
     mapping_path.write_text(
         json.dumps({"people": mapping.people, "orgs": mapping.orgs, "misc": mapping.misc}, indent=2),
         encoding="utf-8",
@@ -487,7 +527,7 @@ def main() -> None:
     verify_ollama_server(args.ollama_url, args.timeout_s)
 
     output_dir = Path(args.output_dir)
-    anonymized_path, summary_path = run_pipeline(
+    _, summary_path = run_pipeline(
         input_path=input_path,
         output_dir=output_dir,
         run_date=args.date,
@@ -495,7 +535,6 @@ def main() -> None:
         ollama_url=args.ollama_url,
         timeout_s=args.timeout_s,
     )
-    print(f"Anonymized transcript: {anonymized_path}")
     print(f"Daily summary: {summary_path}")
 
 

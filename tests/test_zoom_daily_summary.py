@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from zoom_daily_summary import (
     SUMMARY_WARNING,
     apply_name_aliases_to_text,
+    apply_regex_name_corrections_to_text,
     attendees_markdown_table,
     anonymize_utterances,
     clean_caption_lines,
@@ -9,6 +12,8 @@ from zoom_daily_summary import (
     parse_speaker_utterances,
     prepend_warning_and_attendees,
 )
+
+EXISTING_TRANSCRIPT_PATH = Path("tests", "resources", "2026_04_25_anonymized.txt")
 
 
 def test_clean_caption_lines_removes_timestamp_only_rows():
@@ -101,6 +106,14 @@ def test_apply_name_aliases_to_text_replaces_case_insensitive_whole_words():
     assert "Malina should stay unchanged." in replaced
 
 
+def test_apply_regex_name_corrections_to_text_replaces_matching_variants():
+    text = "Alina spoke. A1ina added notes. Malina should stay unchanged."
+    replaced = apply_regex_name_corrections_to_text(text, [(r"\bA[l1]ina\b", "Aleena")])
+    assert "Aleena spoke." in replaced
+    assert "Aleena added notes." in replaced
+    assert "Malina should stay unchanged." in replaced
+
+
 def test_prepend_warning_and_attendees_places_warning_first():
     attendees = attendees_markdown_table([("Aleena", 2)])
     summary = "## Daily Summary\n- Item"
@@ -108,3 +121,44 @@ def test_prepend_warning_and_attendees_places_warning_first():
     assert combined.startswith(SUMMARY_WARNING)
     assert "## Attendees" in combined
     assert "## Daily Summary" in combined
+
+
+def test_collect_session_attendees_applies_regex_corrections():
+    utterances = [
+        ("Alina", "Thanks."),
+        ("A1ina", "Adding context."),
+        ("Bob", "Question."),
+    ]
+    attendees = collect_session_attendees(
+        utterances, regex_corrections=[(r"\bA[l1]ina\b", "Aleena")]
+    )
+    assert attendees[0] == ("Aleena", 2), f"Expected Aleena merge from regex, got: {attendees}"
+    assert ("Bob", 1) in attendees, f"Expected Bob row, got: {attendees}"
+
+
+def test_existing_transcript_extracts_non_empty_speaker_list():
+    raw_text = EXISTING_TRANSCRIPT_PATH.read_text(encoding="utf-8")
+    lines = clean_caption_lines(raw_text)
+    utterances = parse_speaker_utterances(lines)
+    attendees = collect_session_attendees(utterances)
+    assert attendees, f"Expected attendee rows from {EXISTING_TRANSCRIPT_PATH}, found none"
+
+
+def test_existing_transcript_attendees_include_known_speakers():
+    raw_text = EXISTING_TRANSCRIPT_PATH.read_text(encoding="utf-8")
+    lines = clean_caption_lines(raw_text)
+    utterances = parse_speaker_utterances(lines)
+    attendees = collect_session_attendees(utterances)
+    attendee_names = {speaker for speaker, _ in attendees}
+    expected_speakers = {
+        "Peter Murray-Rust",
+        "Renu Kumari",
+        "Sai Nikhil",
+        "Aleena Harold Peter",
+        "Udita Agarwal",
+        "Mahi Bhardwaj",
+    }
+    assert attendee_names == expected_speakers, (
+        f"Expected speakers {sorted(expected_speakers)} from {EXISTING_TRANSCRIPT_PATH}, "
+        f"got {sorted(attendee_names)}"
+    )

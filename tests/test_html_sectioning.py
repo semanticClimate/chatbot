@@ -6,6 +6,7 @@ import pytest
 
 from html_sectioning import (
     IndexedChunk,
+    annotate_html_with_numbering,
     parse_book_html,
     parse_html_path_to_chunks,
     records_to_indexed_chunks,
@@ -54,9 +55,30 @@ def test_indexed_chunks_contain_section_header():
     chunks = records_to_indexed_chunks(records, chunk_size=50, chunk_overlap=8)
     assert isinstance(chunks[0], IndexedChunk)
     assert chunks[0].document.startswith("[§ ")
+    assert "| ¶ " in chunks[0].document
+    assert chunks[0].paragraph_number, "Expected paragraph number metadata on chunk"
     assert "Foundations" in chunks[0].document or "greenhouse" in chunks[0].document.lower()
 
 
 def test_parse_html_path_to_chunks_integration():
     chunks = parse_html_path_to_chunks(PROTOTYPE, chunk_size=30, chunk_overlap=5)
     assert len(chunks) >= len(parse_book_html(PROTOTYPE.read_text(encoding="utf-8")))
+
+
+def test_annotate_html_with_numbering_adds_section_and_paragraph_numbers():
+    html = PROTOTYPE.read_text(encoding="utf-8")
+    numbered_html = annotate_html_with_numbering(html)
+    assert "data-section-number=\"1\"" in numbered_html
+    assert "data-section-number=\"1.1\"" in numbered_html
+    assert "data-paragraph-number=\"1.1.1\"" in numbered_html
+    assert "id=\"s1\"" in numbered_html
+    assert "id=\"s1-1_p1\"" in numbered_html
+    assert "1 Foundations of climate science" in numbered_html
+
+
+def test_annotate_html_with_numbering_uses_distinct_section_and_paragraph_id_syntax():
+    html = PROTOTYPE.read_text(encoding="utf-8")
+    numbered_html = annotate_html_with_numbering(html)
+    assert "id=\"s1-1\"" in numbered_html
+    assert "id=\"s1-1_p1\"" in numbered_html
+    assert "id=\"s1-1\"" in numbered_html and "id=\"s1-1_p1\"" in numbered_html
