@@ -22,6 +22,7 @@ Run: streamlit run app.py
 """
 
 import json
+import re
 import os
 import base64
 import fitz
@@ -590,14 +591,197 @@ If you cannot produce valid JSON, output {{"answer_blocks": []}}.
 
 
 # ─────────────────────────────────────────────────────
-# GROQ
+# GROQ — LLM JSON response parsing
 # ─────────────────────────────────────────────────────
+def _parse_llm_json_blob(raw: str) -> dict | list | None:
+    """
+    Parse the first JSON object or array in `raw`.
+
+    Models often append prose after valid JSON; json.loads(...) then raises
+    json.JSONDecodeError: Extra data. Greedy `\{...\}` slicing also breaks when
+    the payload has nested braces or multiple `}` markers.
+    """
+    text = (raw or "").strip()
+    if not text:
+        return None
+    if text.startswith("```"):
+        text = re.sub(r"^```[a-zA-Z0-9_-]*\s*\n?", "", text)
+        text = re.sub(r"\s*```\s*$", "", text).strip()
+    decoder = json.JSONDecoder()
+    for i, ch in enumerate(text):
+        if ch not in "{[":
+            continue
+        try:
+            obj, _end = decoder.raw_decode(text, i)
+            return obj
+        except json.JSONDecodeError:
+            continue
+    return None
+
+
+def _coerce_source_id(citation: object, valid_ids: set[int]) -> int | None:
+    """Map model citation values to a valid SOURCE_ID."""
+    if isinstance(citation, bool):
+        return None
+    if isinstance(citation, int):
+        return citation if citation in valid_ids else None
+    if isinstance(citation, float) and citation.is_integer():
+        ic = int(citation)
+        return ic if ic in valid_ids else None
+    if isinstance(citation, str):
+        s = citation.strip().lstrip("[").rstrip("]")
+        if s.isdigit():
+            ic = int(s)
+            return ic if ic in valid_ids else None
+    return None
+
+
+def _normalize_answer_blocks(
+    parsed: dict | list | None, valid_source_ids: set[int],
+) -> list[dict]:
+    """
+    Build [{text, citations}, ...] from varied LLM JSON shapes.
+
+    Models often use answer_blocks vs blocks, text vs content, or string citations.
+    """
+    if not parsed:
+        return []
+
+    raw_blocks: list = []
+    if isinstance(parsed, list):
+        raw_blocks = parsed
+    elif isinstance(parsed, dict):
+        for key in (
+            "answer_blocks", "blocks", "answers", "paragraphs",
+            "data", "results", "response",
+        ):
+            val = parsed.get(key)
+            if isinstance(val, list) and val:
+                raw_blocks = val
+                break
+        if not raw_blocks:
+            for k in ("text", "answer", "content", "message"):
+                v = parsed.get(k)
+                if isinstance(v, str) and v.strip():
+                    cites = parsed.get("citations", parsed.get("sources", []))
+                    if not isinstance(cites, list):
+                        cites = []
+                    raw_blocks = [{"text": v.strip(), "citations": cites}]
+                    break
+
+    out: list[dict] = []
+    for b in raw_blocks:
+        if isinstance(b, str) and b.strip():
+            out.append({"text": b.strip(), "citations": []})
+            continue
+        if not isinstance(b, dict):
+            continue
+
+        text_piece = ""
+        for tk in ("text", "content", "body", "message", "answer", "paragraph"):
+            v = b.get(tk)
+            if isinstance(v, str) and v.strip():
+                text_piece = v.strip()
+                break
+        if not text_piece:
+            continue
+
+        cites_raw = (
+            b.get("citations") or b.get("sources") or b.get("refs") or b.get("source_ids") or []
+        )
+        if isinstance(cites_raw, (int, float, str)):
+            cites_raw = [cites_raw]
+        if not isinstance(cites_raw, list):
+            cites_raw = []
+
+        citations: list[int] = []
+        for c in cites_raw:
+            sid = _coerce_source_id(c, valid_source_ids)
+            if sid is not None and sid not in citations:
+                citations.append(sid)
+
+        out.append({"text": text_piece, "citations": citations})
+
+    return out
+
+
+def _message_when_no_answer_blocks(
+    raw: str,
+    parsed: dict | list | None,
+    finish_reason: str | None,
+) -> str:
+    """
+    Explain why we're showing a fallback reply, without technical jargon.
+
+    Caller should use only when normalization produced no paragraphs.
+    """
+    text = (raw or "").strip()
+    fr = (finish_reason or "").strip().lower()
+
+    if not text:
+        return (
+            "The assistant didn't return any text—only an empty reply. "
+            "Try asking again, or shorten your question if it was very long."
+        )
+
+    if fr == "length":
+        return (
+            "The answer was longer than allowed in one step, so it was cut off and couldn't be displayed properly. "
+            "Try asking a narrower question, or split it into smaller questions."
+        )
+
+    if parsed is None:
+        return (
+            "The assistant's reply wasn't in the format this app expects, so nothing could be shown. "
+            "Try asking again, or ask in a simpler way."
+        )
+
+    return (
+        "The assistant replied, but none of its paragraphs contained readable answer text "
+        "(for example empty sections or placeholders). Try asking again, or break the question into parts."
+    )
+
+
+def _operator_detail_no_blocks(
+    raw: str,
+    parsed: dict | list | None,
+    finish_reason: str | None,
+    *,
+    source_count: int,
+) -> str:
+    """Technical summary for operators when normalization yields no paragraphs."""
+    lines = [
+        "event=no_paragraphs_after_normalize",
+        f"finish_reason={finish_reason!r}",
+        f"retrieved_source_count={source_count}",
+        f"raw_model_output_chars={len((raw or '').strip())}",
+    ]
+    if parsed is None:
+        lines.append("first_json_parse=failed_or_empty")
+    elif isinstance(parsed, dict):
+        keys = list(parsed.keys())
+        lines.append(f"parsed_top_level=dict keys={keys!r}")
+    elif isinstance(parsed, list):
+        lines.append(f"parsed_top_level=list len={len(parsed)}")
+    else:
+        lines.append(f"parsed_top_level=unexpected {type(parsed).__name__}")
+
+    snippet = (raw or "")[:2000]
+    if len(raw or "") > 2000:
+        snippet += "\n... [snippet truncated at 2000 chars for dashboard]"
+    lines.append("")
+    lines.append("--- raw model output (operator preview) ---")
+    lines.append(snippet if snippet.strip() else "∅")
+    return "\n".join(lines)
+
+
 def ask_groq(groq_client, chunks: list[dict], history: list, user_message: str, pdf_chunk_map: Optional[dict] = None) -> dict:
     """
     Calls Groq and returns:
       {
         "blocks": [{"text": str, "citations": [int, ...]}, ...],
-        "sources": [{source metadata}, ...]
+        "sources": [{source metadata}, ...],
+        "operator_detail": optional str (technical diagnostics for operators),
       }
     """
     sources = build_sources(chunks, pdf_chunk_map=pdf_chunk_map)
@@ -625,63 +809,47 @@ def ask_groq(groq_client, chunks: list[dict], history: list, user_message: str, 
 
     try:
         resp = groq_client.chat.completions.create(
-            model=GROQ_MODEL, messages=messages, max_tokens=2200, temperature=0.15,
+            model=GROQ_MODEL, messages=messages, max_tokens=4096, temperature=0.15,
         )
-        raw = resp.choices[0].message.content.strip()
-
-        # Strip possible markdown code fences
-        if raw.startswith("```"):
-            raw = re.sub(r"^```[a-z]*\n?", "", raw).rstrip("` \n")
-
-        parsed = None
-        try:
-            parsed = json.loads(raw)
-        except Exception:
-            obj_match = re.search(r"\{[\s\S]*\}", raw)
-            arr_match = re.search(r"\[[\s\S]*\]", raw)
-            candidate = obj_match.group(0) if obj_match else (arr_match.group(0) if arr_match else "")
-            if candidate:
-                parsed = json.loads(candidate)
-            else:
-                parsed = {"answer_blocks": []}
-        raw_blocks = []
-        if isinstance(parsed, dict):
-            raw_blocks = parsed.get("answer_blocks", [])
-        elif isinstance(parsed, list):
-            raw_blocks = parsed
-
+        choice = resp.choices[0]
+        finish_reason = getattr(choice, "finish_reason", None)
+        raw = (choice.message.content or "").strip()
+        parsed = _parse_llm_json_blob(raw)
         valid_source_ids = {s["source_id"] for s in sources}
-        blocks = []
-        for b in raw_blocks:
-            text = str(b.get("text", "")).strip()
-            if not text:
-                continue
-            citations = []
-            for c in b.get("citations", []):
-                if isinstance(c, int) and c in valid_source_ids and c not in citations:
-                    citations.append(c)
-            blocks.append({"text": text, "citations": citations})
+        blocks = _normalize_answer_blocks(parsed, valid_source_ids)
 
+        operator_detail = None
         if not blocks:
             fallback_citations = [s["source_id"] for s in sources[:3]]
             blocks = [{
-                "text": "I could not format a full structured answer this turn. Please retry this question.",
+                "text": _message_when_no_answer_blocks(raw, parsed, finish_reason),
                 "citations": fallback_citations,
             }]
+            operator_detail = _operator_detail_no_blocks(
+                raw, parsed, finish_reason, source_count=len(sources),
+            )
 
-        return {"blocks": blocks, "sources": sources}
+        return {"blocks": blocks, "sources": sources, "operator_detail": operator_detail}
     except Exception as e:
         err = str(e)
+        op_detail = f"exception_type={type(e).__name__}\nexception_message={err}"
         if "rate_limit"      in err.lower():
-            return {"blocks": [{"text": "Rate limit reached. Please wait a moment.", "citations": []}], "sources": sources}
+            return {
+                "blocks": [{"text": "You've hit a temporary usage limit. Wait a minute and try again.", "citations": []}],
+                "sources": sources,
+                "operator_detail": op_detail,
+            }
         if "invalid_api_key" in err.lower():
-            return {"blocks": [{"text": "Invalid GROQ_API_KEY.", "citations": []}], "sources": sources}
-        return {"blocks": [{"text": f"{err[:200]}", "citations": []}], "sources": sources}
-
-
-import re as _re  # make re available for ask_groq's strip logic
-# Re-assign so ask_groq can use it
-import re
+            return {
+                "blocks": [{"text": "This app can't reach the assistant because the API key is wrong or missing. Whoever set up the app needs to fix the key in secrets or environment.", "citations": []}],
+                "sources": sources,
+                "operator_detail": op_detail,
+            }
+        return {
+            "blocks": [{"text": "Something went wrong while getting an answer from the assistant. Please try again in a moment.", "citations": []}],
+            "sources": sources,
+            "operator_detail": op_detail,
+        }
 
 
 # ─────────────────────────────────────────────────────
@@ -1067,6 +1235,10 @@ with col_chat:
                                     st.session_state.jump_pdf_query = source.get("pdf_query", "")
                                     st.session_state.jump_pdf_page = source.get("pdf_page", 1)
                                     st.rerun()
+                    od = msg.get("operator_detail")
+                    if od:
+                        with st.expander("Operator diagnostics (technical)", expanded=False):
+                            st.text(od)
                 else:
                     content = msg.get("content", "")
                     st.markdown(
@@ -1112,7 +1284,13 @@ with col_chat:
             st.session_state.jump_pdf_query = first_source.get("pdf_query", "")
             st.session_state.jump_pdf_page = first_source.get("pdf_page", 1)
 
-        messages.append({"role": "assistant", "content": None, "blocks": blocks, "sources": sources})
+        messages.append({
+            "role": "assistant",
+            "content": None,
+            "blocks": blocks,
+            "sources": sources,
+            "operator_detail": answer.get("operator_detail"),
+        })
         st.rerun()
 
     st.divider()
