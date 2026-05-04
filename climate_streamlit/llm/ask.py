@@ -6,6 +6,8 @@ from typing import Optional
 
 from config_loader import AppSettings
 from llm.parsing import (
+    escape_model_text_for_point_card,
+    fallback_plain_text_when_json_unparsed,
     message_when_no_answer_blocks,
     normalize_answer_blocks,
     operator_detail_no_blocks,
@@ -71,14 +73,30 @@ def ask_groq(
 
         operator_detail = None
         if not blocks:
-            fallback_citations = [s["source_id"] for s in sources[:3]]
-            blocks = [{
-                "text": message_when_no_answer_blocks(raw, parsed, finish_reason),
-                "citations": fallback_citations,
-            }]
-            operator_detail = operator_detail_no_blocks(
-                raw, parsed, finish_reason, source_count=len(sources),
-            )
+            plain = fallback_plain_text_when_json_unparsed(raw)
+            if plain:
+                blocks = [{
+                    "text": escape_model_text_for_point_card(plain),
+                    "citations": [],
+                }]
+                operator_detail = operator_detail_no_blocks(
+                    raw,
+                    parsed,
+                    finish_reason,
+                    source_count=len(sources),
+                    extra_lines=(
+                        "display_mode=recovered_plain_prose_no_json",
+                    ),
+                )
+            else:
+                fallback_citations = [s["source_id"] for s in sources[:3]]
+                blocks = [{
+                    "text": message_when_no_answer_blocks(raw, parsed, finish_reason),
+                    "citations": fallback_citations,
+                }]
+                operator_detail = operator_detail_no_blocks(
+                    raw, parsed, finish_reason, source_count=len(sources),
+                )
 
         return {"blocks": blocks, "sources": sources, "operator_detail": operator_detail}
     except Exception as e:

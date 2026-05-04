@@ -2,14 +2,34 @@
 
 from __future__ import annotations
 
+import html
 import json
 import re
 from typing import Optional
 
+_MAX_PLAIN_FALLBACK_CHARS = 12000
+
+
+def _looks_like_inline_citation_number_list(obj: object) -> bool:
+    """True for JSON like [1, 2, 3] — often appears in prose before the real structured JSON."""
+    if not isinstance(obj, list) or not obj:
+        return False
+    for x in obj:
+        if isinstance(x, bool):
+            return False
+        if isinstance(x, int):
+            continue
+        if isinstance(x, float) and x == int(x):
+            continue
+        return False
+    return True
+
 
 def parse_llm_json_blob(raw: str) -> dict | list | None:
     """
-    Parse the first JSON object or array in `raw`.
+    Parse JSON from model output, which may include prose, ``` fences, and multiple
+    JSON fragments. Prose citations like [1, 2, 3, 14] must NOT win over the
+    trailing {\"answer_blocks\": [...]} object.
     """
     text = (raw or "").strip()
     if not text:
@@ -17,16 +37,91 @@ def parse_llm_json_blob(raw: str) -> dict | list | None:
     if text.startswith("```"):
         text = re.sub(r"^```[a-zA-Z0-9_-]*\s*\n?", "", text)
         text = re.sub(r"\s*```\s*$", "", text).strip()
+
     decoder = json.JSONDecoder()
+    candidates: list[object] = []
     for i, ch in enumerate(text):
         if ch not in "{[":
             continue
         try:
             obj, _end = decoder.raw_decode(text, i)
-            return obj
+            candidates.append(obj)
         except json.JSONDecodeError:
             continue
+    if not candidates:
+        return None
+
+    answer_keys = ("answer_blocks", "blocks", "answers", "paragraphs")
+    for obj in candidates:
+        if isinstance(obj, dict) and any(k in obj for k in answer_keys):
+            return obj
+
+    for obj in candidates:
+        if isinstance(obj, dict):
+            return obj
+
+    for obj in candidates:
+        if (
+            isinstance(obj, list)
+            and obj
+            and isinstance(obj[0], dict)
+            and any(
+                isinstance(obj[0].get(k), str)
+                for k in ("text", "content", "body", "message", "answer")
+            )
+        ):
+            return obj
+
+    for obj in candidates:
+        if _looks_like_inline_citation_number_list(obj):
+            continue
+        return obj
+
     return None
+
+
+def fallback_plain_text_when_json_unparsed(raw: str) -> Optional[str]:
+    """
+    When the model did not produce parseable JSON but returned explanatory prose
+    (common for unknown terms or “not in the book” replies), surface that text.
+
+    If the output looks like a pure JSON attempt (starts with '{' and names answer_blocks),
+    return None so the generic format message applies instead.
+    """
+    t = (raw or "").strip()
+    if len(t) < 12:
+        return None
+
+    try:
+        only = json.loads(t)
+        if _looks_like_inline_citation_number_list(only):
+            return None
+    except (json.JSONDecodeError, TypeError, ValueError):
+        pass
+
+    t_low = t.lstrip()
+    if t_low.startswith("{") and "answer_blocks" in t:
+        return None
+
+    if "{" not in t and "[" not in t:
+        if len(t) > _MAX_PLAIN_FALLBACK_CHARS:
+            return t[:_MAX_PLAIN_FALLBACK_CHARS] + "\n…"
+        return t
+
+    first_brace = t.find("{")
+    if first_brace > 0:
+        prefix = t[:first_brace].strip()
+        if len(prefix) >= 24:
+            if len(prefix) > _MAX_PLAIN_FALLBACK_CHARS:
+                return prefix[:_MAX_PLAIN_FALLBACK_CHARS] + "\n…"
+            return prefix
+
+    return None
+
+
+def escape_model_text_for_point_card(text: str) -> str:
+    """Safe for insertion into HTML point-card body."""
+    return html.escape(text, quote=False).replace("\n", "<br>")
 
 
 def coerce_source_id(citation: object, valid_ids: set[int]) -> int | None:
@@ -155,6 +250,7 @@ def operator_detail_no_blocks(
     finish_reason: Optional[str],
     *,
     source_count: int,
+    extra_lines: tuple[str, ...] = (),
 ) -> str:
     """Technical summary for operators when normalization yields no paragraphs."""
     lines = [
@@ -172,6 +268,8 @@ def operator_detail_no_blocks(
         lines.append(f"parsed_top_level=list len={len(parsed)}")
     else:
         lines.append(f"parsed_top_level=unexpected {type(parsed).__name__}")
+
+    lines.extend(extra_lines)
 
     snippet = (raw or "")[:2000]
     if len(raw or "") > 2000:
