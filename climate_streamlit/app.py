@@ -661,6 +661,55 @@ If you cannot produce valid JSON, output {{"answer_blocks": []}}.
 # ─────────────────────────────────────────────────────
 # GROQ
 # ─────────────────────────────────────────────────────
+def _parse_llm_json_blob(raw: str) -> dict | list | None:
+    """
+    Parse the first useful JSON object/array from model output.
+    Handles prose + inline [1,2,3] citations before trailing JSON payload.
+    """
+    text = (raw or "").strip()
+    if not text:
+        return None
+    if text.startswith("```"):
+        text = re.sub(r"^```[a-zA-Z0-9_-]*\s*\n?", "", text)
+        text = re.sub(r"\s*```\s*$", "", text).strip()
+
+    decoder = json.JSONDecoder()
+    candidates: list[object] = []
+    for i, ch in enumerate(text):
+        if ch not in "{[":
+            continue
+        try:
+            obj, _end = decoder.raw_decode(text, i)
+            candidates.append(obj)
+        except json.JSONDecodeError:
+            continue
+    if not candidates:
+        return None
+
+    # Prefer explicit answer objects if present.
+    for obj in candidates:
+        if isinstance(obj, dict) and any(k in obj for k in ("answer_blocks", "blocks", "answers", "paragraphs")):
+            return obj
+
+    # Then any object.
+    for obj in candidates:
+        if isinstance(obj, dict):
+            return obj
+
+    # Then list of dict blocks.
+    for obj in candidates:
+        if isinstance(obj, list) and obj and isinstance(obj[0], dict):
+            return obj
+
+    # Skip plain inline numeric citation arrays like [1,2,3].
+    for obj in candidates:
+        if isinstance(obj, list) and obj and all(isinstance(x, int) and not isinstance(x, bool) for x in obj):
+            continue
+        return obj
+
+    return None
+
+
 def ask_groq(groq_client, chunks: list[dict], history: list, user_message: str, pdf_chunk_map: Optional[dict] = None) -> dict:
     """
     Calls Groq and returns:
@@ -702,17 +751,9 @@ def ask_groq(groq_client, chunks: list[dict], history: list, user_message: str, 
         if raw.startswith("```"):
             raw = re.sub(r"^```[a-z]*\n?", "", raw).rstrip("` \n")
 
-        parsed = None
-        try:
-            parsed = json.loads(raw)
-        except Exception:
-            obj_match = re.search(r"\{[\s\S]*\}", raw)
-            arr_match = re.search(r"\[[\s\S]*\]", raw)
-            candidate = obj_match.group(0) if obj_match else (arr_match.group(0) if arr_match else "")
-            if candidate:
-                parsed = json.loads(candidate)
-            else:
-                parsed = {"answer_blocks": []}
+        parsed = _parse_llm_json_blob(raw)
+        if parsed is None:
+            parsed = {"answer_blocks": []}
         raw_blocks = []
         if isinstance(parsed, dict):
             raw_blocks = parsed.get("answer_blocks", [])
