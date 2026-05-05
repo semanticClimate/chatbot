@@ -24,15 +24,19 @@ Run: streamlit run app.py
 import json
 import os
 import base64
+import mimetypes
+import zipfile
 import fitz
 from pathlib import Path
 from typing import Optional
+from urllib.parse import quote, unquote
 from uuid import uuid4
-from urllib.parse import quote
 
 import chromadb
 import streamlit as st
 import streamlit.components.v1 as components
+from bs4 import BeautifulSoup
+from chromadb.config import Settings
 from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
 from groq import Groq
 
@@ -41,6 +45,7 @@ from html_sectioning import (
     format_passage_for_prompt,
     parse_html_path_to_chunks,
 )
+from db import init_db, log_interaction, update_feedback, get_all_logs, get_logs_csv_string
 
 # ─────────────────────────────────────────────────────
 # PAGE CONFIG — must be the very first Streamlit call
@@ -55,9 +60,11 @@ st.set_page_config(
 # ─────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────
+init_db()
 BASE_DIR        = Path(__file__).resolve().parent
 ROOT_DIR        = BASE_DIR.parent
 HTML_PATH       = Path(ROOT_DIR, "input", "full_student_book.html")
+DOCX_PATH       = Path(ROOT_DIR, "input", "2025_10", "full_student_book.docx")
 PDF_PATH        = Path(ROOT_DIR, "input", "2025_10", "climate_academy_book.pdf")
 CHROMA_DIR      = str(Path(ROOT_DIR, "chroma_db"))
 COLLECTION_NAME = "climate_academy_paragraphs_v2"   # new name → forces re-index
@@ -279,6 +286,63 @@ section[data-testid="stSidebar"] .stButton > button:hover {
 # ─────────────────────────────────────────────────────
 # ANNOTATED BOOK HTML — built once, cached
 # ─────────────────────────────────────────────────────
+def ensure_html_media_assets(html_path: Path, docx_path: Path) -> None:
+    """
+    Pandoc/Word HTML exports reference images as media/image*.png. If that
+    folder was not checked in, recover the images from the source .docx.
+    """
+    media_dir = html_path.parent / "media"
+    if media_dir.is_dir() and any(media_dir.iterdir()):
+        return
+    if not docx_path.is_file():
+        return
+
+    media_dir.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(docx_path) as docx:
+        for item in docx.infolist():
+            if item.is_dir() or not item.filename.startswith("word/media/"):
+                continue
+
+            target = media_dir / Path(item.filename).name
+            if target.exists():
+                continue
+            with docx.open(item) as src, target.open("wb") as dst:
+                dst.write(src.read())
+
+
+def inline_local_images(html: str, base_dir: Path) -> str:
+    """
+    Streamlit components render inside an iframe, so relative image URLs do not
+    resolve against input/full_student_book.html. Inline local images instead.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    base_dir = base_dir.resolve()
+
+    for img in soup.find_all("img"):
+        src = img.get("src", "").strip()
+        if (
+            not src
+            or src.startswith(("data:", "http://", "https://", "//"))
+            or src.startswith("#")
+        ):
+            continue
+
+        clean_src = unquote(src.split("#", 1)[0].split("?", 1)[0])
+        image_path = (base_dir / clean_src).resolve()
+        try:
+            image_path.relative_to(base_dir)
+        except ValueError:
+            continue
+        if not image_path.is_file():
+            continue
+
+        mime_type = mimetypes.guess_type(image_path.name)[0] or "application/octet-stream"
+        encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
+        img["src"] = f"data:{mime_type};base64,{encoded}"
+
+    return str(soup)
+
+
 @st.cache_data
 def get_annotated_book_html(html_path: str) -> str:
     """
@@ -286,8 +350,10 @@ def get_annotated_book_html(html_path: str) -> str:
     injects para-* anchor IDs), injects highlight CSS and the postMessage
     listener that handles BOTH section-level and paragraph-level jumps.
     """
-    raw       = Path(html_path).read_text(encoding="utf-8")
+    html_file = Path(html_path)
+    raw       = html_file.read_text(encoding="utf-8")
     annotated = annotate_html_with_section_ids(raw)
+    annotated = inline_local_images(annotated, html_file.parent)
 
     highlight_css = """
 <style>
@@ -447,7 +513,10 @@ def load_groq():
 @st.cache_resource
 def build_knowledge_base():
     embedder = load_embedder()
-    chroma   = chromadb.PersistentClient(path=CHROMA_DIR)
+    chroma   = chromadb.PersistentClient(
+        path=CHROMA_DIR,
+        settings=Settings(anonymized_telemetry=False),
+    )
     collection = chroma.get_or_create_collection(
         name=COLLECTION_NAME, metadata={"hnsw:space": "cosine"},
     )
@@ -906,7 +975,7 @@ def _create_chat() -> None:
     chat_id = f"chat_{uuid4().hex[:10]}"
     st.session_state.chats[chat_id] = {
         "name": _new_chat_name(),
-        "messages": [{"role": "assistant", "content": _welcome_message()}],
+        "messages": [{"role": "assistant", "content": _welcome_message(), "message_id": "welcome"}],
     }
     st.session_state.chat_order.insert(0, chat_id)
     st.session_state.current_chat_id = chat_id
@@ -933,6 +1002,7 @@ def _init_session():
         "jump_type":         "section",
         "jump_pdf_query":    "",
         "jump_pdf_page":     1,
+        "show_logs":         False,
     }
     for k, v in defaults.items():
         if k not in st.session_state:
@@ -949,6 +1019,8 @@ _init_session()
 # ─────────────────────────────────────────────────────
 collection, embedder = build_knowledge_base()
 groq_client          = load_groq()
+
+ensure_html_media_assets(HTML_PATH, DOCX_PATH)
 
 BOOK_HTML = (
     get_annotated_book_html(str(HTML_PATH))
@@ -979,7 +1051,7 @@ with st.sidebar:
     st.divider()
     if st.button("🧹 Clear Current Chat", use_container_width=True):
         current = st.session_state.chats[st.session_state.current_chat_id]
-        current["messages"] = [{"role": "assistant", "content": _welcome_message()}]
+        current["messages"] = [{"role": "assistant", "content": _welcome_message(), "message_id": "welcome"}]
         st.session_state.jump_anchor_id = None
         st.session_state.jump_section = None
         st.session_state.jump_heading_id = ""
@@ -996,7 +1068,7 @@ with st.sidebar:
             st.session_state.current_chat_id = st.session_state.chat_order[0]
         else:
             st.session_state.chats[current_id]["messages"] = [
-                {"role": "assistant", "content": _welcome_message()}
+                {"role": "assistant", "content": _welcome_message(), "message_id": "welcome"}
             ]
         st.session_state.jump_anchor_id = None
         st.session_state.jump_section = None
@@ -1006,9 +1078,35 @@ with st.sidebar:
         st.session_state.jump_pdf_page = 1
         st.rerun()
 
+    st.divider()
+    if st.button("📊 View Logs / Analytics", use_container_width=True):
+        st.session_state.show_logs = not st.session_state.get("show_logs", False)
+        st.rerun()
+
 
 current_chat = st.session_state.chats[st.session_state.current_chat_id]
 messages = current_chat["messages"]
+
+
+if st.session_state.get("show_logs", False):
+    st.markdown("## 📊 Chatbot Logs & Analytics")
+    if st.button("⬅️ Back to Chat"):
+        st.session_state.show_logs = False
+        st.rerun()
+    
+    logs_data = get_all_logs()
+    st.dataframe(logs_data, use_container_width=True)
+    
+    csv_str = get_logs_csv_string()
+    if csv_str:
+        st.download_button(
+            "📥 Download as CSV",
+            csv_str.encode('utf-8'),
+            "chatbot_logs.csv",
+            "text/csv",
+            use_container_width=True
+        )
+    st.stop()
 
 col_chat, col_book = st.columns([5, 7], gap="small")
 
@@ -1076,6 +1174,16 @@ with col_chat:
                         f'</div>',
                         unsafe_allow_html=True,
                     )
+
+                message_id = msg.get("message_id")
+                if message_id and message_id != "welcome":
+                    fb_col1, fb_col2, _ = st.columns([1, 1, 8])
+                    if fb_col1.button("👍", key=f"up_{message_id}", help="Good response"):
+                        update_feedback(message_id, 1)
+                        st.toast("Thanks for your feedback! 👍")
+                    if fb_col2.button("👎", key=f"down_{message_id}", help="Bad response"):
+                        update_feedback(message_id, 0)
+                        st.toast("Thanks for your feedback! 👎")
             else:
                 content = msg.get("content", "")
                 st.markdown(
@@ -1112,7 +1220,17 @@ with col_chat:
             st.session_state.jump_pdf_query = first_source.get("pdf_query", "")
             st.session_state.jump_pdf_page = first_source.get("pdf_page", 1)
 
-        messages.append({"role": "assistant", "content": None, "blocks": blocks, "sources": sources})
+        message_id = str(uuid4())
+        messages.append({"role": "assistant", "content": None, "blocks": blocks, "sources": sources, "message_id": message_id})
+        
+        bot_resp_text = ""
+        if blocks:
+            bot_resp_text = "\n\n".join(b.get("text", "") for b in blocks)
+        elif answer.get("blocks"):
+            bot_resp_text = answer.get("blocks")[0].get("text", "")
+            
+        log_interaction(message_id, st.session_state.current_chat_id, user_input, bot_resp_text)
+
         st.rerun()
 
     st.divider()
