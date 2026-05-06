@@ -1,0 +1,27 @@
+:root {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", monospace;
+
+  --color-bg: #f2f6f3;
+  --color-surface: #ffffff;
+  --color-text: #15231b;
+  --color-muted: #4f6257;
+  --color-line: #d9e5dd;
+  --color-brand: #1f6a43;
+  --color-brand-dark: #185235;
+  --color-accent-surface: #fffbe8;
+  --color-accent-border: #c89614;
+
+  --radius-lg: 14px;
+  --radius-md: 12px;
+  --radius-sm: 10px;
+
+  --shadow-soft: 0 8px 22px rgba(22, 45, 32, 0.07);
+
+  --space-xs: 0.35rem;
+  --space-sm: 0.65rem;
+  --space-md: 1rem;
+  --space-lg: 1.35rem;
+
+  --touch-min: 44px;
+}

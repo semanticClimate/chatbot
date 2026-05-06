@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Climate Academy — chat</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1 class="app-title">Climate Academy chat</h1>
+      <p class="app-subtitle">Answers from your RAG API. Conversation stays in this browser tab until you clear it.</p>
+    </header>
+
+    <section class="panel panel-settings" aria-label="Connection">
+      <label class="field">
+        <span class="field-label">API base URL</span>
+        <input type="url" id="apiBaseUrl" class="field-input" placeholder="http://127.0.0.1:8800" autocomplete="off" />
+      </label>
+      <div class="row-actions">
+        <button type="button" id="btnHealth" class="btn btn-secondary">Check health</button>
+        <button type="button" id="btnClear" class="btn btn-secondary">Clear chat</button>
+      </div>
+      <p id="statusLine" class="status-line" role="status"></p>
+    </section>
+
+    <main class="main-grid">
+      <section class="panel panel-chat" aria-label="Conversation">
+        <div id="thread" class="thread"></div>
+        <form id="composer" class="composer">
+          <label class="sr-only" for="question">Your question</label>
+          <textarea id="question" class="composer-input" rows="2" placeholder="Ask about the book…" required></textarea>
+          <button type="submit" class="btn btn-primary" id="btnSend">Send</button>
+        </form>
+      </section>
+
+      <aside class="panel panel-sources" id="sourcesPanel" aria-label="Sources">
+        <h2 class="panel-heading">Sources</h2>
+        <p class="sources-hint">Tap a citation number on an answer to see the passage metadata.</p>
+        <div id="sourcesDetail" class="sources-detail"></div>
+      </aside>
+    </main>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
