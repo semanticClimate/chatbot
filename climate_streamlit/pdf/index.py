@@ -6,13 +6,25 @@ from pathlib import Path
 from typing import Any
 
 import fitz
-import streamlit as st
+try:
+    import streamlit as st
+except ModuleNotFoundError:  # FastAPI-only environment
+    class _StreamlitShim:
+        @staticmethod
+        def cache_resource(fn):
+            return fn
 
-from pdf.text import keyword_set, norm_text
+        @staticmethod
+        def cache_data(fn):
+            return fn
+
+    st = _StreamlitShim()
+
+from climate_streamlit.pdf.text import keyword_set, norm_text
 
 
-@st.cache_resource
-def load_pdf_index(pdf_path: str) -> list[dict[str, Any]]:
+def load_pdf_index_uncached(pdf_path: str) -> list[dict[str, Any]]:
+    """Load PDF structure without Streamlit caching (for FastAPI workers)."""
     doc = fitz.open(pdf_path)
     pages: list[dict[str, Any]] = []
     for i, page in enumerate(doc):
@@ -38,6 +50,11 @@ def load_pdf_index(pdf_path: str) -> list[dict[str, Any]]:
         })
     doc.close()
     return pages
+
+
+@st.cache_resource
+def load_pdf_index(pdf_path: str) -> list[dict[str, Any]]:
+    return load_pdf_index_uncached(pdf_path)
 
 
 def best_page_and_block(chunk_text: str, pdf_index: list[dict], pdf_keyword_max_words: int) -> dict:
@@ -81,16 +98,15 @@ def best_page_and_block(chunk_text: str, pdf_index: list[dict], pdf_keyword_max_
     }
 
 
-@st.cache_data
-def map_chunks_to_pdf(
+def map_chunks_to_pdf_core(
     chunks: list[dict],
     pdf_path: str,
     pdf_keyword_max_words: int,
 ) -> dict:
-    """Streamlit cache key includes primitive args; pass keyword max from settings."""
+    """Map chunks to PDF locations without Streamlit caching."""
     if not Path(pdf_path).is_file():
         return {}
-    pdf_index = load_pdf_index(pdf_path)
+    pdf_index = load_pdf_index_uncached(pdf_path)
     mapped = {}
     for c in chunks:
         chunk_id = c.get("chunk_id", "")
@@ -102,3 +118,13 @@ def map_chunks_to_pdf(
             pdf_keyword_max_words,
         )
     return mapped
+
+
+@st.cache_data
+def map_chunks_to_pdf(
+    chunks: list[dict],
+    pdf_path: str,
+    pdf_keyword_max_words: int,
+) -> dict:
+    """Streamlit cache key includes primitive args; pass keyword max from settings."""
+    return map_chunks_to_pdf_core(chunks, pdf_path, pdf_keyword_max_words)

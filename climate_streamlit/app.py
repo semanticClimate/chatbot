@@ -40,12 +40,29 @@ from chromadb.config import Settings
 from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
 from groq import Groq
 
-from html_sectioning import (
-    annotate_html_with_section_ids,
-    format_passage_for_prompt,
-    parse_html_path_to_chunks,
-)
-from db import init_db, log_interaction, update_feedback, get_all_logs, get_logs_csv_string
+try:
+    from climate_streamlit.html_sectioning import (
+        annotate_html_with_section_ids,
+        format_passage_for_prompt,
+        parse_html_path_to_chunks,
+    )
+    from climate_streamlit.db import (
+        init_db,
+        log_interaction,
+        update_feedback,
+        get_all_logs,
+        get_logs_csv_string,
+    )
+except ModuleNotFoundError:
+    from html_sectioning import (
+        annotate_html_with_section_ids,
+        format_passage_for_prompt,
+        parse_html_path_to_chunks,
+    )
+    from db import init_db, log_interaction, update_feedback, get_all_logs, get_logs_csv_string
+
+CLIMATE_API_BASE_URL = os.environ.get("CLIMATE_API_BASE_URL", "").strip()
+USE_REMOTE_API = bool(CLIMATE_API_BASE_URL)
 
 # ─────────────────────────────────────────────────────
 # PAGE CONFIG — must be the very first Streamlit call
@@ -1058,8 +1075,11 @@ _init_session()
 # ─────────────────────────────────────────────────────
 # LOAD RESOURCES
 # ─────────────────────────────────────────────────────
-collection, embedder = build_knowledge_base()
-groq_client          = load_groq()
+if USE_REMOTE_API:
+    collection = embedder = groq_client = None
+else:
+    collection, embedder = build_knowledge_base()
+    groq_client = load_groq()
 
 ensure_html_media_assets(HTML_PATH, DOCX_PATH)
 
@@ -1076,6 +1096,8 @@ BOOK_PDF_URI = load_pdf_data_uri(str(PDF_PATH)) if PDF_PATH.is_file() else ""
 # LAYOUT
 # ─────────────────────────────────────────────────────
 with st.sidebar:
+    if USE_REMOTE_API:
+        st.caption(f"RAG backend: {CLIMATE_API_BASE_URL}")
     st.markdown("### Chats")
     if st.button("➕ New Chat", use_container_width=True):
         _create_chat()
@@ -1241,10 +1263,22 @@ with col_chat:
         if current_chat["name"].startswith("New Chat"):
             current_chat["name"] = (user_input[:28] + "...") if len(user_input) > 28 else user_input
 
+        message_id = str(uuid4())
         with st.spinner("Thinking..."):
-            chunks = retrieve(user_input, collection, embedder)
-            pdf_chunk_map = map_chunks_to_pdf(chunks, str(PDF_PATH)) if PDF_PATH.is_file() else {}
-            answer = ask_groq(groq_client, chunks, messages[:-1], user_input, pdf_chunk_map=pdf_chunk_map)
+            if USE_REMOTE_API:
+                from api_client import ask_via_api, messages_to_api_conversation
+
+                answer = ask_via_api(
+                    CLIMATE_API_BASE_URL,
+                    user_input,
+                    messages_to_api_conversation(messages[:-1]),
+                    chat_id=st.session_state.current_chat_id,
+                    message_id=message_id,
+                )
+            else:
+                chunks = retrieve(user_input, collection, embedder)
+                pdf_chunk_map = map_chunks_to_pdf(chunks, str(PDF_PATH)) if PDF_PATH.is_file() else {}
+                answer = ask_groq(groq_client, chunks, messages[:-1], user_input, pdf_chunk_map=pdf_chunk_map)
 
         blocks = answer.get("blocks", [])
         sources = answer.get("sources", [])
@@ -1261,9 +1295,17 @@ with col_chat:
             st.session_state.jump_pdf_query = first_source.get("pdf_query", "")
             st.session_state.jump_pdf_page = first_source.get("pdf_page", 1)
 
-        message_id = str(uuid4())
-        messages.append({"role": "assistant", "content": None, "blocks": blocks, "sources": sources, "message_id": message_id})
-        
+        assistant_msg = {
+            "role": "assistant",
+            "content": None,
+            "blocks": blocks,
+            "sources": sources,
+            "message_id": message_id,
+        }
+        if answer.get("operator_detail"):
+            assistant_msg["operator_detail"] = answer["operator_detail"]
+        messages.append(assistant_msg)
+
         bot_resp_text = ""
         if blocks:
             bot_resp_text = "\n\n".join(b.get("text", "") for b in blocks)

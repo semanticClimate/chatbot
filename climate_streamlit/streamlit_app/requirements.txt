@@ -5,3 +5,4 @@ posthog<3.0.0
 sentence-transformers==3.0.1
 groq==0.9.0
 httpx==0.27.0
+pymupdf==1.24.0

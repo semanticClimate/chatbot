@@ -27,7 +27,7 @@ flowchart TB
   end
 
   subgraph Layer2["2 — Python dependencies"]
-    Req[pip install -r climate_streamlit/requirements.txt]
+    Req[pip install -r requirements.txt]
     MuPDF[pip install PyMuPDF for fitz import]
   end
 
@@ -80,7 +80,7 @@ Code resolves `ROOT_DIR` as the parent of `climate_streamlit/`, so the app expec
 
 - Install Python **3.10+** (3.11/3.12 recommended).
 - Clone or copy this repository maintaining the layout above.
-- Create a venv, upgrade `pip`, run `pip install -r climate_streamlit/requirements.txt` and `pip install pymupdf`.
+- Create a venv, upgrade `pip`, run `pip install -r requirements.txt` and `pip install pymupdf`.
 - Obtain a Groq API key and configure `GROQ_API_KEY` (environment variable preferred for servers).
 
 **Assets:**

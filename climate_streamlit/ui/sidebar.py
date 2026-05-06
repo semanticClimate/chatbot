@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import streamlit as st
 
-from config_loader import AppSettings
-from ui.session import chat_preview, create_chat, welcome_message
+from climate_streamlit.config_loader import AppSettings
+from climate_streamlit.ui.session import chat_preview, create_chat, welcome_message
 
 
 def clear_jump_targets() -> None:

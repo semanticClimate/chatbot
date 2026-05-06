@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from config_loader import AppSettings
-from llm.parsing import (
+from climate_streamlit.config_loader import AppSettings
+from climate_streamlit.llm.parsing import (
     escape_model_text_for_point_card,
     fallback_plain_text_when_json_unparsed,
     message_when_no_answer_blocks,
@@ -13,8 +13,8 @@ from llm.parsing import (
     operator_detail_no_blocks,
     parse_llm_json_blob,
 )
-from llm.prompts import load_system_prompt_template
-from rag.sources import build_sources
+from climate_streamlit.llm.prompts import load_system_prompt_template
+from climate_streamlit.rag.sources import build_sources
 
 
 def ask_groq(
