@@ -2,6 +2,8 @@
 
 This document defines the logical and physical server shape for the Climate Academy chatbot shipped in `climate_streamlit/app.py`.
 
+For a combined view of both the web client and server stack, see [`docs/client-server-architecture.md`](../client-server-architecture.md).
+
 ## Logical components
 
 | Component | Role | Location / provider |
