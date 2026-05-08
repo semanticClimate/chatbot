@@ -133,8 +133,10 @@ if (-not $env:GROQ_API_KEY) {
     throw "GROQ_API_KEY is not set in this PowerShell session."
 }
 
-# Set local web origin for API CORS.
-$env:CLIMATE_API_CORS_ORIGINS = "http://127.0.0.1:$WebPort"
+# For quick-tunnel testing, default to permissive CORS unless already provided.
+if (-not $env:CLIMATE_API_CORS_ORIGINS) {
+    $env:CLIMATE_API_CORS_ORIGINS = "*"
+}
 
 # Start FastAPI locally.
 Start-LoggedProcess -Title "API" `

@@ -289,3 +289,39 @@ powershell -ExecutionPolicy Bypass -File .\stop-quick-tunnel.ps1
 - Quick tunnel URLs are temporary and may change after restart/disconnect.
 - Keep Team A machine awake and online for session continuity.
 - Do not commit secrets (especially `GROQ_API_KEY`).
+- For quick tunnels, API CORS should allow the tunnel origin; easiest test setting is `CLIMATE_API_CORS_ORIGINS='*'`.
+
+## Troubleshooting: "failed to fetch"
+
+If Team B can open the web UI but chat requests fail, use this checklist.
+
+1) Confirm both tunnels exist
+- You need two public URLs, not one:
+  - Web tunnel -> local `127.0.0.1:8081`
+  - API tunnel -> local `127.0.0.1:8800`
+
+2) Confirm UI API base URL
+- In the web app settings, API base URL must be the API tunnel URL:
+  - `https://<api-random>.trycloudflare.com`
+- Do not use `http://127.0.0.1:8800` in a remote browser.
+
+3) Confirm API tunnel health endpoint
+- From any browser, open:
+  - `https://<api-random>.trycloudflare.com/health`
+- Expected: JSON health response (not Cloudflare or browser error).
+
+4) Confirm CORS
+- For quick-tunnel testing, easiest safe temporary setting is:
+  - `CLIMATE_API_CORS_ORIGINS='*'`
+- The checked-in `start-quick-tunnel.ps1` now defaults to `*` if not set.
+
+5) Restart stack after fixes
+- Re-run:
+  - `powershell -ExecutionPolicy Bypass -File .\start-quick-tunnel.ps1`
+- Re-copy the newly printed URLs (they may change per session).
+
+6) If still failing, capture these for debugging
+- Web tunnel URL
+- API tunnel URL
+- Result of `https://<api-random>.trycloudflare.com/health`
+- Relevant logs under `.quick-tunnel-runtime`
