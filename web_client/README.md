@@ -8,12 +8,12 @@ From repo root:
 
 ```bash
 cd web_client
-python -m http.server 8080
+python -m http.server 8081
 ```
 
-Open http://127.0.0.1:8080 — set **API base URL** to `http://127.0.0.1:8800` (or your deployed URL).
+Open http://127.0.0.1:8081 — set **API base URL** to `http://127.0.0.1:8800` (or your deployed URL).
 
-Ensure the API allows this origin (e.g. `CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8080` or `*` for dev).
+Ensure the API allows this origin (e.g. `CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8081` or `*` for dev).
 
 ## Layout
 

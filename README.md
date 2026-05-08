@@ -20,10 +20,10 @@ Use `python -m uvicorn`, not necessarily bare `uvicorn`, if your shell’s `uvic
 
 ```bash
 cd /path/to/chatbot/web_client
-python -m http.server 8080
+python -m http.server 8081
 ```
 
-Open `http://127.0.0.1:8080` and set the API base URL to `http://127.0.0.1:8800`. If the browser blocks cross-origin requests, start Terminal A with e.g. `export CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8080`.
+Open `http://127.0.0.1:8081` and set the API base URL to `http://127.0.0.1:8800`. If the browser blocks cross-origin requests, start Terminal A with e.g. `export CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8081`.
 
 **Smoke checks**
 

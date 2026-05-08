@@ -139,9 +139,9 @@ Use this when you only need lightweight verification with yourself or one other 
    - Prefer `python -m uvicorn` over bare `uvicorn` if `which uvicorn` points at an older Python (e.g. missing `tomllib`).
 
 3. **Run web UI locally**  
-   - `cd web_client` → `python -m http.server 8080`.  
-   - Browser: `http://127.0.0.1:8080`, set API base to `http://127.0.0.1:8800`.  
-   - If the browser blocks requests: `export CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8080` and restart the API.
+   - `cd web_client` → `python -m http.server 8081`.  
+   - Browser: `http://127.0.0.1:8081`, set API base to `http://127.0.0.1:8800`.  
+   - If the browser blocks requests: `export CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8081` and restart the API.
 
 4. **Smoke**  
    - Ask a question; citation chips should populate the sources pane.  

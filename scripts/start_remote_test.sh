@@ -62,7 +62,7 @@ run_service() {
 }
 
 run_service "api" "cd '${ROOT_DIR}' && python -m uvicorn fastapi_app.main:app --host 127.0.0.1 --port 8800"
-run_service "web" "cd '${ROOT_DIR}/web_client' && python -m http.server 8080"
+run_service "web" "cd '${ROOT_DIR}/web_client' && python -m http.server 8081"
 run_service "tunnel-api" "cloudflared tunnel --config '${HOME}/.cloudflared/climate-api.yml' run"
 run_service "tunnel-web" "cloudflared tunnel --config '${HOME}/.cloudflared/climate-web.yml' run"
 

@@ -74,7 +74,7 @@ tunnel: climate-web
 credentials-file: /Users/you/.cloudflared/<WEB_TUNNEL_UUID>.json
 ingress:
   - hostname: chat.example.com
-    service: http://localhost:8080
+    service: http://localhost:8081
   - service: http_status:404
 ```
 
@@ -113,7 +113,7 @@ bash scripts/start_remote_test.sh
 
 This starts 4 background processes:
 - FastAPI API server (`127.0.0.1:8800`)
-- Static web server (`127.0.0.1:8080`)
+- Static web server (`127.0.0.1:8081`)
 - Cloudflare API tunnel
 - Cloudflare web tunnel
 

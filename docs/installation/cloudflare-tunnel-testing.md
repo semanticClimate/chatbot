@@ -79,7 +79,7 @@ tunnel: climate-web
 credentials-file: /Users/you/.cloudflared/<WEB_TUNNEL_UUID>.json
 ingress:
   - hostname: chat.example.com
-    service: http://localhost:8080
+    service: http://localhost:8081
   - service: http_status:404
 ```
 
@@ -104,7 +104,7 @@ From repo root:
 
 ```bash
 cd web_client
-python -m http.server 8080
+python -m http.server 8081
 ```
 
 ### 3) Start API tunnel
@@ -155,7 +155,7 @@ bash scripts/start_remote_test.sh
 
 What this starts:
 - API (`uvicorn`) on `127.0.0.1:8800`
-- Web UI (`python -m http.server`) on `127.0.0.1:8080`
+- Web UI (`python -m http.server`) on `127.0.0.1:8081`
 - Cloudflare API tunnel
 - Cloudflare web tunnel
 
