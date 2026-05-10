@@ -66,3 +66,73 @@ export async function getReady(baseUrl) {
   if (!res.ok) throw new Error(data.detail || res.statusText);
   return data;
 }
+
+/**
+ * @param {string} baseUrl
+ * @returns {Promise<{ sections: Array<{ section_number: string, title: string, heading_id: string, level: number }> }>}
+ */
+export async function getBookOutline(baseUrl) {
+  const root = trimBaseUrl(baseUrl);
+  const res = await fetch(`${root}/book/outline`);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const detail = data.detail ?? data.message ?? res.statusText;
+    throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+  }
+  return data;
+}
+
+/**
+ * Absolute URL for the annotated HTML document (iframe src).
+ * @param {string} baseUrl
+ */
+export function bookDocumentUrl(baseUrl) {
+  return `${trimBaseUrl(baseUrl)}/book/document`;
+}
+
+/**
+ * @param {string} baseUrl
+ * @param {object[]} conversation
+ */
+export async function exportConversationCsv(baseUrl, conversation) {
+  const root = trimBaseUrl(baseUrl);
+  const res = await fetch(`${root}/conversation/export`, {
+    method: "POST",
+    headers: JSON_HEADERS,
+    body: JSON.stringify({ conversation, format: "csv" }),
+  });
+  const text = await res.text();
+  if (!res.ok) {
+    let detail = text;
+    try {
+      const data = text ? JSON.parse(text) : {};
+      detail = data.detail ?? data.message ?? text;
+    } catch {
+      /* plain-text error */
+    }
+    throw new Error(typeof detail === "string" ? detail : text.slice(0, 200));
+  }
+  return new Blob([text], { type: "text/csv;charset=utf-8" });
+}
+
+/**
+ * @param {string} baseUrl
+ */
+export async function fetchLogsCsvBlob(baseUrl) {
+  const root = trimBaseUrl(baseUrl);
+  const res = await fetch(`${root}/logs/export`);
+  if (!res.ok) {
+    const text = await res.text();
+    let detail = text;
+    try {
+      const data = text ? JSON.parse(text) : {};
+      detail = data.detail ?? text;
+    } catch {
+      /* use raw */
+    }
+    throw new Error(
+      typeof detail === "string" ? detail : text.slice(0, 200) || res.statusText
+    );
+  }
+  return res.blob();
+}

@@ -23,25 +23,63 @@
       <div class="row-actions">
         <button type="button" id="btnHealth" class="btn btn-secondary">Check health</button>
         <button type="button" id="btnClear" class="btn btn-secondary">Clear chat</button>
+        <button type="button" id="btnExportChat" class="btn btn-secondary">Download chat (CSV)</button>
+        <button type="button" id="btnExportLogs" class="btn btn-secondary">Server logs (CSV)</button>
       </div>
       <p id="statusLine" class="status-line" role="status"></p>
     </section>
 
     <main class="main-grid">
-      <section class="panel panel-chat" aria-label="Conversation">
-        <div id="thread" class="thread"></div>
-        <form id="composer" class="composer">
-          <label class="sr-only" for="question">Your question</label>
-          <textarea id="question" class="composer-input" rows="2" placeholder="Ask about the book…" required></textarea>
-          <button type="submit" class="btn btn-primary" id="btnSend">Send</button>
-        </form>
-      </section>
-
-      <aside class="panel panel-sources" id="sourcesPanel" aria-label="Sources">
-        <h2 class="panel-heading">Sources</h2>
-        <p class="sources-hint">Tap a citation number on an answer to see the passage metadata.</p>
-        <div id="sourcesDetail" class="sources-detail"></div>
+      <aside class="panel panel-outline" aria-label="Book outline">
+        <h2 class="panel-heading">Contents</h2>
+        <p class="outline-hint">§ / section titles — click to jump in the book (same as Streamlit).</p>
+        <div class="outline-scroll">
+          <table class="outline-table" id="outlineTable" aria-label="Section outline">
+            <thead>
+              <tr>
+                <th scope="col">§</th>
+                <th scope="col">Section</th>
+              </tr>
+            </thead>
+            <tbody id="outlineBody"></tbody>
+          </table>
+          <p id="outlineEmpty" class="outline-empty hidden">
+            Set API base URL to load outline.
+          </p>
+        </div>
       </aside>
+
+      <div class="main-middle">
+        <section class="panel panel-chat" aria-label="Conversation">
+          <div id="thread" class="thread"></div>
+          <form id="composer" class="composer">
+            <label class="sr-only" for="question">Your question</label>
+            <textarea id="question" class="composer-input" rows="2" placeholder="Ask about the book…" required></textarea>
+            <button type="submit" class="btn btn-primary" id="btnSend">Send</button>
+          </form>
+        </section>
+
+        <aside class="panel panel-sources" id="sourcesPanel" aria-label="Sources">
+          <h2 class="panel-heading">Sources</h2>
+          <p class="sources-hint">Tap a citation number on an answer to see the passage metadata.</p>
+          <div id="sourcesDetail" class="sources-detail"></div>
+        </aside>
+      </div>
+
+      <section class="panel panel-book" aria-label="Student book">
+        <div class="book-toolbar">
+          <h2 class="panel-heading">Student book</h2>
+          <button type="button" id="btnResetBook" class="btn btn-secondary">
+            Reset highlight
+          </button>
+        </div>
+        <iframe
+          id="bookFrame"
+          class="book-frame"
+          title="Climate Academy Student Book"
+          sandbox="allow-scripts allow-same-origin"
+        ></iframe>
+      </section>
     </main>
   </div>
 

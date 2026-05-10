@@ -17,10 +17,13 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, Field
+from starlette.responses import HTMLResponse
 
 from climate_streamlit.config_loader import AppSettings, get_settings
-from climate_streamlit.db import log_interaction
+from climate_streamlit.db import get_logs_csv_string, log_interaction
+from climate_streamlit.html_sectioning import load_html_file, parse_book_html
 from climate_streamlit.llm.groq_client import load_groq_from_env
+from climate_streamlit.rag.book_document import build_annotated_book_document
 from climate_streamlit.rag.indexing import build_knowledge_base_core
 from climate_streamlit.services.chat_service import run_ask, run_retrieve
 from climate_streamlit.services.conversation import (
@@ -94,6 +97,19 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/logs/export")
+def logs_export_csv() -> Response:
+    """SQLite-backed interaction logs as CSV (same data as Streamlit analytics download)."""
+    csv_str = get_logs_csv_string()
+    if not csv_str.strip():
+        csv_str = "id,timestamp,chat_id,user_query,bot_response,feedback\n"
+    return Response(
+        content=csv_str.encode("utf-8"),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": 'attachment; filename="chatbot_logs.csv"'},
+    )
+
+
 @app.get("/ready")
 def ready(request: Request) -> dict[str, Any]:
     s: AppSettings = request.app.state.settings
@@ -108,6 +124,47 @@ def ready(request: Request) -> dict[str, Any]:
         "chunk_count": n,
         "html_exists": html_ok,
     }
+
+
+def _cached_book_outline(app: FastAPI) -> list[dict[str, Any]]:
+    if getattr(app.state, "_book_outline_rows", None) is None:
+        s: AppSettings = app.state.settings
+        raw = load_html_file(s.html_path)
+        records = parse_book_html(raw)
+        app.state._book_outline_rows = [
+            {
+                "section_number": r.section_number,
+                "title": r.title,
+                "heading_id": r.heading_id,
+                "level": r.level,
+            }
+            for r in records
+        ]
+    return app.state._book_outline_rows
+
+
+def _cached_book_html(app: FastAPI) -> str:
+    if getattr(app.state, "_book_document_html", None) is None:
+        app.state._book_document_html = build_annotated_book_document(app.state.settings)
+    return app.state._book_document_html
+
+
+@app.get("/book/outline")
+def book_outline(request: Request) -> dict[str, Any]:
+    """Decimal outline (§ / title) for the student book — same structure Streamlit uses for navigation."""
+    s: AppSettings = request.app.state.settings
+    if not s.html_path.is_file():
+        raise HTTPException(status_code=503, detail="Book HTML not available")
+    return {"sections": _cached_book_outline(request.app)}
+
+
+@app.get("/book/document", response_class=HTMLResponse)
+def book_document(request: Request) -> HTMLResponse:
+    """Annotated book HTML for embedding in the browser client iframe."""
+    s: AppSettings = request.app.state.settings
+    if not s.html_path.is_file():
+        raise HTTPException(status_code=503, detail="Book HTML not available")
+    return HTMLResponse(content=_cached_book_html(request.app))
 
 
 @app.post("/retrieve")
