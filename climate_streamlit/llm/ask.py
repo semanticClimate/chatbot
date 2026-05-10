@@ -12,6 +12,7 @@ from climate_streamlit.llm.parsing import (
     normalize_answer_blocks,
     operator_detail_no_blocks,
     parse_llm_json_blob,
+    salvage_answer_blocks_from_near_json,
 )
 from climate_streamlit.llm.prompts import load_system_prompt_template
 from climate_streamlit.rag.sources import build_sources
@@ -89,14 +90,29 @@ def ask_groq(
                     ),
                 )
             else:
-                fallback_citations = [s["source_id"] for s in sources[:3]]
-                blocks = [{
-                    "text": message_when_no_answer_blocks(raw, parsed, finish_reason),
-                    "citations": fallback_citations,
-                }]
-                operator_detail = operator_detail_no_blocks(
-                    raw, parsed, finish_reason, source_count=len(sources),
-                )
+                salvaged = salvage_answer_blocks_from_near_json(raw)
+                if salvaged:
+                    blocks = normalize_answer_blocks(
+                        {"answer_blocks": salvaged},
+                        valid_source_ids,
+                    )
+                if blocks:
+                    operator_detail = operator_detail_no_blocks(
+                        raw,
+                        parsed,
+                        finish_reason,
+                        source_count=len(sources),
+                        extra_lines=("display_mode=salvaged_near_json_text_scan",),
+                    )
+                else:
+                    fallback_citations = [s["source_id"] for s in sources[:3]]
+                    blocks = [{
+                        "text": message_when_no_answer_blocks(raw, parsed, finish_reason),
+                        "citations": fallback_citations,
+                    }]
+                    operator_detail = operator_detail_no_blocks(
+                        raw, parsed, finish_reason, source_count=len(sources),
+                    )
 
         return {"blocks": blocks, "sources": sources, "operator_detail": operator_detail}
     except Exception as e:

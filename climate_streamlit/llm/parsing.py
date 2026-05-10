@@ -48,36 +48,165 @@ def parse_llm_json_blob(raw: str) -> dict | list | None:
             candidates.append(obj)
         except json.JSONDecodeError:
             continue
-    if not candidates:
-        return None
 
     answer_keys = ("answer_blocks", "blocks", "answers", "paragraphs")
-    for obj in candidates:
-        if isinstance(obj, dict) and any(k in obj for k in answer_keys):
+    if candidates:
+        for obj in candidates:
+            if isinstance(obj, dict) and any(k in obj for k in answer_keys):
+                return obj
+
+        for obj in candidates:
+            if isinstance(obj, dict):
+                return obj
+
+        for obj in candidates:
+            if (
+                isinstance(obj, list)
+                and obj
+                and isinstance(obj[0], dict)
+                and any(
+                    isinstance(obj[0].get(k), str)
+                    for k in ("text", "content", "body", "message", "answer")
+                )
+            ):
+                return obj
+
+        for obj in candidates:
+            if _looks_like_inline_citation_number_list(obj):
+                continue
             return obj
 
-    for obj in candidates:
-        if isinstance(obj, dict):
-            return obj
-
-    for obj in candidates:
-        if (
-            isinstance(obj, list)
-            and obj
-            and isinstance(obj[0], dict)
-            and any(
-                isinstance(obj[0].get(k), str)
-                for k in ("text", "content", "body", "message", "answer")
-            )
-        ):
-            return obj
-
-    for obj in candidates:
-        if _looks_like_inline_citation_number_list(obj):
-            continue
-        return obj
+    loose = _try_relaxed_outer_json_parse(text)
+    if isinstance(loose, dict):
+        return loose
+    if isinstance(loose, list) and loose and isinstance(loose[0], dict):
+        if _looks_like_inline_citation_number_list(loose):
+            return None
+        return loose
 
     return None
+
+
+def _strip_json_trailing_commas(s: str) -> str:
+    """Remove lone trailing commas before } or ] (common malformed model JSON)."""
+    s = re.sub(r",(\s*})", r"\1", s)
+    s = re.sub(r",(\s*\])", r"\1", s)
+    return s
+
+
+def _try_relaxed_outer_json_parse(text: str) -> dict | list | None:
+    """
+    Last-resort JSON parse: take substring from first '{' through last '}' and
+    load with trivial repairs. Helps when prose/extra fences break raw_decode scans.
+    """
+    t = (text or "").strip()
+    fb = t.find("{")
+    if fb == -1:
+        return None
+    lb = t.rfind("}")
+    if lb <= fb:
+        return None
+    chunk = t[fb : lb + 1]
+    variants = [chunk, _strip_json_trailing_commas(chunk)]
+    for cand in variants:
+        try:
+            out = json.loads(cand)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(out, (dict, list)):
+            return out
+    return None
+
+
+def consume_json_string_value(full: str, open_quote_idx: int) -> tuple[str, int | None]:
+    """
+    Read a JSON string literal starting at open_quote_idx (the opening double quote).
+    Returns (decoded_utf8_content, idx_after_closing_quote) or (decoded, None) if truncated.
+    """
+    if open_quote_idx >= len(full) or full[open_quote_idx] != '"':
+        return "", None
+    i = open_quote_idx + 1
+    out_chars: list[str] = []
+    while i < len(full):
+        c = full[i]
+        if c != "\\":
+            if c == '"':
+                return "".join(out_chars), i + 1
+            out_chars.append(c)
+            i += 1
+            continue
+        i += 1
+        if i >= len(full):
+            out_chars.append("\\")
+            break
+        ec = full[i]
+        if ec == '"':
+            out_chars.append('"')
+        elif ec == "\\":
+            out_chars.append("\\")
+        elif ec == "/":
+            out_chars.append("/")
+        elif ec == "b":
+            out_chars.append("\b")
+        elif ec == "f":
+            out_chars.append("\f")
+        elif ec == "n":
+            out_chars.append("\n")
+        elif ec == "r":
+            out_chars.append("\r")
+        elif ec == "t":
+            out_chars.append("\t")
+        elif ec == "u":
+            hx = full[i + 1 : i + 5]
+            if len(hx) == 4:
+                try:
+                    out_chars.append(chr(int(hx, 16)))
+                    i += 5
+                    continue
+                except ValueError:
+                    out_chars.append("u")
+                    i += 1
+                    continue
+            out_chars.append("u")
+            i += 1
+            continue
+        else:
+            out_chars.append(ec)
+        i += 1
+    return "".join(out_chars), None
+
+
+_TEXT_FIELD_PATTERN = re.compile(r'"text"\s*:\s*"')
+
+
+def salvage_answer_blocks_from_near_json(raw: str) -> list[dict]:
+    """
+    Pull paragraph strings from malformed output that looks like answer_blocks JSON
+    (e.g. truncated mid-response or stray characters outside an otherwise valid blob).
+    """
+    r = raw or ""
+    if len(r.strip()) < 16:
+        return []
+    lowered = r.lower()
+    if "answer_blocks" not in lowered and '"blocks"' not in lowered and '"text"' not in lowered:
+        return []
+
+    out: list[dict] = []
+    for m in _TEXT_FIELD_PATTERN.finditer(r):
+        oq = m.end() - 1  # opening " of JSON string value
+        if oq < 0 or r[oq] != '"':
+            continue
+        body, _after = consume_json_string_value(r, oq)
+        body = body.strip()
+        if body:
+            out.append({"text": body, "citations": []})
+
+    merged: list[dict] = []
+    for b in out:
+        if merged and merged[-1]["text"] == b["text"]:
+            continue
+        merged.append(b)
+    return merged
 
 
 def fallback_plain_text_when_json_unparsed(raw: str) -> Optional[str]:

@@ -12,10 +12,137 @@ import { renderThread, renderSourceDetail, setStatus } from "./render.js";
 
 const STORAGE_KEY_API = "climate_web_client_api_base";
 
+const DEFAULT_API_BASE = "http://127.0.0.1:8800";
+
+function trimBaseUrl(baseUrl) {
+  return String(baseUrl || "").trim().replace(/\/+$/, "");
+}
+
+function normalizedDefaultApiBase() {
+  return trimBaseUrl(DEFAULT_API_BASE);
+}
+
+/** True when the chat UI is opened via a public tunnel hostname (not local dev). */
+function isRemoteWebOrigin() {
+  const h = window.location.hostname;
+  if (!h) return false;
+  return h !== "localhost" && h !== "127.0.0.1";
+}
+
+function isLoopbackApiBase(raw) {
+  try {
+    const u = new URL(String(raw || "").trim());
+    return u.hostname === "127.0.0.1" || u.hostname === "localhost";
+  } catch {
+    return false;
+  }
+}
+
+/** Prefer empty API base on remote tunnel pages over misleading localhost. */
+function fallbackApiBase() {
+  return isRemoteWebOrigin() ? "" : DEFAULT_API_BASE;
+}
+
+/**
+ * Accept only absolute http(s) URLs. Paths like /Users/.../tunnel-api.log are
+ * mistaken for URLs and resolve against the tunnel host, yielding 501 from
+ * Python's static http.server on POST /ask.
+ */
+function isAcceptableApiBase(raw) {
+  const s = String(raw || "").trim();
+  if (!s) return false;
+  try {
+    const u = new URL(s);
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 function $(id) {
   const el = document.getElementById(id);
   if (!el) throw new Error(`Missing element #${id}`);
   return el;
+}
+
+async function fetchTunnelHintApiBase() {
+  const attempt = async () => {
+    try {
+      const u = new URL("tunnel-api-base.txt", window.location.href);
+      if (isRemoteWebOrigin()) {
+        u.searchParams.set("cb", String(Date.now()));
+      }
+      const res = await fetch(u, { cache: "no-store" });
+      if (!res.ok) return "";
+      const text = (await res.text()).trim();
+      return isAcceptableApiBase(text) ? text : "";
+    } catch {
+      return "";
+    }
+  };
+
+  let hint = await attempt();
+  if (!hint && isRemoteWebOrigin()) {
+    await new Promise((r) => setTimeout(r, 450));
+    hint = await attempt();
+  }
+  return hint;
+}
+
+/**
+ * Prefer saved setting; else same-origin tunnel hint (written by start-quick-tunnel.sh);
+ * else local dev default.
+ */
+async function resolveInitialApiBase(statusLine) {
+  const stored = loadApiBase();
+  const hinted = await fetchTunnelHintApiBase();
+
+  if (stored && !isAcceptableApiBase(stored)) {
+    saveApiBase("");
+    const v = hinted || fallbackApiBase();
+    const parts = [
+      "Saved API base was not a valid http(s) URL (e.g. a file path was pasted). Reset.",
+    ];
+    if (!v && isRemoteWebOrigin()) {
+      parts.push(
+        "tunnel-api-base.txt was not found — paste the API tunnel URL or reload."
+      );
+    }
+    setStatus(statusLine, parts.join(" "), "error");
+    return v;
+  }
+
+  const storedTrim = stored ? trimBaseUrl(stored) : "";
+  const storedIsDefaultLocal =
+    storedTrim === normalizedDefaultApiBase();
+
+  if (stored) {
+    if (hinted) {
+      if (isRemoteWebOrigin()) {
+        if (isLoopbackApiBase(stored) || storedIsDefaultLocal) {
+          saveApiBase(hinted);
+          return hinted;
+        }
+        return stored;
+      }
+      if (storedIsDefaultLocal) {
+        saveApiBase(hinted);
+        return hinted;
+      }
+      return stored;
+    }
+    return stored;
+  }
+
+  const out = hinted || fallbackApiBase();
+  if (!out && isRemoteWebOrigin()) {
+    setStatus(
+      statusLine,
+      "Could not load tunnel-api-base.txt from this page. Paste the API tunnel URL or reload.",
+      "error"
+    );
+  }
+  return out;
 }
 
 function loadApiBase() {
@@ -50,7 +177,7 @@ async function refreshView() {
   scrollThreadToBottom();
 }
 
-function wire() {
+async function wire() {
   const apiInput = $("apiBaseUrl");
   const statusLine = $("statusLine");
   const composer = $("composer");
@@ -59,8 +186,20 @@ function wire() {
   const btnHealth = $("btnHealth");
   const btnClear = $("btnClear");
 
-  apiInput.value = loadApiBase() || "http://127.0.0.1:8800";
-  apiInput.addEventListener("change", () => saveApiBase(apiInput.value));
+  apiInput.value = await resolveInitialApiBase(statusLine);
+
+  apiInput.addEventListener("change", () => {
+    const v = apiInput.value.trim();
+    if (v && !isAcceptableApiBase(v)) {
+      setStatus(
+        statusLine,
+        "Use a full URL such as https://….trycloudflare.com or http://127.0.0.1:8800 — not a log file path.",
+        "error"
+      );
+      return;
+    }
+    saveApiBase(apiInput.value);
+  });
 
   btnClear.addEventListener("click", () => {
     clearConversation();
@@ -126,4 +265,13 @@ function wire() {
   refreshView();
 }
 
-document.addEventListener("DOMContentLoaded", wire);
+document.addEventListener("DOMContentLoaded", () => {
+  wire().catch((err) => {
+    console.error(err);
+    try {
+      $("apiBaseUrl").value = fallbackApiBase();
+    } catch {
+      /* ignore */
+    }
+  });
+});
