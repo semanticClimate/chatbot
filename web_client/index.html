@@ -12,7 +12,7 @@
   <div class="app">
     <header class="app-header">
       <h1 class="app-title">Climate Academy chat</h1>
-      <p class="app-subtitle">Answers from your RAG API. Conversation stays in this browser tab until you clear it.</p>
+      <p class="app-subtitle">Book-grounded answers via your API below.</p>
     </header>
 
     <section class="panel panel-settings" aria-label="Connection">
@@ -20,19 +20,24 @@
         <span class="field-label">API base URL</span>
         <input type="url" id="apiBaseUrl" class="field-input" placeholder="http://127.0.0.1:8800" autocomplete="off" />
       </label>
-      <div class="row-actions">
+      <div class="row-actions row-actions-primary">
         <button type="button" id="btnHealth" class="btn btn-secondary">Check health</button>
         <button type="button" id="btnClear" class="btn btn-secondary">Clear chat</button>
-        <button type="button" id="btnExportChat" class="btn btn-secondary">Download chat (CSV)</button>
-        <button type="button" id="btnExportLogs" class="btn btn-secondary">Server logs (CSV)</button>
       </div>
+      <details class="settings-more">
+        <summary class="settings-more-summary">Export CSV…</summary>
+        <div class="row-actions row-actions-secondary">
+          <button type="button" id="btnExportChat" class="btn btn-secondary">Download chat</button>
+          <button type="button" id="btnExportLogs" class="btn btn-secondary">Server logs</button>
+        </div>
+      </details>
       <p id="statusLine" class="status-line" role="status"></p>
     </section>
 
     <main class="main-grid">
       <aside class="panel panel-outline" aria-label="Book outline">
         <h2 class="panel-heading">Contents</h2>
-        <p class="outline-hint">§ / section titles — click to jump in the book (same as Streamlit).</p>
+        <p class="outline-hint">Click a section to jump in the book.</p>
         <div class="outline-scroll">
           <table class="outline-table" id="outlineTable" aria-label="Section outline">
             <thead>
@@ -62,7 +67,7 @@
 
         <aside class="panel panel-sources" id="sourcesPanel" aria-label="Sources">
           <h2 class="panel-heading">Sources</h2>
-          <p class="sources-hint">Tap a citation number on an answer to see the passage metadata.</p>
+          <p class="sources-hint">Click a citation number on an answer.</p>
           <div id="sourcesDetail" class="sources-detail"></div>
         </aside>
       </div>

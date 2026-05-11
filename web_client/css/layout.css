@@ -158,6 +158,41 @@ body {
   margin-top: var(--space-sm);
 }
 
+.row-actions-primary {
+  margin-top: var(--space-sm);
+}
+
+.settings-more {
+  margin-top: var(--space-xs);
+  font-size: 0.85rem;
+}
+
+.settings-more-summary {
+  cursor: pointer;
+  color: var(--color-muted);
+  font-weight: 600;
+  list-style: none;
+  user-select: none;
+}
+
+.settings-more-summary::-webkit-details-marker {
+  display: none;
+}
+
+.settings-more-summary::before {
+  content: "▸ ";
+  color: var(--color-brand-dark);
+}
+
+.settings-more[open] .settings-more-summary::before {
+  content: "▾ ";
+}
+
+.row-actions-secondary {
+  margin-top: var(--space-xs);
+  margin-bottom: 0;
+}
+
 .status-line {
   margin: var(--space-sm) 0 0;
   font-size: 0.8rem;

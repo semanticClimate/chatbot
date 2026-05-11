@@ -11,31 +11,6 @@ export const EXAMPLE_LANGUAGES = [
   { id: "es", label: "Español" },
 ];
 
-/** @type {Record<string, string[]>} */
-/** Short empty-thread hints (same languages as sample questions). */
-export const EMPTY_THREAD_HINTS = [
-  {
-    label: "EN",
-    text: "Ask in any language — answers follow your language. Citations jump to the English book.",
-  },
-  {
-    label: "HI",
-    text: "किसी भी भाषा में पूछें — उत्तर आपकी भाषा में होंगे। उद्धरण अंग्रेज़ी पुस्तक पर ले जाते हैं।",
-  },
-  {
-    label: "FR",
-    text: "Posez votre question dans la langue de votre choix — la réponse sera dans cette langue. Les sources renvoient au livre en anglais.",
-  },
-  {
-    label: "PT",
-    text: "Pergunte em qualquer idioma — a resposta segue o seu idioma. As citações abrem o livro em inglês.",
-  },
-  {
-    label: "ES",
-    text: "Pregunta en el idioma que quieras — la respuesta irá en ese idioma. Las citas enlazan con el libro en inglés.",
-  },
-];
-
 export const EXAMPLES_BY_LANG = {
   en: [
     "What is the greenhouse effect?",
@@ -70,13 +45,24 @@ export const EXAMPLES_BY_LANG = {
  */
 export function mountExampleQuestions(host, hooks) {
   host.innerHTML = "";
-  host.className = "examples-panel";
+  host.className = "examples-mount";
+
+  const det = document.createElement("details");
+  det.className = "examples-details";
+
+  const sum = document.createElement("summary");
+  sum.className = "examples-details-summary";
+  sum.textContent = "Sample questions";
+  det.appendChild(sum);
+
+  const inner = document.createElement("div");
+  inner.className = "examples-details-body";
 
   const intro = document.createElement("p");
   intro.className = "examples-intro";
   intro.textContent =
-    "Sample questions — the assistant answers in the same language you type (book sources are in English).";
-  host.appendChild(intro);
+    "Tap a line to fill the box — replies match your language; the book stays in English.";
+  inner.appendChild(intro);
 
   for (const { id, label } of EXAMPLE_LANGUAGES) {
     const row = document.createElement("div");
@@ -100,6 +86,9 @@ export function mountExampleQuestions(host, hooks) {
       chips.appendChild(b);
     }
     row.appendChild(chips);
-    host.appendChild(row);
+    inner.appendChild(row);
   }
+
+  det.appendChild(inner);
+  host.appendChild(det);
 }

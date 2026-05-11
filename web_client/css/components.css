@@ -230,75 +230,97 @@
 }
 
 .examples-mount {
-  margin-top: var(--space-sm);
+  margin-top: var(--space-xs);
+  flex-shrink: 0;
 }
 
-.examples-panel {
-  padding: var(--space-sm) 0 var(--space-md);
+.examples-details {
   border-top: 1px solid var(--color-line);
+  padding-top: var(--space-xs);
+}
+
+.examples-details-summary {
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  list-style: none;
+}
+
+.examples-details-summary::-webkit-details-marker {
+  display: none;
+}
+
+.examples-details-summary::before {
+  content: "▸ ";
+  display: inline-block;
+  width: 1em;
+  color: var(--color-brand-dark);
+}
+
+.examples-details[open] .examples-details-summary::before {
+  content: "▾ ";
+}
+
+.examples-details-body {
+  margin-top: var(--space-sm);
+  padding-bottom: var(--space-xs);
 }
 
 .examples-intro {
   margin: 0 0 var(--space-sm);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--color-muted);
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 .examples-lang-block {
   margin-bottom: var(--space-sm);
 }
 
+.examples-lang-block:last-child {
+  margin-bottom: 0;
+}
+
 .examples-lang-label {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-muted);
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .examples-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs);
+  gap: 4px;
+}
+
+.examples-chip.btn {
+  min-height: auto;
 }
 
 .examples-chip {
   max-width: 100%;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 500;
   text-align: left;
   white-space: normal;
-  line-height: 1.35;
+  line-height: 1.3;
+  padding: 4px 8px;
 }
 
 .thread-empty-welcome {
-  padding: var(--space-md) var(--space-sm);
+  padding: var(--space-sm) var(--space-sm);
   border-radius: var(--radius-md);
   background: var(--color-bg);
-  border: 1px dashed var(--color-line);
-}
-
-.thread-empty-title {
-  margin: 0 0 var(--space-sm);
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--color-text);
+  border: 1px solid var(--color-line);
 }
 
 .thread-empty-line {
-  margin: 0 0 0.45rem;
-  font-size: 0.84rem;
-  line-height: 1.5;
-  color: var(--color-text);
-}
-
-.thread-empty-lang {
-  display: inline-block;
-  min-width: 2rem;
-  font-weight: 700;
-  font-size: 0.72rem;
-  color: var(--color-brand-dark);
-  letter-spacing: 0.02em;
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--color-muted);
 }
