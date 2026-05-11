@@ -228,3 +228,77 @@
   font-size: 0.82rem;
   color: var(--color-muted);
 }
+
+.examples-mount {
+  margin-top: var(--space-sm);
+}
+
+.examples-panel {
+  padding: var(--space-sm) 0 var(--space-md);
+  border-top: 1px solid var(--color-line);
+}
+
+.examples-intro {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+.examples-lang-block {
+  margin-bottom: var(--space-sm);
+}
+
+.examples-lang-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  margin-bottom: 4px;
+}
+
+.examples-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.examples-chip {
+  max-width: 100%;
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-align: left;
+  white-space: normal;
+  line-height: 1.35;
+}
+
+.thread-empty-welcome {
+  padding: var(--space-md) var(--space-sm);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  border: 1px dashed var(--color-line);
+}
+
+.thread-empty-title {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.thread-empty-line {
+  margin: 0 0 0.45rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.thread-empty-lang {
+  display: inline-block;
+  min-width: 2rem;
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: var(--color-brand-dark);
+  letter-spacing: 0.02em;
+}

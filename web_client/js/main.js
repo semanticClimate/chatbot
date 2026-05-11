@@ -17,6 +17,7 @@ import {
   applyConversationFull,
 } from "./state.js";
 import { renderThread, renderSourceDetail, setStatus } from "./render.js";
+import { mountExampleQuestions } from "./examples.js";
 
 const STORAGE_KEY_API = "climate_web_client_api_base";
 
@@ -367,6 +368,16 @@ async function wire() {
 
   apiInput.value = await resolveInitialApiBase(statusLine);
   await syncBookPanel(apiInput.value.trim(), statusLine);
+
+  const examplesHost = document.getElementById("examplesMount");
+  if (examplesHost) {
+    mountExampleQuestions(examplesHost, {
+      setQuestion: (q) => {
+        question.value = q;
+        question.focus();
+      },
+    });
+  }
 
   apiInput.addEventListener("change", async () => {
     const v = apiInput.value.trim();

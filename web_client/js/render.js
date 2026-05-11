@@ -2,6 +2,8 @@
  * DOM rendering only. Escapes text to avoid HTML injection from model output.
  */
 
+import { EMPTY_THREAD_HINTS } from "./examples.js";
+
 function escapeHtml(s) {
   const d = document.createElement("div");
   d.textContent = s;
@@ -54,6 +56,27 @@ export function renderSourceDetail(el, source) {
  */
 export function renderThread(threadEl, messages, onPickSource) {
   threadEl.innerHTML = "";
+
+  if (!messages.length) {
+    const wrap = document.createElement("div");
+    wrap.className = "thread-empty-welcome";
+    const title = document.createElement("p");
+    title.className = "thread-empty-title";
+    title.textContent = "Multilingual chat";
+    wrap.appendChild(title);
+    for (const { label, text } of EMPTY_THREAD_HINTS) {
+      const p = document.createElement("p");
+      p.className = "thread-empty-line";
+      const tag = document.createElement("span");
+      tag.className = "thread-empty-lang";
+      tag.textContent = label;
+      p.appendChild(tag);
+      p.appendChild(document.createTextNode(` ${text}`));
+      wrap.appendChild(p);
+    }
+    threadEl.appendChild(wrap);
+    return;
+  }
 
   for (const msg of messages) {
     if (msg.role === "user") {

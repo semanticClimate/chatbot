@@ -92,6 +92,22 @@ app.add_middleware(
 )
 
 
+@app.get("/", response_class=HTMLResponse)
+def root() -> HTMLResponse:
+    """Help people who open the API tunnel URL in a browser by mistake."""
+    return HTMLResponse(
+        content="""<!doctype html>
+<meta charset="utf-8">
+<title>Climate Academy API</title>
+<h1>Climate Academy API</h1>
+<p>This host is the <strong>API server</strong>, not the chat page in your browser.</p>
+<p>Open the <strong>web client</strong> URL you were given (another
+<code>*.trycloudflare.com</code> hostname) to use the chat UI.</p>
+<p>Checks: <a href="/health">/health</a> · <a href="/ready">/ready</a></p>
+""",
+    )
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
