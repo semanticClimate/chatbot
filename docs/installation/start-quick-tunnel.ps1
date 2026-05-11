@@ -86,39 +86,63 @@ function Start-LoggedProcess {
     Write-Host "$Title started (PID $($p.Id))"
 }
 
-function Wait-ForUrlInLog {
+function Get-QuickTunnelPublicUrlFromLog {
     <#
     .SYNOPSIS
-    Waits for a trycloudflare.com URL to appear in a cloudflared log.
+    Returns the newest public quick-tunnel hostname from a cloudflared log, or $null.
+    #>
+    param([string]$LogPath)
+    if (-not (Test-Path $LogPath)) { return $null }
+    $urls = Select-String -Path $LogPath -Pattern 'https://[a-zA-Z0-9\.-]+\.trycloudflare\.com' -AllMatches -ErrorAction SilentlyContinue |
+        ForEach-Object { $_.Matches } |
+        ForEach-Object { $_.Value } |
+        Where-Object { $_ -ne 'https://api.trycloudflare.com' }
+    if (-not $urls) { return $null }
+    return @($urls)[-1]
+}
 
-    .PARAMETER LogPath
-    Log file to scan.
-
-    .PARAMETER TimeoutSeconds
-    Max wait duration.
+function Wait-ForBothQuickTunnelUrls {
+    <#
+    .SYNOPSIS
+    Polls both tunnel logs in parallel with stderr progress every 10s.
     #>
     param(
-        [string]$LogPath,
-        [int]$TimeoutSeconds = 90
+        [string]$ApiTunnelLog,
+        [string]$WebTunnelLog,
+        [int]$TimeoutSeconds = 180
     )
-
-    # Poll until timeout for tunnel URL emission.
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    $start = Get-Date
+    $lastProgress = $start
+    $apiPublic = $null
+    $webPublic = $null
+    $warned = $false
+
     while ((Get-Date) -lt $deadline) {
-        if (Test-Path $LogPath) {
-            # Exclude https://api.trycloudflare.com — that is the registrar host in error
-            # lines (e.g. Post "https://api.trycloudflare.com/tunnel": …), not your public URL.
-            $urls = Select-String -Path $LogPath -Pattern 'https://[a-zA-Z0-9\.-]+\.trycloudflare\.com' -AllMatches -ErrorAction SilentlyContinue |
-                ForEach-Object { $_.Matches } |
-                ForEach-Object { $_.Value } |
-                Where-Object { $_ -ne 'https://api.trycloudflare.com' }
-            if ($urls) {
-                return @($urls)[-1]
-            }
+        if (-not $apiPublic) { $apiPublic = Get-QuickTunnelPublicUrlFromLog $ApiTunnelLog }
+        if (-not $webPublic) { $webPublic = Get-QuickTunnelPublicUrlFromLog $WebTunnelLog }
+        if ($apiPublic -and $webPublic) {
+            return @{ Api = $apiPublic; Web = $webPublic }
         }
-        Start-Sleep -Milliseconds 700  # Keep polling lightweight.
+
+        $now = Get-Date
+        if (($now - $lastProgress).TotalSeconds -ge 10) {
+            $lastProgress = $now
+            $elapsed = [int](($now - $start).TotalSeconds)
+            $aStatus = $(if ($apiPublic) { "ready" } else { "waiting…" })
+            $wStatus = $(if ($webPublic) { "ready" } else { "waiting…" })
+            Write-Host "[quick-tunnel ${elapsed}s / ${TimeoutSeconds}s max] API tunnel: ${aStatus} · Web tunnel: ${wStatus}" -ForegroundColor DarkGray
+            try {
+                if (-not $warned -and (Select-String -Path $ApiTunnelLog -Pattern 'failed to request quick Tunnel' -Quiet -ErrorAction SilentlyContinue)) {
+                    Write-Host "Hint: tunnel-api.log shows registration errors — try another network or set `$env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS higher." -ForegroundColor DarkYellow
+                    $warned = $true
+                }
+            } catch { }
+        }
+        Start-Sleep -Milliseconds 700
     }
-    return $null
+
+    return @{ Api = $apiPublic; Web = $webPublic }
 }
 
 # Ensure virtual environment exists before launching dependent processes.
@@ -165,12 +189,20 @@ Start-LoggedProcess -Title "Web Tunnel" `
     -Command "cloudflared tunnel --url http://127.0.0.1:$WebPort --no-autoupdate" `
     -LogPath $WebTunnelLog -PidFile $WebTunnelPidFile
 
-Write-Host ""
-Write-Host "Waiting for tunnel URLs..."
+$tunnelDeadline = 180
+try {
+    if ($env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS -match '^\d+$') {
+        $tunnelDeadline = [int]$env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS
+    }
+} catch { }
 
-# Read generated public URLs from tunnel logs.
-$ApiPublic = Wait-ForUrlInLog -LogPath $ApiTunnelLog
-$WebPublic = Wait-ForUrlInLog -LogPath $WebTunnelLog
+Write-Host ""
+Write-Host "Waiting for tunnel URLs from cloudflared (can take 1–3+ minutes on slow networks)…"
+Write-Host "Progress updates every 10s. Increase wait before running again: `$env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300"
+
+$urls = Wait-ForBothQuickTunnelUrls -ApiTunnelLog $ApiTunnelLog -WebTunnelLog $WebTunnelLog -TimeoutSeconds $tunnelDeadline
+$ApiPublic = $urls.Api
+$WebPublic = $urls.Web
 
 Write-Host ""
 Write-Host "==== PUBLIC URLS ===="

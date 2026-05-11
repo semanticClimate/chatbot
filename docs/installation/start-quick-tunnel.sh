@@ -92,35 +92,79 @@ start_logged_process() {
     echo "${Title} started (PID ${NewPid})"
 }
 
-wait_for_url_in_log() {
-    # Poll a cloudflared log until a *public* Quick Tunnel hostname appears.
-    #   $1 LogPath          Log file to scan
-    #   $2 TimeoutSeconds   Max wait duration (default 90)
-    #
-    # cloudflared logs the registration endpoint https://api.trycloudflare.com
-    # (e.g. in "Post \"https://api.trycloudflare.com/tunnel\": ... timeout").
-    # That string must NOT be treated as the tunnel URL — grep it out.
-    local LogPath="$1"
-    local TimeoutSeconds="${2:-90}"
+# Optional: total seconds to wait for *both* tunnel hostnames (default 180).
+# Example: QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300 bash start-quick-tunnel.sh
+: "${QUICK_TUNNEL_URL_TIMEOUT_SECONDS:=180}"
 
-    local Deadline=$(( $(date +%s) + TimeoutSeconds ))
+extract_quick_tunnel_public_url_from_log() {
+    # Print one public quick-tunnel URL from a cloudflared log, or empty.
+    # Never return https://api.trycloudflare.com (registrar, not your tunnel).
+    local LogPath="$1"
+    [[ -f "${LogPath}" ]] || {
+        echo ""
+        return 0
+    }
+    LC_ALL=C grep -aEo 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' "${LogPath}" 2>/dev/null \
+        | grep -Fxv 'https://api.trycloudflare.com' \
+        | tail -n 1 || true
+}
+
+wait_for_both_quick_tunnel_urls() {
+    # Poll both logs in parallel until each has a hostname or deadline.
+    # Prints one line to stdout: "API_URL<TAB>WEB_URL" (either may be empty if timed out).
+    # Progress every ~10s on stderr so slow Cloudflare does not look like a hang.
+    local ApiLog="$1"
+    local WebLog="$2"
+    local TimeoutSeconds="${3:-180}"
+
+    local Start
+    Start="$(date +%s)"
+    local Deadline=$(( Start + TimeoutSeconds ))
+    local LastProgress="${Start}"
+    local ApiPublic="" WebPublic=""
+    local WarnRegistration=0
+
     while [[ $(date +%s) -lt ${Deadline} ]]; do
-        if [[ -f "${LogPath}" ]]; then
-            # -a: cloudflared logs can contain NUL/high bytes; grep else prints
-            # "Binary file … matches" to stdout, which we must not capture as the URL.
-            local Url
-            Url="$(
-                LC_ALL=C grep -aEo 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' "${LogPath}" 2>/dev/null \
-                    | grep -Fxv 'https://api.trycloudflare.com' \
-                    | tail -n 1 || true
-            )"
-            if [[ -n "${Url}" ]]; then
-                echo "${Url}"
-                return 0
+        if [[ -z "${ApiPublic}" ]]; then
+            ApiPublic="$(extract_quick_tunnel_public_url_from_log "${ApiLog}")"
+        fi
+        if [[ -z "${WebPublic}" ]]; then
+            WebPublic="$(extract_quick_tunnel_public_url_from_log "${WebLog}")"
+        fi
+
+        if [[ -n "${ApiPublic}" && -n "${WebPublic}" ]]; then
+            printf '%s\t%s\n' "${ApiPublic}" "${WebPublic}"
+            return 0
+        fi
+
+        local Now
+        Now="$(date +%s)"
+        if [[ $(( Now - LastProgress )) -ge 10 ]]; then
+            LastProgress="${Now}"
+            local Elapsed=$(( Now - Start ))
+            local Amsg Wmsg
+            if [[ -n "${ApiPublic}" ]]; then
+                Amsg="ready"
+            else
+                Amsg="waiting…"
+            fi
+            if [[ -n "${WebPublic}" ]]; then
+                Wmsg="ready"
+            else
+                Wmsg="waiting…"
+            fi
+            echo "[quick-tunnel ${Elapsed}s / ${TimeoutSeconds}s max] API tunnel: ${Amsg} · Web tunnel: ${Wmsg}" >&2
+            if [[ "${WarnRegistration}" -eq 0 ]] && [[ -f "${ApiLog}" ]] \
+                && LC_ALL=C grep -aFq 'failed to request quick Tunnel' "${ApiLog}" 2>/dev/null; then
+                echo "Hint: tunnel-api.log shows quick-tunnel registration errors (often slow/blocked reachability to api.trycloudflare.com). Try another network or increase QUICK_TUNNEL_URL_TIMEOUT_SECONDS." >&2
+                WarnRegistration=1
             fi
         fi
+
         sleep 0.7
     done
+
+    printf '%s\t%s\n' "${ApiPublic}" "${WebPublic}"
     return 1
 }
 
@@ -222,11 +266,13 @@ start_logged_process "Web Tunnel" \
     "${WebTunnelLog}" "${WebTunnelPidFile}"
 
 echo ""
-echo "Waiting for tunnel URLs..."
+echo "Waiting for tunnel URLs from cloudflared (can take 1–3+ minutes on slow networks)…"
+echo "Progress updates every 10s. Override wait: QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300 bash …" >&2
 
-# Read generated public URLs from tunnel logs.
-ApiPublic="$(wait_for_url_in_log "${ApiTunnelLog}" || true)"
-WebPublic="$(wait_for_url_in_log "${WebTunnelLog}" || true)"
+PairLine="$(wait_for_both_quick_tunnel_urls "${ApiTunnelLog}" "${WebTunnelLog}" "${QUICK_TUNNEL_URL_TIMEOUT_SECONDS}" || true)"
+IFS=$'\t' read -r ApiPublic WebPublic <<<"${PairLine}"
+ApiPublic="$(echo "${ApiPublic}" | tr -d '\r')"
+WebPublic="$(echo "${WebPublic}" | tr -d '\r')"
 
 echo ""
 echo "==== PUBLIC URLS ===="
@@ -245,13 +291,13 @@ if [[ -n "${ApiPublic}" ]]; then
     printf '%s\n' "${ApiPublic}" >"${RuntimeDir}/api-public-url.txt"
     printf '%s\n' "${ApiPublic}" >"${WebTunnelHint}"
 else
-    printf '%s\n' "UNAVAILABLE — no public https://…trycloudflare.com hostname in tunnel-api.log within 90s (api.trycloudflare.com is the registrar, not your tunnel). See tunnel-api.log." >"${RuntimeDir}/api-public-url.txt"
+    printf '%s\n' "UNAVAILABLE — no public https://…trycloudflare.com hostname in tunnel-api.log within ${QUICK_TUNNEL_URL_TIMEOUT_SECONDS}s (api.trycloudflare.com is the registrar, not your tunnel). See tunnel-api.log." >"${RuntimeDir}/api-public-url.txt"
     rm -f "${WebTunnelHint}"
 fi
 if [[ -n "${WebPublic}" ]]; then
     printf '%s\n' "${WebPublic}" >"${RuntimeDir}/web-public-url.txt"
 else
-    printf '%s\n' "UNAVAILABLE — no public https://…trycloudflare.com hostname in tunnel-web.log within 90s. See tunnel-web.log." >"${RuntimeDir}/web-public-url.txt"
+    printf '%s\n' "UNAVAILABLE — no public https://…trycloudflare.com hostname in tunnel-web.log within ${QUICK_TUNNEL_URL_TIMEOUT_SECONDS}s. See tunnel-web.log." >"${RuntimeDir}/web-public-url.txt"
 fi
 
 if [[ -z "${WebPublic}" || -z "${ApiPublic}" ]]; then
