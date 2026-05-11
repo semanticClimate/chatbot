@@ -109,7 +109,8 @@ function Wait-ForBothQuickTunnelUrls {
     param(
         [string]$ApiTunnelLog,
         [string]$WebTunnelLog,
-        [int]$TimeoutSeconds = 180
+        [int]$TimeoutSeconds = 300,
+        [int]$EarlyExitSeconds = 90
     )
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     $start = Get-Date
@@ -126,15 +127,33 @@ function Wait-ForBothQuickTunnelUrls {
         }
 
         $now = Get-Date
+        $elapsed = [int](($now - $start).TotalSeconds)
+        $left = [Math]::Max(0, $TimeoutSeconds - $elapsed)
+
+        if ($EarlyExitSeconds -gt 0 -and $elapsed -ge $EarlyExitSeconds -and -not $apiPublic -and -not $webPublic) {
+            $apiFail = $false
+            $webFail = $false
+            try {
+                $apiFail = Select-String -Path $ApiTunnelLog -Pattern 'failed to request quick Tunnel' -Quiet -ErrorAction SilentlyContinue
+            } catch { }
+            try {
+                $webFail = Select-String -Path $WebTunnelLog -Pattern 'failed to request quick Tunnel' -Quiet -ErrorAction SilentlyContinue
+            } catch { }
+            if ($apiFail -and $webFail) {
+                Write-Host "[quick-tunnel] Stopping wait at ${elapsed}s / ${TimeoutSeconds}s max (${left}s left): both tunnel logs report registration failure." -ForegroundColor Yellow
+                Write-Host "Wait the full timeout anyway: `$env:QUICK_TUNNEL_EARLY_EXIT_SECONDS=0" -ForegroundColor DarkYellow
+                break
+            }
+        }
+
         if (($now - $lastProgress).TotalSeconds -ge 10) {
             $lastProgress = $now
-            $elapsed = [int](($now - $start).TotalSeconds)
             $aStatus = $(if ($apiPublic) { "ready" } else { "waiting…" })
             $wStatus = $(if ($webPublic) { "ready" } else { "waiting…" })
-            Write-Host "[quick-tunnel ${elapsed}s / ${TimeoutSeconds}s max] API tunnel: ${aStatus} · Web tunnel: ${wStatus}" -ForegroundColor DarkGray
+            Write-Host "[quick-tunnel ${elapsed}s / ${TimeoutSeconds}s max, ${left}s left] API tunnel: ${aStatus} · Web tunnel: ${wStatus}" -ForegroundColor DarkGray
             try {
                 if (-not $warned -and (Select-String -Path $ApiTunnelLog -Pattern 'failed to request quick Tunnel' -Quiet -ErrorAction SilentlyContinue)) {
-                    Write-Host "Hint: tunnel-api.log shows registration errors — try another network or set `$env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS higher." -ForegroundColor DarkYellow
+                    Write-Host "Hint: registration errors in logs — try another network/VPN off, or `$env:QUICK_TUNNEL_EARLY_EXIT_SECONDS=0 to wait the full ${TimeoutSeconds}s." -ForegroundColor DarkYellow
                     $warned = $true
                 }
             } catch { }
@@ -189,18 +208,24 @@ Start-LoggedProcess -Title "Web Tunnel" `
     -Command "cloudflared tunnel --url http://127.0.0.1:$WebPort --no-autoupdate" `
     -LogPath $WebTunnelLog -PidFile $WebTunnelPidFile
 
-$tunnelDeadline = 180
+$tunnelDeadline = 300
+$earlyExitSeconds = 90
 try {
     if ($env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS -match '^\d+$') {
         $tunnelDeadline = [int]$env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS
     }
 } catch { }
+try {
+    if ($env:QUICK_TUNNEL_EARLY_EXIT_SECONDS -match '^\d+$') {
+        $earlyExitSeconds = [int]$env:QUICK_TUNNEL_EARLY_EXIT_SECONDS
+    }
+} catch { }
 
 Write-Host ""
-Write-Host "Waiting for tunnel URLs from cloudflared (can take 1–3+ minutes on slow networks)…"
-Write-Host "Progress updates every 10s. Increase wait before running again: `$env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300"
+Write-Host "Waiting for tunnel URLs from cloudflared (default wait ${tunnelDeadline}s; early exit ${earlyExitSeconds}s if both logs show registration failure)…"
+Write-Host "Tune: `$env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS=600; `$env:QUICK_TUNNEL_EARLY_EXIT_SECONDS=0"
 
-$urls = Wait-ForBothQuickTunnelUrls -ApiTunnelLog $ApiTunnelLog -WebTunnelLog $WebTunnelLog -TimeoutSeconds $tunnelDeadline
+$urls = Wait-ForBothQuickTunnelUrls -ApiTunnelLog $ApiTunnelLog -WebTunnelLog $WebTunnelLog -TimeoutSeconds $tunnelDeadline -EarlyExitSeconds $earlyExitSeconds
 $ApiPublic = $urls.Api
 $WebPublic = $urls.Web
 

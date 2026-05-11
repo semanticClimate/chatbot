@@ -346,7 +346,7 @@ That hostname is **Cloudflare’s quick-tunnel registration API**, not your publ
 
 If the script now prints **no** URL (or `UNAVAILABLE` in `api-public-url.txt`), open `tunnel-api.log` and look for **`failed to request quick Tunnel`**. That usually means the machine or network (VPN, firewall, proxy) could not reach `https://api.trycloudflare.com` within the client timeout—fix connectivity, try another network, or adjust VPN/split tunnel, then rerun.
 
-While waiting, `start-quick-tunnel.sh` prints **`[quick-tunnel …]`** lines every 10 seconds and polls **both** tunnel logs together (total default wait **180s**). For very slow registrations: `QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300 bash docs/installation/start-quick-tunnel.sh`
+While waiting, `start-quick-tunnel.sh` prints **`[quick-tunnel …]`** every 10 seconds and polls **both** tunnel logs together. Defaults: **`QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300`** (max wait) and **`QUICK_TUNNEL_EARLY_EXIT_SECONDS=90`** (if both logs already show `failed to request quick Tunnel` and neither URL appeared, stop waiting instead of burning the full 300s). Disable early exit: `QUICK_TUNNEL_EARLY_EXIT_SECONDS=0`. Longer max wait: `QUICK_TUNNEL_URL_TIMEOUT_SECONDS=600`.
 
 ## Troubleshooting: browser “Your connection is not private” / privacy error
 

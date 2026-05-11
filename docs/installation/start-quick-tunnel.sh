@@ -92,10 +92,18 @@ start_logged_process() {
     echo "${Title} started (PID ${NewPid})"
 }
 
-# Total seconds to wait for *both* tunnel hostnames (default 180).
+# Total seconds to wait for *both* tunnel hostnames (default 300 — one value for every run).
 # Safe with `set -u`: use :- so an unset or empty env var still yields a number.
-# Example: QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300 bash docs/installation/start-quick-tunnel.sh
-QuickTunnelDeadlineSeconds="${QUICK_TUNNEL_URL_TIMEOUT_SECONDS:-180}"
+# Example: QUICK_TUNNEL_URL_TIMEOUT_SECONDS=600 bash docs/installation/start-quick-tunnel.sh
+QuickTunnelDeadlineSeconds="${QUICK_TUNNEL_URL_TIMEOUT_SECONDS:-300}"
+
+# If both tunnels still have no URL and both logs show registration failure after this many
+# seconds, stop waiting (saves minutes when api.trycloudflare.com is blocked). Set to 0 to
+# always wait the full QUICK_TUNNEL_URL_TIMEOUT_SECONDS.
+QuickTunnelEarlyExitSeconds="${QUICK_TUNNEL_EARLY_EXIT_SECONDS:-90}"
+case "${QuickTunnelEarlyExitSeconds}" in
+    ''|*[!0-9]*) QuickTunnelEarlyExitSeconds=90 ;;
+esac
 
 extract_quick_tunnel_public_url_from_log() {
     # Print one public quick-tunnel URL from a cloudflared log, or empty.
@@ -110,13 +118,19 @@ extract_quick_tunnel_public_url_from_log() {
         | tail -n 1 || true
 }
 
+log_has_quick_tunnel_registration_failure() {
+    local LogPath="$1"
+    [[ -f "${LogPath}" ]] && LC_ALL=C grep -aFq 'failed to request quick Tunnel' "${LogPath}" 2>/dev/null
+}
+
 wait_for_both_quick_tunnel_urls() {
     # Poll both logs in parallel until each has a hostname or deadline.
     # Prints one line to stdout: "API_URL<TAB>WEB_URL" (either may be empty if timed out).
     # Progress every ~10s on stderr so slow Cloudflare does not look like a hang.
     local ApiLog="$1"
     local WebLog="$2"
-    local TimeoutSeconds="${3:-180}"
+    local TimeoutSeconds="${3:-300}"
+    local EarlyExitSeconds="${4:-90}"
 
     local Start
     Start="$(date +%s)"
@@ -140,9 +154,23 @@ wait_for_both_quick_tunnel_urls() {
 
         local Now
         Now="$(date +%s)"
+        local Elapsed=$(( Now - Start ))
+        local Left=$(( TimeoutSeconds - Elapsed ))
+        [[ "${Left}" -lt 0 ]] && Left=0
+
+        # Both tunnels still have no public URL but both logs already show registration failure:
+        # waiting the full timeout rarely helps; exit early unless EarlyExitSeconds is 0.
+        if [[ "${EarlyExitSeconds}" -gt 0 ]] && [[ "${Elapsed}" -ge "${EarlyExitSeconds}" ]] \
+            && [[ -z "${ApiPublic}" ]] && [[ -z "${WebPublic}" ]] \
+            && log_has_quick_tunnel_registration_failure "${ApiLog}" \
+            && log_has_quick_tunnel_registration_failure "${WebLog}"; then
+            echo "[quick-tunnel] Stopping wait at ${Elapsed}s / ${TimeoutSeconds}s max (${Left}s left): both tunnel logs report quick-tunnel registration failure (likely blocked or slow https://api.trycloudflare.com)." >&2
+            echo "To wait the full ${TimeoutSeconds}s anyway: QUICK_TUNNEL_EARLY_EXIT_SECONDS=0 bash docs/installation/start-quick-tunnel.sh" >&2
+            break
+        fi
+
         if [[ $(( Now - LastProgress )) -ge 10 ]]; then
             LastProgress="${Now}"
-            local Elapsed=$(( Now - Start ))
             local Amsg Wmsg
             if [[ -n "${ApiPublic}" ]]; then
                 Amsg="ready"
@@ -154,10 +182,10 @@ wait_for_both_quick_tunnel_urls() {
             else
                 Wmsg="waiting…"
             fi
-            echo "[quick-tunnel ${Elapsed}s / ${TimeoutSeconds}s max] API tunnel: ${Amsg} · Web tunnel: ${Wmsg}" >&2
+            echo "[quick-tunnel ${Elapsed}s / ${TimeoutSeconds}s max, ${Left}s left] API tunnel: ${Amsg} · Web tunnel: ${Wmsg}" >&2
             if [[ "${WarnRegistration}" -eq 0 ]] && [[ -f "${ApiLog}" ]] \
                 && LC_ALL=C grep -aFq 'failed to request quick Tunnel' "${ApiLog}" 2>/dev/null; then
-                echo "Hint: tunnel-api.log shows quick-tunnel registration errors (often slow/blocked reachability to api.trycloudflare.com). Try another network or increase QUICK_TUNNEL_URL_TIMEOUT_SECONDS." >&2
+                echo "Hint: registration errors in logs — try another network/VPN off, or QUICK_TUNNEL_EARLY_EXIT_SECONDS=0 to wait the full ${TimeoutSeconds}s." >&2
                 WarnRegistration=1
             fi
         fi
@@ -267,10 +295,10 @@ start_logged_process "Web Tunnel" \
     "${WebTunnelLog}" "${WebTunnelPidFile}"
 
 echo ""
-echo "Waiting for tunnel URLs from cloudflared (can take 1–3+ minutes on slow networks)…"
-echo "Progress updates every 10s. Override wait: QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300 bash docs/installation/start-quick-tunnel.sh" >&2
+echo "Waiting for tunnel URLs from cloudflared (default wait ${QuickTunnelDeadlineSeconds}s; early exit ${QuickTunnelEarlyExitSeconds}s if both logs show registration failure)…"
+echo "Tune: QUICK_TUNNEL_URL_TIMEOUT_SECONDS=600 QUICK_TUNNEL_EARLY_EXIT_SECONDS=0 bash docs/installation/start-quick-tunnel.sh" >&2
 
-PairLine="$(wait_for_both_quick_tunnel_urls "${ApiTunnelLog}" "${WebTunnelLog}" "${QuickTunnelDeadlineSeconds}" || true)"
+PairLine="$(wait_for_both_quick_tunnel_urls "${ApiTunnelLog}" "${WebTunnelLog}" "${QuickTunnelDeadlineSeconds}" "${QuickTunnelEarlyExitSeconds}" || true)"
 ApiPublic=""
 WebPublic=""
 IFS=$'\t' read -r ApiPublic WebPublic <<<"${PairLine}" || true
@@ -308,6 +336,9 @@ if [[ -z "${WebPublic}" || -z "${ApiPublic}" ]]; then
     echo "WARNING: Could not detect one/both Quick Tunnel URLs. Check logs in ${RuntimeDir}" >&2
     if [[ -f "${ApiTunnelLog}" ]] && LC_ALL=C grep -aFq 'failed to request quick Tunnel' "${ApiTunnelLog}" 2>/dev/null; then
         echo "tunnel-api.log reports quick-tunnel registration failure (often network/VPN/firewall blocking https://api.trycloudflare.com). Fix connectivity, then rerun." >&2
+    fi
+    if [[ -f "${WebTunnelLog}" ]] && LC_ALL=C grep -aFq 'failed to request quick Tunnel' "${WebTunnelLog}" 2>/dev/null; then
+        echo "tunnel-web.log reports quick-tunnel registration failure (same causes as API tunnel)." >&2
     fi
     echo "The API base URL in the chat UI must be the printed https://…trycloudflare.com URL for the API tunnel, not a .log file path." >&2
     echo "Placeholder lines were written to api-public-url.txt / web-public-url.txt (do not paste those into the UI)." >&2
