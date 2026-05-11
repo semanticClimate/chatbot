@@ -93,28 +93,35 @@ start_logged_process() {
 }
 
 wait_for_url_in_log() {
-    # Poll a cloudflared log until a trycloudflare.com URL appears.
+    # Poll a cloudflared log until a *public* Quick Tunnel hostname appears.
     #   $1 LogPath          Log file to scan
-    #   $2 TimeoutSeconds   Max wait duration (default 45)
+    #   $2 TimeoutSeconds   Max wait duration (default 90)
+    #
+    # cloudflared logs the registration endpoint https://api.trycloudflare.com
+    # (e.g. in "Post \"https://api.trycloudflare.com/tunnel\": ... timeout").
+    # That string must NOT be treated as the tunnel URL — grep it out.
     local LogPath="$1"
-    local TimeoutSeconds="${2:-45}"
+    local TimeoutSeconds="${2:-90}"
 
-    # Compute deadline once and poll in short intervals.
     local Deadline=$(( $(date +%s) + TimeoutSeconds ))
     while [[ $(date +%s) -lt ${Deadline} ]]; do
         if [[ -f "${LogPath}" ]]; then
             # -a: cloudflared logs can contain NUL/high bytes; grep else prints
             # "Binary file … matches" to stdout, which we must not capture as the URL.
             local Url
-            Url="$(LC_ALL=C grep -aEo 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' "${LogPath}" 2>/dev/null | tail -n 1 || true)"
-            if [[ -n "${Url}" && "${Url}" == https://*.trycloudflare.com ]]; then
+            Url="$(
+                LC_ALL=C grep -aEo 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' "${LogPath}" 2>/dev/null \
+                    | grep -Fxv 'https://api.trycloudflare.com' \
+                    | tail -n 1 || true
+            )"
+            if [[ -n "${Url}" ]]; then
                 echo "${Url}"
                 return 0
             fi
         fi
         sleep 0.7
     done
-    return 0
+    return 1
 }
 
 # Fail fast if something still holds the port (avoids uvicorn "address already in use"
@@ -218,8 +225,8 @@ echo ""
 echo "Waiting for tunnel URLs..."
 
 # Read generated public URLs from tunnel logs.
-ApiPublic="$(wait_for_url_in_log "${ApiTunnelLog}")"
-WebPublic="$(wait_for_url_in_log "${WebTunnelLog}")"
+ApiPublic="$(wait_for_url_in_log "${ApiTunnelLog}" || true)"
+WebPublic="$(wait_for_url_in_log "${WebTunnelLog}" || true)"
 
 echo ""
 echo "==== PUBLIC URLS ===="
@@ -238,18 +245,21 @@ if [[ -n "${ApiPublic}" ]]; then
     printf '%s\n' "${ApiPublic}" >"${RuntimeDir}/api-public-url.txt"
     printf '%s\n' "${ApiPublic}" >"${WebTunnelHint}"
 else
-    printf '%s\n' "UNAVAILABLE — no https://…trycloudflare.com seen in tunnel-api.log within 45s. Fix cloudflared or grep that log after it stabilizes." >"${RuntimeDir}/api-public-url.txt"
+    printf '%s\n' "UNAVAILABLE — no public https://…trycloudflare.com hostname in tunnel-api.log within 90s (api.trycloudflare.com is the registrar, not your tunnel). See tunnel-api.log." >"${RuntimeDir}/api-public-url.txt"
     rm -f "${WebTunnelHint}"
 fi
 if [[ -n "${WebPublic}" ]]; then
     printf '%s\n' "${WebPublic}" >"${RuntimeDir}/web-public-url.txt"
 else
-    printf '%s\n' "UNAVAILABLE — no https://…trycloudflare.com seen in tunnel-web.log within 45s. Fix cloudflared or grep that log after it stabilizes." >"${RuntimeDir}/web-public-url.txt"
+    printf '%s\n' "UNAVAILABLE — no public https://…trycloudflare.com hostname in tunnel-web.log within 90s. See tunnel-web.log." >"${RuntimeDir}/web-public-url.txt"
 fi
 
 if [[ -z "${WebPublic}" || -z "${ApiPublic}" ]]; then
     # Tell operator exactly where diagnostics live.
-    echo "WARNING: Could not detect one/both URLs yet. Check logs in ${RuntimeDir}" >&2
+    echo "WARNING: Could not detect one/both Quick Tunnel URLs. Check logs in ${RuntimeDir}" >&2
+    if [[ -f "${ApiTunnelLog}" ]] && LC_ALL=C grep -aFq 'failed to request quick Tunnel' "${ApiTunnelLog}" 2>/dev/null; then
+        echo "tunnel-api.log reports quick-tunnel registration failure (often network/VPN/firewall blocking https://api.trycloudflare.com). Fix connectivity, then rerun." >&2
+    fi
     echo "The API base URL in the chat UI must be the printed https://…trycloudflare.com URL for the API tunnel, not a .log file path." >&2
     echo "Placeholder lines were written to api-public-url.txt / web-public-url.txt (do not paste those into the UI)." >&2
 else

@@ -130,18 +130,20 @@ function Wait-ForUrlInLog {
     #>
     param(
         [string]$LogPath,
-        [int]$TimeoutSeconds = 45
+        [int]$TimeoutSeconds = 90
     )
 
     # Compute deadline once and poll in short intervals.
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     while ((Get-Date) -lt $deadline) {
         if (Test-Path $LogPath) {
-            # Extract latest tunnel URL emitted by cloudflared.
-            $line = Select-String -Path $LogPath -Pattern 'https://[a-zA-Z0-9\.-]+\.trycloudflare\.com' -AllMatches -ErrorAction SilentlyContinue |
-                Select-Object -Last 1
-            if ($line -and $line.Matches.Count -gt 0) {
-                return $line.Matches[0].Value
+            # Exclude https://api.trycloudflare.com — registrar host in errors, not public URL.
+            $urls = Select-String -Path $LogPath -Pattern 'https://[a-zA-Z0-9\.-]+\.trycloudflare\.com' -AllMatches -ErrorAction SilentlyContinue |
+                ForEach-Object { $_.Matches } |
+                ForEach-Object { $_.Value } |
+                Where-Object { $_ -ne 'https://api.trycloudflare.com' }
+            if ($urls) {
+                return @($urls)[-1]
             }
         }
         Start-Sleep -Milliseconds 700  # Small sleep to reduce log polling overhead.
@@ -283,6 +285,12 @@ powershell -ExecutionPolicy Bypass -File .\stop-quick-tunnel.ps1
 
 - Open the **Web URL** printed by Team A (a `https://...trycloudflare.com` URL).
 - In web settings, set API base URL to Team A’s printed **API URL**.
+
+## Troubleshooting: both URLs showed `https://api.trycloudflare.com`
+
+That hostname is **Cloudflare’s quick-tunnel registration API**, not your public site. It appears in log lines such as `Post "https://api.trycloudflare.com/tunnel": …`. The start script used to mistake that for the tunnel URL; current `start-quick-tunnel.ps1` / `start-quick-tunnel.sh` filters it out and waits for **`https://<random>.trycloudflare.com`**.
+
+If the script prints **no** URL, check `tunnel-api.log` for **`failed to request quick Tunnel`** — often VPN/firewall/proxy blocking `https://api.trycloudflare.com`. Fix connectivity and rerun.
 
 ## Notes and caveats
 

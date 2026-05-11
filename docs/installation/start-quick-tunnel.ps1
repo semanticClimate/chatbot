@@ -99,18 +99,21 @@ function Wait-ForUrlInLog {
     #>
     param(
         [string]$LogPath,
-        [int]$TimeoutSeconds = 45
+        [int]$TimeoutSeconds = 90
     )
 
     # Poll until timeout for tunnel URL emission.
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     while ((Get-Date) -lt $deadline) {
         if (Test-Path $LogPath) {
-            # Capture latest URL match from current log contents.
-            $line = Select-String -Path $LogPath -Pattern 'https://[a-zA-Z0-9\.-]+\.trycloudflare\.com' -AllMatches -ErrorAction SilentlyContinue |
-                Select-Object -Last 1
-            if ($line -and $line.Matches.Count -gt 0) {
-                return $line.Matches[0].Value
+            # Exclude https://api.trycloudflare.com — that is the registrar host in error
+            # lines (e.g. Post "https://api.trycloudflare.com/tunnel": …), not your public URL.
+            $urls = Select-String -Path $LogPath -Pattern 'https://[a-zA-Z0-9\.-]+\.trycloudflare\.com' -AllMatches -ErrorAction SilentlyContinue |
+                ForEach-Object { $_.Matches } |
+                ForEach-Object { $_.Value } |
+                Where-Object { $_ -ne 'https://api.trycloudflare.com' }
+            if ($urls) {
+                return @($urls)[-1]
             }
         }
         Start-Sleep -Milliseconds 700  # Keep polling lightweight.
@@ -177,8 +180,15 @@ Write-Host "====================="
 Write-Host ""
 
 if (-not $WebPublic -or -not $ApiPublic) {
-    # Tell operator exactly where diagnostics live.
-    Write-Warning "Could not detect one/both URLs yet. Check logs in $RuntimeDir"
+    Write-Warning "Could not detect one/both Quick Tunnel URLs. Check logs in $RuntimeDir (api.trycloudflare.com in logs is the registrar, not your tunnel hostname)."
+    try {
+        $apiLogText = Get-Content -Path $ApiTunnelLog -Raw -ErrorAction Stop
+        if ($apiLogText -like '*failed to request quick Tunnel*') {
+            Write-Warning "tunnel-api.log reports quick-tunnel registration failure — often VPN/firewall/network blocking https://api.trycloudflare.com."
+        }
+    } catch {
+        # ignore missing log
+    }
 } else {
     # Team B only needs web URL; API URL is entered in UI settings.
     Write-Host "Team B should open: $WebPublic"

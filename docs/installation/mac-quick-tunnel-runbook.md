@@ -112,27 +112,32 @@ start_logged_process() {
 }
 
 wait_for_url_in_log() {
-    # Poll a cloudflared log until a trycloudflare.com URL appears.
+    # Poll a cloudflared log until a *public* Quick Tunnel hostname appears.
     #   $1 LogPath          Log file to scan
-    #   $2 TimeoutSeconds   Max wait duration (default 45)
+    #   $2 TimeoutSeconds   Max wait duration (default 90)
+    #
+    # Never treat https://api.trycloudflare.com as the tunnel URL — that is the
+    # registration API host in error lines, not the randomized trycloudflare hostname.
     local LogPath="$1"
-    local TimeoutSeconds="${2:-45}"
+    local TimeoutSeconds="${2:-90}"
 
-    # Compute deadline once and poll in short intervals.
     local Deadline=$(( $(date +%s) + TimeoutSeconds ))
     while [[ $(date +%s) -lt ${Deadline} ]]; do
         if [[ -f "${LogPath}" ]]; then
-            # Capture the latest URL emitted by cloudflared.
             local Url
-            Url="$(LC_ALL=C grep -aEo 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' "${LogPath}" 2>/dev/null | tail -n 1 || true)"
-            if [[ -n "${Url}" && "${Url}" == https://*.trycloudflare.com ]]; then
+            Url="$(
+                LC_ALL=C grep -aEo 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' "${LogPath}" 2>/dev/null \
+                    | grep -Fxv 'https://api.trycloudflare.com' \
+                    | tail -n 1 || true
+            )"
+            if [[ -n "${Url}" ]]; then
                 echo "${Url}"
                 return 0
             fi
         fi
         sleep 0.7
     done
-    return 0
+    return 1
 }
 
 # Ensure venv interpreter exists before launching dependent processes.
@@ -334,6 +339,12 @@ To stop:
 
 - Open the **Web URL** printed by Team A (a `https://...trycloudflare.com` URL).
 - In web settings, set API base URL to Team A's printed **API URL**.
+
+## Troubleshooting: both URLs showed `https://api.trycloudflare.com`
+
+That hostname is **Cloudflare’s quick-tunnel registration API**, not your public site. It appears in log lines such as `Post "https://api.trycloudflare.com/tunnel": …`. The start script used to mistake that for the tunnel URL; current `start-quick-tunnel.sh` filters it out and waits for the real **`https://<random>.trycloudflare.com`** hostname.
+
+If the script now prints **no** URL (or `UNAVAILABLE` in `api-public-url.txt`), open `tunnel-api.log` and look for **`failed to request quick Tunnel`**. That usually means the machine or network (VPN, firewall, proxy) could not reach `https://api.trycloudflare.com` within the client timeout—fix connectivity, try another network, or adjust VPN/split tunnel, then rerun.
 
 ## Troubleshooting: browser “Your connection is not private” / privacy error
 
