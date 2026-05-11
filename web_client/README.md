@@ -22,7 +22,7 @@ Ensure the API allows this origin (e.g. `CLIMATE_API_CORS_ORIGINS=http://127.0.0
 | `js/api.js` | HTTP calls to `/ask`, `/health` |
 | `js/state.js` | In-memory conversation for the API |
 | `js/render.js` | DOM for thread, cards, sources |
-| `js/main.js` | Form wiring, orchestration |
+| `js/main.js` | Form wiring, book iframe, orchestration (no TOC — jumps from citations only) |
 | `css/tokens.css` | Design tokens |
 | `css/layout.css` | Responsive shell |
 | `css/components.css` | Cards, chips, composer |

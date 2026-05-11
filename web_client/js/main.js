@@ -6,7 +6,6 @@ import {
   postAsk,
   getHealth,
   getReady,
-  getBookOutline,
   bookDocumentUrl,
   exportConversationCsv,
   fetchLogsCsvBlob,
@@ -129,113 +128,22 @@ function jumpBookToSource(source, targetOrigin) {
 }
 
 /**
- * @param {object} row
- * @param {string} targetOrigin
- */
-function jumpBookToOutlineRow(row, targetOrigin) {
-  const iframe = document.getElementById("bookFrame");
-  if (!iframe?.contentWindow || !targetOrigin || !row) return;
-  const section = row.section_number || "";
-  const headingId = row.heading_id || "";
-  const payload = section
-    ? {
-        type: "ca-jump",
-        section,
-        keywords: [],
-        heading_id: headingId,
-      }
-    : headingId
-      ? {
-          type: "ca-jump",
-          section: "",
-          keywords: [],
-          heading_id: headingId,
-        }
-      : null;
-  if (payload) {
-    iframe.contentWindow.postMessage(payload, targetOrigin);
-  }
-}
-
-/**
- * @param {Array<{ section_number: string, title: string, heading_id: string, level: number }>} sections
- * @param {string} targetOrigin
- */
-function renderOutlineRows(sections, targetOrigin) {
-  const tbody = document.getElementById("outlineBody");
-  const empty = document.getElementById("outlineEmpty");
-  const table = document.getElementById("outlineTable");
-  if (!tbody || !empty || !table) return;
-
-  tbody.innerHTML = "";
-  if (!sections.length) {
-    empty.classList.remove("hidden");
-    empty.textContent = "No outline sections returned.";
-    table.classList.add("hidden");
-    return;
-  }
-
-  empty.classList.add("hidden");
-  table.classList.remove("hidden");
-
-  for (const row of sections) {
-    const tr = document.createElement("tr");
-    const tdNum = document.createElement("td");
-    tdNum.className = "outline-cell outline-cell-num";
-    tdNum.textContent = row.section_number ? `§ ${row.section_number}` : "—";
-
-    const tdTitle = document.createElement("td");
-    tdTitle.className = "outline-cell outline-cell-title";
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "outline-jump-btn";
-    const lv = Number(row.level) || 1;
-    btn.style.paddingLeft = `${8 + Math.max(0, lv - 1) * 10}px`;
-    btn.textContent = row.title || "(untitled)";
-    btn.title = row.title || "";
-    btn.addEventListener("click", () => jumpBookToOutlineRow(row, targetOrigin));
-    tdTitle.appendChild(btn);
-
-    tr.appendChild(tdNum);
-    tr.appendChild(tdTitle);
-    tbody.appendChild(tr);
-  }
-}
-
-/**
  * @param {string} apiBase
  * @param {HTMLElement} statusLine
  */
 async function syncBookPanel(apiBase, statusLine) {
   const iframe = document.getElementById("bookFrame");
-  const empty = document.getElementById("outlineEmpty");
-  const table = document.getElementById("outlineTable");
-  const tbody = document.getElementById("outlineBody");
-  if (!iframe || !empty || !table || !tbody) return;
-
-  const origin = apiOriginFromBase(apiBase);
+  if (!iframe) return;
 
   if (!apiBase || !isAcceptableApiBase(apiBase)) {
     iframe.removeAttribute("src");
-    tbody.innerHTML = "";
-    empty.classList.remove("hidden");
-    empty.textContent =
-      "Set a valid API base URL to load the book outline and viewer.";
-    table.classList.add("hidden");
     return;
   }
 
   try {
-    const data = await getBookOutline(apiBase);
-    const sections = Array.isArray(data.sections) ? data.sections : [];
-    renderOutlineRows(sections, origin);
     iframe.src = bookDocumentUrl(apiBase);
   } catch (e) {
     iframe.removeAttribute("src");
-    tbody.innerHTML = "";
-    empty.classList.remove("hidden");
-    empty.textContent = String(e.message || e);
-    table.classList.add("hidden");
     setStatus(statusLine, String(e.message || e), "error");
   }
 }

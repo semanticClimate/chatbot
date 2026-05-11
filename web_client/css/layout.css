@@ -62,39 +62,12 @@ body {
 
 @media (min-width: 1100px) {
   .main-grid {
-    grid-template-columns: minmax(176px, 220px) minmax(260px, 1fr) minmax(300px, 1.15fr);
+    grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.15fr);
     align-items: stretch;
-  }
-
-  .panel-outline {
-    position: sticky;
-    top: var(--space-md);
-    max-height: calc(100dvh - 2rem);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .outline-scroll {
-    overflow-y: auto;
-    flex: 1;
-    min-height: 0;
-    padding-right: 4px;
   }
 
   .panel-chat {
     max-height: none;
-  }
-}
-
-@media (max-width: 1099px) {
-  .panel-outline {
-    max-height: 38dvh;
-  }
-
-  .outline-scroll {
-    overflow-y: auto;
-    max-height: 34dvh;
   }
 }
 

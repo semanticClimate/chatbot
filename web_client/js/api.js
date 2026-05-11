@@ -68,21 +68,6 @@ export async function getReady(baseUrl) {
 }
 
 /**
- * @param {string} baseUrl
- * @returns {Promise<{ sections: Array<{ section_number: string, title: string, heading_id: string, level: number }> }>}
- */
-export async function getBookOutline(baseUrl) {
-  const root = trimBaseUrl(baseUrl);
-  const res = await fetch(`${root}/book/outline`);
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const detail = data.detail ?? data.message ?? res.statusText;
-    throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
-  }
-  return data;
-}
-
-/**
  * Absolute URL for the annotated HTML document (iframe src).
  * @param {string} baseUrl
  */
