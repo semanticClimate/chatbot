@@ -92,9 +92,10 @@ start_logged_process() {
     echo "${Title} started (PID ${NewPid})"
 }
 
-# Optional: total seconds to wait for *both* tunnel hostnames (default 180).
-# Example: QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300 bash start-quick-tunnel.sh
-: "${QUICK_TUNNEL_URL_TIMEOUT_SECONDS:=180}"
+# Total seconds to wait for *both* tunnel hostnames (default 180).
+# Safe with `set -u`: use :- so an unset or empty env var still yields a number.
+# Example: QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300 bash docs/installation/start-quick-tunnel.sh
+QuickTunnelDeadlineSeconds="${QUICK_TUNNEL_URL_TIMEOUT_SECONDS:-180}"
 
 extract_quick_tunnel_public_url_from_log() {
     # Print one public quick-tunnel URL from a cloudflared log, or empty.
@@ -267,12 +268,14 @@ start_logged_process "Web Tunnel" \
 
 echo ""
 echo "Waiting for tunnel URLs from cloudflared (can take 1–3+ minutes on slow networks)…"
-echo "Progress updates every 10s. Override wait: QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300 bash …" >&2
+echo "Progress updates every 10s. Override wait: QUICK_TUNNEL_URL_TIMEOUT_SECONDS=300 bash docs/installation/start-quick-tunnel.sh" >&2
 
-PairLine="$(wait_for_both_quick_tunnel_urls "${ApiTunnelLog}" "${WebTunnelLog}" "${QUICK_TUNNEL_URL_TIMEOUT_SECONDS}" || true)"
-IFS=$'\t' read -r ApiPublic WebPublic <<<"${PairLine}"
-ApiPublic="$(echo "${ApiPublic}" | tr -d '\r')"
-WebPublic="$(echo "${WebPublic}" | tr -d '\r')"
+PairLine="$(wait_for_both_quick_tunnel_urls "${ApiTunnelLog}" "${WebTunnelLog}" "${QuickTunnelDeadlineSeconds}" || true)"
+ApiPublic=""
+WebPublic=""
+IFS=$'\t' read -r ApiPublic WebPublic <<<"${PairLine}" || true
+ApiPublic="$(echo "${ApiPublic:-}" | tr -d '\r')"
+WebPublic="$(echo "${WebPublic:-}" | tr -d '\r')"
 
 echo ""
 echo "==== PUBLIC URLS ===="
@@ -291,13 +294,13 @@ if [[ -n "${ApiPublic}" ]]; then
     printf '%s\n' "${ApiPublic}" >"${RuntimeDir}/api-public-url.txt"
     printf '%s\n' "${ApiPublic}" >"${WebTunnelHint}"
 else
-    printf '%s\n' "UNAVAILABLE — no public https://…trycloudflare.com hostname in tunnel-api.log within ${QUICK_TUNNEL_URL_TIMEOUT_SECONDS}s (api.trycloudflare.com is the registrar, not your tunnel). See tunnel-api.log." >"${RuntimeDir}/api-public-url.txt"
+    printf '%s\n' "UNAVAILABLE — no public https://…trycloudflare.com hostname in tunnel-api.log within ${QuickTunnelDeadlineSeconds}s (api.trycloudflare.com is the registrar, not your tunnel). See tunnel-api.log." >"${RuntimeDir}/api-public-url.txt"
     rm -f "${WebTunnelHint}"
 fi
 if [[ -n "${WebPublic}" ]]; then
     printf '%s\n' "${WebPublic}" >"${RuntimeDir}/web-public-url.txt"
 else
-    printf '%s\n' "UNAVAILABLE — no public https://…trycloudflare.com hostname in tunnel-web.log within ${QUICK_TUNNEL_URL_TIMEOUT_SECONDS}s. See tunnel-web.log." >"${RuntimeDir}/web-public-url.txt"
+    printf '%s\n' "UNAVAILABLE — no public https://…trycloudflare.com hostname in tunnel-web.log within ${QuickTunnelDeadlineSeconds}s. See tunnel-web.log." >"${RuntimeDir}/web-public-url.txt"
 fi
 
 if [[ -z "${WebPublic}" || -z "${ApiPublic}" ]]; then
@@ -313,6 +316,16 @@ else
     echo "Team B should open: ${WebPublic}"
     echo "API base URL defaults to: ${ApiPublic} (served as web_client/tunnel-api-base.txt)"
     echo "(Also saved under ${RuntimeDir}/api-public-url.txt for copying.)"
+fi
+
+echo ""
+echo "Local servers (leave running for Team B; stop with stop-quick-tunnel.sh):"
+echo "  API  http://127.0.0.1:${ApiPort}/health"
+echo "  Web  http://127.0.0.1:${WebPort}/"
+if curl -fsS -o /dev/null "http://127.0.0.1:${ApiPort}/health" 2>/dev/null; then
+    echo "  API health check: OK"
+else
+    echo "  API health check: FAILED — see ${ApiLog}" >&2
 fi
 
 echo ""
