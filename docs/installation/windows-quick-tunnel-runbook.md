@@ -292,6 +292,8 @@ That hostname is **Cloudflare’s quick-tunnel registration API**, not your publ
 
 If the script prints **no** URL, check `tunnel-api.log` for **`failed to request quick Tunnel`** — often VPN/firewall/proxy blocking `https://api.trycloudflare.com`. Fix connectivity and rerun.
 
+While waiting, the start script prints **`[quick-tunnel …]`** every 10 seconds and waits for **both** tunnels in parallel (default **180s** total). Increase: `$env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS = 300` before running `start-quick-tunnel.ps1`.
+
 ## Notes and caveats
 
 - Quick tunnel URLs are temporary and may change after restart/disconnect.
