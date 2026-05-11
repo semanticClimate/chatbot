@@ -274,21 +274,34 @@
   line-height: 1.4;
 }
 
-.examples-lang-block {
+.examples-picker-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
   margin-bottom: var(--space-sm);
 }
 
-.examples-lang-block:last-child {
-  margin-bottom: 0;
+.examples-lang-select-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  flex-shrink: 0;
 }
 
-.examples-lang-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-muted);
-  margin-bottom: 3px;
+.examples-lang-select {
+  flex: 1;
+  min-width: 8rem;
+  max-width: 100%;
+  min-height: 2rem;
+  padding: 4px 8px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: 0.85rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
 }
 
 .examples-chips {
