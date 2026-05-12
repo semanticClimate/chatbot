@@ -1,5 +1,7 @@
 # Web client — browser & UI constraints
 
+**Canonical index:** [`docs/web-client-guidelines.md`](web-client-guidelines.md) (layout + browser rules + GitHub Issues). This file is the **browser / content / i18n** slice only.
+
 **Read this before changing anything under [`web_client/`](../web_client/)** (HTML, CSS, or JS modules). Treat it as non-negotiable unless the product owner explicitly changes these rules.
 
 ---
@@ -16,6 +18,7 @@
 
 | Document | Topic |
 | --- | --- |
+| [`docs/web-client-guidelines.md`](web-client-guidelines.md) | **Start here** — index, GitHub Issues link, quick rules |
 | [`docs/web-client-layout-contract.md`](web-client-layout-contract.md) | Regions, breakpoints, scroll ownership |
 | This file | Browser/runtime, safety, i18n, UX invariants |
 

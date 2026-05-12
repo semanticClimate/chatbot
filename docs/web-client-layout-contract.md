@@ -1,5 +1,7 @@
 # Web client shell — layout contract
 
+**Canonical index:** [`docs/web-client-guidelines.md`](web-client-guidelines.md) (layout + browser rules + GitHub Issues). This file is the **layout** slice only.
+
 This document freezes the **structural layout** of the Climate Academy chat (`web_client/`): named regions, breakpoints, scroll ownership, and min/max sizing. **Do not ship visual tweaks that reshuffle regions or alter these breakpoints unless this file is updated in the same change.**
 
 Implementation lives primarily in [`web_client/css/layout.css`](../web_client/css/layout.css), with book and composer details in [`web_client/css/components.css`](../web_client/css/components.css) and spacing/radii in [`web_client/css/tokens.css`](../web_client/css/tokens.css). Markup: [`web_client/index.html`](../web_client/index.html).
