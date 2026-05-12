@@ -25,8 +25,8 @@ flowchart LR
 
   Groq[Groq API<br/>llama-3.3-70b-versatile]
 
-  WebClient -->|HTTP requests (/ask, /health, /ready)| FastAPI
-  RAG -->|HTTPS chat completions| Groq
+  WebClient -->|"HTTP: /ask, /health, /ready"| FastAPI
+  RAG -->|"HTTPS chat completions"| Groq
 ```
 
 ## User client (browser) detail
@@ -51,7 +51,7 @@ flowchart TB
       Examples["Example question chips<br/>(examples.js)"]
       Thread["Conversation thread<br/>(render.js + state.js)"]
       Composer["Composer: POST question on submit"]
-      Book["Book panel: iframe src = {API}/book/document<br/>postMessage jumps for citations → iframe origin"]
+      Book["Book panel: iframe → API base plus /book/document<br/>postMessage jumps for citations → iframe origin"]
     end
 
     Modules --> Conn
