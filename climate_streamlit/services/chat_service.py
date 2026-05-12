@@ -30,6 +30,7 @@ def run_ask(
     settings: AppSettings,
     *,
     top_k: Optional[int] = None,
+    response_language: str = "en",
 ) -> dict[str, Any]:
     """
     Full retrieval + PDF mapping + Groq completion.
@@ -55,6 +56,7 @@ def run_ask(
         question,
         settings,
         pdf_chunk_map=pdf_chunk_map or None,
+        response_language=response_language,
     )
     t3 = time.perf_counter()
 

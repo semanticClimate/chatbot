@@ -12,7 +12,7 @@ function trimBaseUrl(baseUrl) {
  * @param {string} baseUrl
  * @param {string} question
  * @param {object[]} conversation  API-shaped history (previous turns only; current question passed separately).
- * @param {{ signal?: AbortSignal, top_k?: number }} [opts]
+ * @param {{ signal?: AbortSignal, top_k?: number, response_language?: string }} [opts]
  */
 export async function postAsk(baseUrl, question, conversation, opts = {}) {
   const root = trimBaseUrl(baseUrl);
@@ -22,6 +22,9 @@ export async function postAsk(baseUrl, question, conversation, opts = {}) {
     conversation: Array.isArray(conversation) ? conversation : [],
   };
   if (opts.top_k != null) body.top_k = opts.top_k;
+  if (opts.response_language != null && String(opts.response_language).trim()) {
+    body.response_language = String(opts.response_language).trim().toLowerCase();
+  }
 
   const res = await fetch(url, {
     method: "POST",

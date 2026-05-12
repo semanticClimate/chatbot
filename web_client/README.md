@@ -17,12 +17,19 @@ Ensure the API allows this origin (e.g. `CLIMATE_API_CORS_ORIGINS=http://127.0.0
 
 ## Layout
 
+**Shell contract** (regions, breakpoints, scroll rules): [`docs/web-client-layout-contract.md`](../docs/web-client-layout-contract.md)
+
+**Browser & UI constraints** (mandatory guidelines for this folder): [`docs/web-client-browser-constraints.md`](../docs/web-client-browser-constraints.md)
+
 | File | Role |
 |------|------|
 | `js/api.js` | HTTP calls to `/ask`, `/health` |
 | `js/state.js` | In-memory conversation for the API |
 | `js/render.js` | DOM for thread, cards, sources |
 | `js/main.js` | Form wiring, book iframe, orchestration (no TOC — jumps from citations only) |
+| `js/lang_prefs.js` | Chat language ids (en/fr/es/pt/hi), localStorage persistence |
+| `js/ui_strings.js` | Shell + status + empty-thread copy in all UI languages |
+| `js/examples_data.js` | Sample questions per language |
 | `css/tokens.css` | Design tokens |
 | `css/layout.css` | Responsive shell |
 | `css/components.css` | Cards, chips, composer |

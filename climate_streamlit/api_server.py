@@ -16,7 +16,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from starlette.responses import HTMLResponse
 
 from climate_streamlit.config_loader import AppSettings, get_settings
@@ -35,6 +35,8 @@ from climate_streamlit.services.conversation import (
 
 logger = logging.getLogger(__name__)
 
+RESPONSE_LANGUAGE_CODES = frozenset({"en", "fr", "es", "pt", "hi"})
+
 
 class AskRequest(BaseModel):
     question: str = Field(..., min_length=1)
@@ -42,6 +44,18 @@ class AskRequest(BaseModel):
     top_k: int | None = None
     chat_id: str | None = None
     message_id: str | None = None
+    response_language: str = Field(default="en")
+
+    @field_validator("response_language")
+    @classmethod
+    def _normalize_response_language(cls, v: str) -> str:
+        code = (v or "en").strip().lower()
+        if code not in RESPONSE_LANGUAGE_CODES:
+            raise ValueError(
+                "response_language must be one of: "
+                + ", ".join(sorted(RESPONSE_LANGUAGE_CODES))
+            )
+        return code
 
 
 class RetrieveRequest(BaseModel):
@@ -214,6 +228,7 @@ def ask_ep(request: Request, body: AskRequest) -> dict[str, Any]:
         request.app.state.groq,
         s,
         top_k=body.top_k,
+        response_language=body.response_language,
     )
     updated = append_turn(
         conv,

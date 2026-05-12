@@ -18,6 +18,100 @@ from climate_streamlit.llm.prompts import load_system_prompt_template
 from climate_streamlit.rag.sources import build_sources
 
 
+_RESPONSE_LANGUAGE_LABELS = {
+    "en": "English",
+    "fr": "French",
+    "es": "Spanish",
+    "pt": "Portuguese",
+    "hi": "Hindi",
+}
+
+_CANNED_LINES = {
+    "rate_limit": {
+        "en": "You've hit a temporary usage limit. Wait a minute and try again.",
+        "fr": "Vous avez atteint une limite d'utilisation temporaire. Attendez une minute et réessayez.",
+        "es": "Has alcanzado un límite de uso temporal. Espera un minuto e inténtalo de nuevo.",
+        "pt": "Atingiu um limite de uso temporário. Aguarde um minuto e tente novamente.",
+        "hi": "आप अस्थायी उपयोग सीमा तक पहुँच गए हैं। एक मिनट प्रतीक्षा करें और पुनः प्रयास करें।",
+    },
+    "bad_key": {
+        "en": (
+            "This app can't reach the assistant because the API key is wrong or missing. "
+            "Whoever set up the app needs to fix the key in secrets or environment."
+        ),
+        "fr": (
+            "L'application ne peut pas joindre l'assistant : la clé API est absente ou invalide. "
+            "La personne qui configure l'application doit corriger la clé dans les secrets ou "
+            "l'environnement."
+        ),
+        "es": (
+            "La aplicación no puede hablar con el asistente porque falta la clave API "
+            "o no es válida. Quien configuró la app debe corregir la clave en secretos "
+            "o entorno."
+        ),
+        "pt": (
+            "A aplicação não consegue contactar o assistente porque a chave API falta ou "
+            "é inválida. Quem instalou deve corrigir a chave nos segredos ou no ambiente."
+        ),
+        "hi": (
+            "ऐप सहायक से जुड़ नहीं सकता — API कुंजी गलत या अनुपलब्ध है। सेटअप करने वाले को "
+            "सिक्रेट्स या पर्यावरण में कुंजी ठीक करनी होगी।"
+        ),
+    },
+    "generic": {
+        "en": (
+            "Something went wrong while getting an answer from the assistant. "
+            "Please try again in a moment."
+        ),
+        "fr": (
+            "Un problème est survenu en obtenant une réponse de l'assistant. "
+            "Veuillez réessayer dans un instant."
+        ),
+        "es": (
+            "Algo salió mal al obtener una respuesta del asistente. "
+            "Inténtalo de nuevo dentro de un momento."
+        ),
+        "pt": (
+            "Algo correu mal ao obter uma resposta do assistente. "
+            "Tente novamente dentro de momentos."
+        ),
+        "hi": (
+            "सहायक से उत्तर लेते समय कुछ गलत हुआ। कृपया कुछ क्षण बाद फिर से प्रयास करें।"
+        ),
+    },
+}
+
+
+def _normalize_response_language(code: str | None) -> str:
+    c = (code or "en").strip().lower()
+    return c if c in _RESPONSE_LANGUAGE_LABELS else "en"
+
+
+def _language_mode_appendix(code: str) -> str:
+    code = _normalize_response_language(code)
+    label = _RESPONSE_LANGUAGE_LABELS.get(code, "English")
+    if code == "en":
+        return (
+            "\n\nLANGUAGE MODE (mandatory):\n"
+            "- Selected chat language: English (en).\n"
+            "- Write this entire assistant reply in English only.\n"
+        )
+    return (
+        f"\n\nLANGUAGE MODE (mandatory):\n"
+        f'- Selected chat language: {label} ({code}).\n'
+        f"- Write **every** answer paragraph only in {label}; do not mix English "
+        "(or any other language) into the prose. Citation markers stay as ASCII digits.\n"
+        "- Retrieved book excerpts remain in English underneath; summarize and quote "
+        f"ideas faithfully in {label}.\n"
+        "- If the user message is not in {label}, still answer entirely in {label}.\n"
+    )
+
+
+def _canned_line(kind: str, lang: str) -> str:
+    code = _normalize_response_language(lang)
+    return _CANNED_LINES.get(kind, {}).get(code) or _CANNED_LINES[kind]["en"]
+
+
 def ask_groq(
     groq_client,
     chunks: list[dict],
@@ -25,6 +119,7 @@ def ask_groq(
     user_message: str,
     settings: AppSettings,
     pdf_chunk_map: Optional[dict] = None,
+    response_language: str = "en",
 ) -> dict:
     """
     Calls Groq and returns:
@@ -47,8 +142,9 @@ def ask_groq(
         context_parts.append(passage)
     context = "\n\n---\n\n".join(context_parts)
 
+    rl = _normalize_response_language(response_language)
     template = load_system_prompt_template(settings.base_dir)
-    system = template.format(context=context)
+    system = template.format(context=context) + _language_mode_appendix(rl)
     messages = [{"role": "system", "content": system}]
     for t in history[-settings.llm_history_turns :]:
         if t["role"] in ("user", "assistant"):
@@ -120,18 +216,18 @@ def ask_groq(
         op_detail = f"exception_type={type(e).__name__}\nexception_message={err}"
         if "rate_limit" in err.lower():
             return {
-                "blocks": [{"text": "You've hit a temporary usage limit. Wait a minute and try again.", "citations": []}],
+                "blocks": [{"text": _canned_line("rate_limit", rl), "citations": []}],
                 "sources": sources,
                 "operator_detail": op_detail,
             }
         if "invalid_api_key" in err.lower():
             return {
-                "blocks": [{"text": "This app can't reach the assistant because the API key is wrong or missing. Whoever set up the app needs to fix the key in secrets or environment.", "citations": []}],
+                "blocks": [{"text": _canned_line("bad_key", rl), "citations": []}],
                 "sources": sources,
                 "operator_detail": op_detail,
             }
         return {
-            "blocks": [{"text": "Something went wrong while getting an answer from the assistant. Please try again in a moment.", "citations": []}],
+            "blocks": [{"text": _canned_line("generic", rl), "citations": []}],
             "sources": sources,
             "operator_detail": op_detail,
         }

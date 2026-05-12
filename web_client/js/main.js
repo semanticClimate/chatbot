@@ -17,6 +17,13 @@ import {
 } from "./state.js";
 import { renderThread, renderSourceDetail, setStatus } from "./render.js";
 import { mountExampleQuestions } from "./examples.js";
+import {
+  CHAT_LANGUAGES,
+  loadChatLanguage,
+  normalizeChatLangId,
+  saveChatLanguage,
+} from "./lang_prefs.js";
+import { applyShellUiStrings, t } from "./ui_strings.js";
 
 const STORAGE_KEY_API = "climate_web_client_api_base";
 
@@ -183,13 +190,9 @@ async function resolveInitialApiBase(statusLine) {
   if (stored && !isAcceptableApiBase(stored)) {
     saveApiBase("");
     const v = hinted || fallbackApiBase();
-    const parts = [
-      "Saved API base was not a valid http(s) URL (e.g. a file path was pasted). Reset.",
-    ];
+    const parts = [t("errApiBaseInvalidSaved")];
     if (!v && isRemoteWebOrigin()) {
-      parts.push(
-        "tunnel-api-base.txt was not found — paste the API tunnel URL or reload."
-      );
+      parts.push(t("errTunnelNotFound"));
     }
     setStatus(statusLine, parts.join(" "), "error");
     return v;
@@ -219,11 +222,7 @@ async function resolveInitialApiBase(statusLine) {
 
   const out = hinted || fallbackApiBase();
   if (!out && isRemoteWebOrigin()) {
-    setStatus(
-      statusLine,
-      "Could not load tunnel-api-base.txt from this page. Paste the API tunnel URL or reload.",
-      "error"
-    );
+    setStatus(statusLine, t("errTunnelBaseNotFound"), "error");
   }
   return out;
 }
@@ -262,7 +261,27 @@ async function refreshView(apiBase) {
   scrollThreadToBottom();
 }
 
+function wireChatLanguageSelect() {
+  const sel = document.getElementById("chatLangSelect");
+  if (!sel || !(sel instanceof HTMLSelectElement)) return null;
+  sel.replaceChildren();
+  const initial = loadChatLanguage();
+  for (const { id, label } of CHAT_LANGUAGES) {
+    const opt = document.createElement("option");
+    opt.value = id;
+    opt.textContent = label;
+    if (id === initial) opt.selected = true;
+    sel.appendChild(opt);
+  }
+  return sel;
+}
+
 async function wire() {
+  const langSelect = wireChatLanguageSelect();
+  applyShellUiStrings(
+    langSelect ? normalizeChatLangId(langSelect.value) : loadChatLanguage()
+  );
+
   const apiInput = $("apiBaseUrl");
   const statusLine = $("statusLine");
   const composer = $("composer");
@@ -278,23 +297,30 @@ async function wire() {
   await syncBookPanel(apiInput.value.trim(), statusLine);
 
   const examplesHost = document.getElementById("examplesMount");
+  /** @type {{ refill: () => void } | null} */
+  let exampleControls = null;
   if (examplesHost) {
-    mountExampleQuestions(examplesHost, {
+    exampleControls = mountExampleQuestions(examplesHost, {
       setQuestion: (q) => {
         question.value = q;
         question.focus();
       },
     });
   }
+  if (langSelect) {
+    langSelect.addEventListener("change", () => {
+      const lid = normalizeChatLangId(langSelect.value);
+      saveChatLanguage(lid);
+      applyShellUiStrings(lid);
+      exampleControls?.refill();
+      refreshView(apiInput.value.trim());
+    });
+  }
 
   apiInput.addEventListener("change", async () => {
     const v = apiInput.value.trim();
     if (v && !isAcceptableApiBase(v)) {
-      setStatus(
-        statusLine,
-        "Use a full URL such as https://….trycloudflare.com or http://127.0.0.1:8800 — not a log file path.",
-        "error"
-      );
+      setStatus(statusLine, t("errUseFullUrl"), "error");
       return;
     }
     saveApiBase(apiInput.value);
@@ -314,26 +340,26 @@ async function wire() {
 
   btnClear.addEventListener("click", () => {
     clearConversation();
-    setStatus(statusLine, "Chat cleared.");
+    setStatus(statusLine, t("chatCleared"));
     refreshView(apiInput.value.trim());
   });
 
   btnExportChat.addEventListener("click", async () => {
     const base = apiInput.value.trim();
     if (!base || !isAcceptableApiBase(base)) {
-      setStatus(statusLine, "Set API base URL first.", "error");
+      setStatus(statusLine, t("errSetApiFirst"), "error");
       return;
     }
     const conv = getConversation();
     if (!conv.length) {
-      setStatus(statusLine, "Nothing to export yet.", "error");
+      setStatus(statusLine, t("nothingToExport"), "error");
       return;
     }
-    setStatus(statusLine, "Preparing CSV…");
+    setStatus(statusLine, t("preparingCsv"));
     try {
       const blob = await exportConversationCsv(base, conv);
       triggerBrowserDownload(blob, "conversation.csv");
-      setStatus(statusLine, "Saved conversation.csv", "info");
+      setStatus(statusLine, t("savedConversationCsv"), "info");
     } catch (e) {
       setStatus(statusLine, String(e.message || e), "error");
     }
@@ -342,14 +368,14 @@ async function wire() {
   btnExportLogs.addEventListener("click", async () => {
     const base = apiInput.value.trim();
     if (!base || !isAcceptableApiBase(base)) {
-      setStatus(statusLine, "Set API base URL first.", "error");
+      setStatus(statusLine, t("errSetApiFirst"), "error");
       return;
     }
-    setStatus(statusLine, "Fetching logs…");
+    setStatus(statusLine, t("fetchingLogs"));
     try {
       const blob = await fetchLogsCsvBlob(base);
       triggerBrowserDownload(blob, "chatbot_logs.csv");
-      setStatus(statusLine, "Saved chatbot_logs.csv", "info");
+      setStatus(statusLine, t("savedLogsCsv"), "info");
     } catch (e) {
       setStatus(statusLine, String(e.message || e), "error");
     }
@@ -358,16 +384,16 @@ async function wire() {
   btnHealth.addEventListener("click", async () => {
     const base = apiInput.value.trim();
     if (!base) {
-      setStatus(statusLine, "Set API base URL first.", "error");
+      setStatus(statusLine, t("errSetApiFirst"), "error");
       return;
     }
-    setStatus(statusLine, "Checking…");
+    setStatus(statusLine, t("checkingHealth"));
     try {
       const h = await getHealth(base);
       const r = await getReady(base);
       setStatus(
         statusLine,
-        `Health: ${JSON.stringify(h)} | Ready: ${JSON.stringify(r)}`,
+        `${t("labelHealth")}: ${JSON.stringify(h)} | ${t("labelReady")}: ${JSON.stringify(r)}`,
         "info"
       );
     } catch (e) {
@@ -383,7 +409,7 @@ async function wire() {
 
     const prior = getConversation();
     btnSend.disabled = true;
-    setStatus(statusLine, "Sending…");
+    setStatus(statusLine, t("sending"));
 
     const abort = new AbortController();
     /** Optimistic user bubble — we render user + prior; API will reconcile */
@@ -393,13 +419,19 @@ async function wire() {
       renderThread($("thread"), tempConv, () => {});
       scrollThreadToBottom();
 
-      const data = await postAsk(base, q, prior, { signal: abort.signal });
+      const lang = langSelect
+        ? normalizeChatLangId(langSelect.value)
+        : loadChatLanguage();
+      const data = await postAsk(base, q, prior, {
+        signal: abort.signal,
+        response_language: lang,
+      });
       applyConversationFull(data.conversation_full);
-      const t =
+      const statusText =
         data.timings_ms && data.timings_ms.total != null
-          ? `OK — ${data.timings_ms.total} ms total`
-          : "OK";
-      setStatus(statusLine, t, "info");
+          ? t("okMs", { ms: data.timings_ms.total })
+          : t("ok");
+      setStatus(statusLine, statusText, "info");
       question.value = "";
       await refreshView(apiInput.value.trim());
     } catch (e) {

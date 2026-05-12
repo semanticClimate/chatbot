@@ -2,6 +2,8 @@
  * DOM rendering only. Escapes text to avoid HTML injection from model output.
  */
 
+import { t } from "./ui_strings.js";
+
 function escapeHtml(s) {
   const d = document.createElement("div");
   d.textContent = s;
@@ -21,7 +23,7 @@ export function renderSourceDetail(el, source) {
   if (!source) {
     const p = document.createElement("p");
     p.className = "sources-empty";
-    p.textContent = "No source selected.";
+    p.textContent = t("sourcesEmpty");
     el.appendChild(p);
     return;
   }
@@ -39,11 +41,16 @@ export function renderSourceDetail(el, source) {
     dl.appendChild(dd);
   }
 
-  row("Source ID", source.source_id);
-  row("Section", source.section_number ? `§ ${source.section_number} — ${source.section_title || ""}` : "");
-  row("Chunk", source.chunk_id);
-  row("Anchor", source.anchor_id);
-  row("Passage", source.document);
+  row(t("labelSourceId"), source.source_id);
+  row(
+    t("labelSection"),
+    source.section_number
+      ? `§ ${source.section_number} — ${source.section_title || ""}`
+      : ""
+  );
+  row(t("labelChunk"), source.chunk_id);
+  row(t("labelAnchor"), source.anchor_id);
+  row(t("labelPassage"), source.document);
   el.appendChild(dl);
 }
 
@@ -60,8 +67,7 @@ export function renderThread(threadEl, messages, onPickSource) {
     wrap.className = "thread-empty-welcome";
     const p = document.createElement("p");
     p.className = "thread-empty-line";
-    p.textContent =
-      "Ask in any language — answers follow your language. Citation chips open the English book.";
+    p.textContent = t("threadEmptyWelcome");
     wrap.appendChild(p);
     threadEl.appendChild(wrap);
     return;
@@ -119,7 +125,7 @@ export function renderThread(threadEl, messages, onPickSource) {
             btn.type = "button";
             btn.className = "chip";
             btn.textContent = String(sid);
-            btn.title = "Show source";
+            btn.title = t("chipShowSource");
             btn.addEventListener("click", () => onPickSource(sid, sources));
             chips.appendChild(btn);
           }
@@ -132,7 +138,7 @@ export function renderThread(threadEl, messages, onPickSource) {
         const det = document.createElement("details");
         det.className = "operator-details";
         const sum = document.createElement("summary");
-        sum.textContent = "Operator details";
+        sum.textContent = t("operatorDetails");
         const pre = document.createElement("pre");
         pre.className = "operator-pre";
         pre.textContent = msg.operator_detail;

@@ -198,6 +198,24 @@ body {
   font: inherit;
 }
 
+.field-select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--color-muted) 50%),
+    linear-gradient(135deg, var(--color-muted) 50%, transparent 50%);
+  background-position: calc(100% - 1.1rem) 50%, calc(100% - 0.75rem) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+  cursor: pointer;
+}
+
+.field-hint {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
 .sources-hint {
   margin: 0 0 var(--space-sm);
   font-size: 0.85rem;
