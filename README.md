@@ -34,6 +34,8 @@ curl -s http://127.0.0.1:8800/ready
 
 More detail: [`web_client/README.md`](web_client/README.md), [`climate_streamlit/Getting_started.md`](climate_streamlit/Getting_started.md) for Streamlit.
 
+**Web client (layout & content):** start at [`docs/web-client-guidelines.md`](docs/web-client-guidelines.md). **Issues / bugs / features:** [github.com/semanticclimate/chatbot/issues](https://github.com/semanticclimate/chatbot/issues).
+
 ---
 
 ## How climate_streamlit/app.py works

@@ -1,5 +1,7 @@
 # Climate chat — vanilla web client
 
+**Guidelines (layout + content + where to file issues):** [`docs/web-client-guidelines.md`](../docs/web-client-guidelines.md)
+
 Static HTML/CSS/JS that talks to the FastAPI backend (`POST /ask`). ES modules must be served over HTTP (not `file://`).
 
 ## Run locally
@@ -15,11 +17,11 @@ Open http://127.0.0.1:8081 — set **API base URL** to `http://127.0.0.1:8800` (
 
 Ensure the API allows this origin (e.g. `CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8081` or `*` for dev).
 
-## Layout
+## Layout & constraints
 
-**Shell contract** (regions, breakpoints, scroll rules): [`docs/web-client-layout-contract.md`](../docs/web-client-layout-contract.md)
+**Start here:** [`docs/web-client-guidelines.md`](../docs/web-client-guidelines.md) (index + GitHub Issues link).
 
-**Browser & UI constraints** (mandatory guidelines for this folder): [`docs/web-client-browser-constraints.md`](../docs/web-client-browser-constraints.md)
+Deep dives: [`docs/web-client-layout-contract.md`](../docs/web-client-layout-contract.md) · [`docs/web-client-browser-constraints.md`](../docs/web-client-browser-constraints.md)
 
 | File | Role |
 |------|------|
