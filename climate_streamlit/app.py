@@ -393,6 +393,7 @@ p  { margin: 0.6em 0; }
 ul, ol { margin: 0.4em 0 0.6em 1.4em; }
 li { margin: 0.25em 0; }
 img, table, pre, code { max-width: 100% !important; }
+img { height: auto !important; }
 
 .ca-section {
     margin: 0.3em 0;
