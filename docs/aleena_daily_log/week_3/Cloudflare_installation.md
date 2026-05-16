@@ -74,9 +74,7 @@ Before starting, ensure you have:
 
 Open your project folder:
 
-```powershell
-D:\Aleena\Programming\semanticClimate\chatbot
-```
+
 
 Then:
 
@@ -89,7 +87,7 @@ Then:
 Navigate to project root:
 
 ```powershell
-cd D:\Aleena\Programming\semanticClimate\chatbot
+cd chatbot
 ```
 
 Run these commands one by one:
