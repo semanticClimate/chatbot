@@ -47,3 +47,9 @@ def test_run_pipeline_with_cutdown_transcript_generates_summary():
     assert "## Daily Summary" in summary_text, (
         f"Expected daily summary heading in {summary_path}, got: {summary_text[:300]}"
     )
+    assert summary_path.parent == CUTDOWN_TRANSCRIPT_PATH.parent, (
+        f"Expected summary in Zoom session folder, got {summary_path}"
+    )
+    assert "## Session" in summary_text and "**Date:**" in summary_text, (
+        f"Expected session date metadata in {summary_path}, got: {summary_text[:300]}"
+    )

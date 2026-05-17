@@ -11,7 +11,6 @@ Features:
 from __future__ import annotations
 
 import json
-from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -24,18 +23,16 @@ from zoom_daily_summary import (
     attendees_markdown_table,
     clean_caption_lines,
     collect_session_attendees,
+    extract_zoom_meeting_id,
     parse_speaker_utterances,
     prepend_warning_and_attendees,
+    session_date_for_summary,
     summarize_transcript_text,
+    summary_path_for_session,
     verify_ollama_server,
 )
 
 TRANSCRIPT_FILENAME = "meeting_saved_closed_caption.txt"
-
-
-def _timestamp_now() -> str:
-    """Timestamp used in output filenames: YYYY_MM_DD_HH_MM."""
-    return datetime.now().strftime("%Y_%m_%d_%H_%M")
 
 
 def _list_session_dirs(base_dir: Path) -> List[Path]:
@@ -44,11 +41,6 @@ def _list_session_dirs(base_dir: Path) -> List[Path]:
         return []
     dirs = [p for p in base_dir.iterdir() if p.is_dir()]
     return sorted(dirs, key=lambda p: p.stat().st_mtime, reverse=True)
-
-
-def _default_output_dir() -> Path:
-    repo_root = Path(__file__).resolve().parents[1]
-    return Path(repo_root, "temp", "zoom_summaries")
 
 
 def _default_config_dir() -> Path:
@@ -184,7 +176,6 @@ def main() -> None:
         model = st.text_input("Ollama model", value="qwen2.5:7b-instruct")
         ollama_url = st.text_input("Ollama URL", value="http://localhost:11434")
         timeout_s = st.number_input("Timeout (seconds)", min_value=10, max_value=600, value=120, step=10)
-        output_dir_input = st.text_input("Output directory", value=str(_default_output_dir()))
         alias_map_json = st.text_area(
             "Speaker name corrections (JSON)",
             value=st.session_state.alias_map_json,
@@ -298,13 +289,15 @@ def main() -> None:
             st.error("Summary is empty.")
             return
 
-        output_dir = Path(output_dir_input).expanduser()
-        output_dir.mkdir(parents=True, exist_ok=True)
-        stamp = _timestamp_now()
-        summary_path = Path(output_dir, f"{stamp}_summary.md")
+        session_dir = transcript_path.parent
+        meeting_id = extract_zoom_meeting_id(session_dir)
+        session_date = session_date_for_summary(session_dir, transcript_path)
+        summary_path = summary_path_for_session(session_dir, meeting_id)
         full_summary = prepend_warning_and_attendees(
             summary_md=edited_summary,
             attendees_md=st.session_state.attendees_md,
+            session_date=session_date,
+            meeting_id=meeting_id,
         )
         summary_path.write_text(full_summary + "\n", encoding="utf-8")
         st.session_state.summary_md = edited_summary

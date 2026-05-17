@@ -48,6 +48,16 @@ SUMMARY_WARNING = (
     "WARNING Summary created from transcript of Zoom Session audio. "
     "May contain errors, particularly names."
 )
+TRANSCRIPT_FILENAME = "meeting_saved_closed_caption.txt"
+ZOOM_UUID_RE = re.compile(
+    r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+)
+ZOOM_FOLDER_DATE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})")
+MEETING_ID_LINE_RE = re.compile(
+    r"(?:Meeting\s+ID|Meeting\s+UUID|UUID)\s*[:#]?\s*([0-9a-fA-F\- ]+)",
+    re.IGNORECASE,
+)
+MEETING_NUM_RE = re.compile(r"\b(\d{9,11})\b")
 
 
 @dataclass
@@ -196,9 +206,98 @@ def apply_name_aliases_to_text(text: str, alias_map: Dict[str, str]) -> str:
     return safe
 
 
-def prepend_warning_and_attendees(summary_md: str, attendees_md: str = "") -> str:
-    """Build final summary output with required warning and optional attendees."""
+def sanitize_meeting_id_for_filename(meeting_id: str) -> str:
+    """Filesystem-safe meeting id for summary filenames."""
+    safe = re.sub(r"[^\w.-]+", "_", meeting_id.strip())
+    return safe or "unknown_meeting"
+
+
+def extract_zoom_meeting_id(session_dir: Path) -> str:
+    """
+    Resolve Zoom meeting UUID or numeric meeting ID from session folder.
+
+    Checks folder name, then metadata text/json files, then falls back to a
+    slug derived from the folder name.
+    """
+    folder_match = ZOOM_UUID_RE.search(session_dir.name)
+    if folder_match:
+        return folder_match.group(0).lower()
+
+    for path in sorted(session_dir.iterdir()):
+        if not path.is_file():
+            continue
+        suffix = path.suffix.lower()
+        if suffix not in {".txt", ".json"}:
+            continue
+        if path.name in {TRANSCRIPT_FILENAME, "chat.txt"}:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        uuid_match = ZOOM_UUID_RE.search(text)
+        if uuid_match:
+            return uuid_match.group(0).lower()
+        for line_match in MEETING_ID_LINE_RE.finditer(text):
+            raw = line_match.group(1).strip()
+            uuid_in_line = ZOOM_UUID_RE.search(raw)
+            if uuid_in_line:
+                return uuid_in_line.group(0).lower()
+            digits = re.sub(r"\D", "", raw)
+            if len(digits) >= 9:
+                return digits
+
+    numbers = MEETING_NUM_RE.findall(session_dir.name)
+    if numbers:
+        return numbers[-1]
+
+    slug = sanitize_meeting_id_for_filename(session_dir.name)
+    return slug if slug != "unknown_meeting" else "unknown_meeting"
+
+
+def session_date_for_summary(session_dir: Path, transcript_path: Path | None = None) -> str:
+    """Session date as YYYY-MM-DD from folder name or transcript timestamp."""
+    folder_match = ZOOM_FOLDER_DATE_RE.match(session_dir.name)
+    if folder_match:
+        return folder_match.group(1)
+
+    ref = transcript_path
+    if ref is None or not ref.is_file():
+        ref = session_dir / TRANSCRIPT_FILENAME
+    if ref.is_file():
+        return datetime.fromtimestamp(ref.stat().st_mtime).strftime("%Y-%m-%d")
+    return datetime.now().strftime("%Y-%m-%d")
+
+
+def summary_path_for_session(session_dir: Path, meeting_id: str | None = None) -> Path:
+    """Path for summary markdown inside the Zoom session folder."""
+    resolved_id = meeting_id or extract_zoom_meeting_id(session_dir)
+    safe_id = sanitize_meeting_id_for_filename(resolved_id)
+    return session_dir / f"{safe_id}_summary.md"
+
+
+def format_session_metadata(session_date: str, meeting_id: str) -> str:
+    """Markdown block with session date and Zoom meeting id."""
+    return (
+        "## Session\n\n"
+        f"- **Date:** {session_date}\n"
+        f"- **Zoom meeting ID:** `{meeting_id}`\n"
+    )
+
+
+def prepend_warning_and_attendees(
+    summary_md: str,
+    attendees_md: str = "",
+    *,
+    session_date: str = "",
+    meeting_id: str = "",
+) -> str:
+    """Build final summary output with warning, session metadata, attendees, and body."""
     sections = [SUMMARY_WARNING]
+    if session_date.strip() or meeting_id.strip():
+        sections.append(
+            format_session_metadata(session_date=session_date.strip(), meeting_id=meeting_id.strip())
+        )
     if attendees_md.strip():
         sections.append(attendees_md.strip())
     sections.append(summary_md.strip())
@@ -490,11 +589,20 @@ def run_pipeline(
     summary_md = summarize_anonymized_text(
         anonymized_text=anonymized_text, model=model, ollama_url=ollama_url, timeout_s=timeout_s
     )
-    full_summary_md = prepend_warning_and_attendees(summary_md=summary_md, attendees_md=attendees_md)
+    session_dir = input_path.parent
+    meeting_id = extract_zoom_meeting_id(session_dir)
+    session_date = session_date_for_summary(session_dir, input_path)
+    full_summary_md = prepend_warning_and_attendees(
+        summary_md=summary_md,
+        attendees_md=attendees_md,
+        session_date=session_date,
+        meeting_id=meeting_id,
+    )
 
     output_dir.mkdir(parents=True, exist_ok=True)
+    safe_id = sanitize_meeting_id_for_filename(meeting_id)
     anonymized_path = Path(output_dir, f"{run_date}_anonymized.txt")
-    summary_path = Path(output_dir, f"{run_date}_summary.md")
+    summary_path = summary_path_for_session(session_dir, meeting_id)
     mapping_path = Path(output_dir, f"{run_date}_anonymization_map.json")
 
     summary_path.write_text(full_summary_md.strip() + "\n", encoding="utf-8")
@@ -508,7 +616,11 @@ def run_pipeline(
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Daily local Zoom transcript summarizer (anonymized first)")
     parser.add_argument("--input", required=True, help="Path to meeting_saved_closed_caption.txt")
-    parser.add_argument("--output_dir", default=str(_default_output_dir()), help="Directory for outputs")
+    parser.add_argument(
+        "--output_dir",
+        default=str(_default_output_dir()),
+        help="Directory for anonymization map (summary is written into the Zoom session folder)",
+    )
     parser.add_argument("--date", default=_today_date_string(), help="Date stamp for output filenames (YYYY_MM_DD)")
     parser.add_argument("--model", default="qwen2.5:7b-instruct", help="Local Ollama model name")
     parser.add_argument("--ollama_url", default="http://localhost:11434", help="Base URL for local Ollama")

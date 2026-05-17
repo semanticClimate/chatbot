@@ -8,9 +8,12 @@ from zoom_daily_summary import (
     anonymize_utterances,
     clean_caption_lines,
     collect_session_attendees,
+    extract_zoom_meeting_id,
     normalize_speaker_name,
     parse_speaker_utterances,
     prepend_warning_and_attendees,
+    session_date_for_summary,
+    summary_path_for_session,
 )
 
 EXISTING_TRANSCRIPT_PATH = Path("tests", "resources", "2026_04_25_anonymized.txt")
@@ -121,6 +124,44 @@ def test_prepend_warning_and_attendees_places_warning_first():
     assert combined.startswith(SUMMARY_WARNING)
     assert "## Attendees" in combined
     assert "## Daily Summary" in combined
+
+
+def test_prepend_includes_session_date_and_meeting_id():
+    combined = prepend_warning_and_attendees(
+        "## Daily Summary\n- Item",
+        "",
+        session_date="2026-05-15",
+        meeting_id="abc-123-def",
+    )
+    assert "**Date:** 2026-05-15" in combined
+    assert "**Zoom meeting ID:** `abc-123-def`" in combined
+
+
+def test_extract_zoom_meeting_id_from_uuid_folder(tmp_path: Path):
+    session = tmp_path / "2026-05-15 10.00.00 Standup abcdef12-3456-7890-abcd-ef1234567890"
+    session.mkdir()
+    assert extract_zoom_meeting_id(session) == "abcdef12-3456-7890-abcd-ef1234567890"
+
+
+def test_extract_zoom_meeting_id_from_metadata(tmp_path: Path):
+    session = tmp_path / "2026-05-15 Standup"
+    session.mkdir()
+    (session / "zoom_0.txt").write_text("Meeting ID: 830 1234 5678\n", encoding="utf-8")
+    assert extract_zoom_meeting_id(session) == "83012345678"
+
+
+def test_summary_path_for_session_uses_meeting_id(tmp_path: Path):
+    session = tmp_path / "2026-05-15 10.00.00 Call 98765432101"
+    session.mkdir()
+    path = summary_path_for_session(session)
+    assert path.parent == session
+    assert path.name == "98765432101_summary.md"
+
+
+def test_session_date_from_folder_name(tmp_path: Path):
+    session = tmp_path / "2026-05-15 10.00.00 Daily"
+    session.mkdir()
+    assert session_date_for_summary(session) == "2026-05-15"
 
 
 def test_collect_session_attendees_applies_regex_corrections():
