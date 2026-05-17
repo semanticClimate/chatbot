@@ -1,0 +1,1443 @@
+{
+  "/Users/pm286/Documents/Zoom/2025-11-03 08.04.35 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-03_08.04.35_CEVOpen",
+    "mtime": 1762160352.8656497,
+    "processed_at": "2026-05-15T14:55:36.770153+00:00",
+    "session_date": "2025-11-03",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-03 08.04.35 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-03 08.04.35 CEVOpen/2025-11-03_08.04.35_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-03 09.34.21 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-03_09.34.21_CEVOpen",
+    "mtime": 1762167860.70747,
+    "processed_at": "2026-05-15T14:54:06.432238+00:00",
+    "session_date": "2025-11-03",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-03 09.34.21 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-03 09.34.21 CEVOpen/2025-11-03_09.34.21_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-04 08.02.01 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-04_08.02.01_CEVOpen",
+    "mtime": 1762247257.9593654,
+    "processed_at": "2026-05-15T14:52:56.962045+00:00",
+    "session_date": "2025-11-04",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-04 08.02.01 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-04 08.02.01 CEVOpen/2025-11-04_08.02.01_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-04 09.37.42 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-04_09.37.42_CEVOpen",
+    "mtime": 1762253968.1663115,
+    "processed_at": "2026-05-15T14:51:53.798085+00:00",
+    "session_date": "2025-11-04",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-04 09.37.42 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-04 09.37.42 CEVOpen/2025-11-04_09.37.42_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-05 09.13.42 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-05_09.13.42_CEVOpen",
+    "mtime": 1762343420.477617,
+    "processed_at": "2026-05-15T14:50:57.796817+00:00",
+    "session_date": "2025-11-05",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-05 09.13.42 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-05 09.13.42 CEVOpen/2025-11-05_09.13.42_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-06 08.07.29 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-06_08.07.29_CEVOpen",
+    "mtime": 1762419691.9791083,
+    "processed_at": "2026-05-15T14:48:47.311851+00:00",
+    "session_date": "2025-11-06",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-06 08.07.29 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-06 08.07.29 CEVOpen/2025-11-06_08.07.29_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-06 09.36.59 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-06_09.36.59_CEVOpen",
+    "mtime": 1762426756.8435814,
+    "processed_at": "2026-05-15T14:47:15.740820+00:00",
+    "session_date": "2025-11-06",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-06 09.36.59 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-06 09.36.59 CEVOpen/2025-11-06_09.36.59_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-07 08.02.41 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-07_08.02.41_CEVOpen",
+    "mtime": 1762506388.6719627,
+    "processed_at": "2026-05-15T14:45:49.134010+00:00",
+    "session_date": "2025-11-07",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-07 08.02.41 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-07 08.02.41 CEVOpen/2025-11-07_08.02.41_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-07 09.37.49 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-07_09.37.49_CEVOpen",
+    "mtime": 1762514120.1921897,
+    "processed_at": "2026-05-15T14:44:23.846651+00:00",
+    "session_date": "2025-11-07",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-07 09.37.49 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-07 09.37.49 CEVOpen/2025-11-07_09.37.49_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-10 09.00.44 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-10_09.00.44_CEVOpen",
+    "mtime": 1762765244.4995568,
+    "processed_at": "2026-05-15T14:42:52.344238+00:00",
+    "session_date": "2025-11-10",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-10 09.00.44 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-10 09.00.44 CEVOpen/2025-11-10_09.00.44_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-10 09.36.03 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-10_09.36.03_CEVOpen",
+    "mtime": 1762771413.0245233,
+    "processed_at": "2026-05-15T14:41:23.348977+00:00",
+    "session_date": "2025-11-10",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-10 09.36.03 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-10 09.36.03 CEVOpen/2025-11-10_09.36.03_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-11 08.02.37 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-11_08.02.37_CEVOpen",
+    "mtime": 1762852129.5372014,
+    "processed_at": "2026-05-15T14:39:53.597047+00:00",
+    "session_date": "2025-11-11",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-11 08.02.37 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-11 08.02.37 CEVOpen/2025-11-11_08.02.37_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-11 09.44.33 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-11_09.44.33_CEVOpen",
+    "mtime": 1762857623.6290243,
+    "processed_at": "2026-05-15T14:38:18.166213+00:00",
+    "session_date": "2025-11-11",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-11 09.44.33 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-11 09.44.33 CEVOpen/2025-11-11_09.44.33_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-12 08.04.01 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-12_08.04.01_CEVOpen",
+    "mtime": 1762938140.7762127,
+    "processed_at": "2026-05-15T14:37:25.388230+00:00",
+    "session_date": "2025-11-12",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-12 08.04.01 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-12 08.04.01 CEVOpen/2025-11-12_08.04.01_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-12 09.37.51 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-12_09.37.51_CEVOpen",
+    "mtime": 1762943937.2521186,
+    "processed_at": "2026-05-15T14:35:46.893049+00:00",
+    "session_date": "2025-11-12",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-12 09.37.51 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-12 09.37.51 CEVOpen/2025-11-12_09.37.51_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-13 08.02.47 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-13_08.02.47_CEVOpen",
+    "mtime": 1763024561.6631746,
+    "processed_at": "2026-05-15T14:34:22.990512+00:00",
+    "session_date": "2025-11-13",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-13 08.02.47 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-13 08.02.47 CEVOpen/2025-11-13_08.02.47_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-13 09.33.29 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-13_09.33.29_CEVOpen",
+    "mtime": 1763031010.5501049,
+    "processed_at": "2026-05-15T14:32:46.831841+00:00",
+    "session_date": "2025-11-13",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-13 09.33.29 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-13 09.33.29 CEVOpen/2025-11-13_09.33.29_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-14 08.00.48 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-14_08.00.48_CEVOpen",
+    "mtime": 1763110869.9774,
+    "processed_at": "2026-05-15T14:31:44.198236+00:00",
+    "session_date": "2025-11-14",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-14 08.00.48 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-14 08.00.48 CEVOpen/2025-11-14_08.00.48_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-17 09.33.33 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-17_09.33.33_CEVOpen",
+    "mtime": 1763375687.6243038,
+    "processed_at": "2026-05-15T14:30:15.179244+00:00",
+    "session_date": "2025-11-17",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-17 09.33.33 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-17 09.33.33 CEVOpen/2025-11-17_09.33.33_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-18 08.02.42 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-18_08.02.42_CEVOpen",
+    "mtime": 1763456009.5774548,
+    "processed_at": "2026-05-15T14:28:57.558755+00:00",
+    "session_date": "2025-11-18",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-18 08.02.42 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-18 08.02.42 CEVOpen/2025-11-18_08.02.42_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-18 09.32.18 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-18_09.32.18_CEVOpen",
+    "mtime": 1763461326.0349636,
+    "processed_at": "2026-05-15T14:27:37.339655+00:00",
+    "session_date": "2025-11-18",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-18 09.32.18 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-18 09.32.18 CEVOpen/2025-11-18_09.32.18_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-20 08.03.52 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-20_08.03.52_CEVOpen",
+    "mtime": 1763629343.3524344,
+    "processed_at": "2026-05-15T14:26:21.946480+00:00",
+    "session_date": "2025-11-20",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-20 08.03.52 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-20 08.03.52 CEVOpen/2025-11-20_08.03.52_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-21 08.05.14 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-21_08.05.14_CEVOpen",
+    "mtime": 1763715595.9885397,
+    "processed_at": "2026-05-15T14:24:42.162992+00:00",
+    "session_date": "2025-11-21",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-21 08.05.14 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-21 08.05.14 CEVOpen/2025-11-21_08.05.14_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-21 09.34.41 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-21_09.34.41_CEVOpen",
+    "mtime": 1763720818.1852767,
+    "processed_at": "2026-05-15T14:23:27.312669+00:00",
+    "session_date": "2025-11-21",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-21 09.34.41 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-21 09.34.41 CEVOpen/2025-11-21_09.34.41_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-24 07.59.35 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-24_07.59.35_CEVOpen",
+    "mtime": 1763975237.8887117,
+    "processed_at": "2026-05-15T14:22:09.935958+00:00",
+    "session_date": "2025-11-24",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-24 07.59.35 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-24 07.59.35 CEVOpen/2025-11-24_07.59.35_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-25 08.04.14 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-25_08.04.14_CEVOpen",
+    "mtime": 1764061552.823939,
+    "processed_at": "2026-05-15T14:20:43.274393+00:00",
+    "session_date": "2025-11-25",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-25 08.04.14 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-25 08.04.14 CEVOpen/2025-11-25_08.04.14_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-25 09.36.00 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-25_09.36.00_CEVOpen",
+    "mtime": 1764067787.159854,
+    "processed_at": "2026-05-15T14:19:12.661329+00:00",
+    "session_date": "2025-11-25",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-25 09.36.00 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-25 09.36.00 CEVOpen/2025-11-25_09.36.00_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-26 08.01.57 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-26_08.01.57_CEVOpen",
+    "mtime": 1764147739.5305314,
+    "processed_at": "2026-05-15T14:18:02.305187+00:00",
+    "session_date": "2025-11-26",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-26 08.01.57 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-26 08.01.57 CEVOpen/2025-11-26_08.01.57_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-27 08.07.11 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-27_08.07.11_CEVOpen",
+    "mtime": 1764234027.19498,
+    "processed_at": "2026-05-15T14:16:24.551385+00:00",
+    "session_date": "2025-11-27",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-27 08.07.11 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-27 08.07.11 CEVOpen/2025-11-27_08.07.11_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-11-28 08.06.34 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-11-28_08.06.34_CEVOpen",
+    "mtime": 1764319925.3410058,
+    "processed_at": "2026-05-15T14:15:24.403864+00:00",
+    "session_date": "2025-11-28",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-11-28 08.06.34 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-11-28 08.06.34 CEVOpen/2025-11-28_08.06.34_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-02 08.03.27 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-02_08.03.27_CEVOpen",
+    "mtime": 1764666414.4258485,
+    "processed_at": "2026-05-15T14:14:20.565535+00:00",
+    "session_date": "2025-12-02",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-02 08.03.27 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-02 08.03.27 CEVOpen/2025-12-02_08.03.27_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-02 09.39.15 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-02_09.39.15_CEVOpen",
+    "mtime": 1764671794.720441,
+    "processed_at": "2026-05-15T14:13:22.569560+00:00",
+    "session_date": "2025-12-02",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-02 09.39.15 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-02 09.39.15 CEVOpen/2025-12-02_09.39.15_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-03 09.37.43 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-03_09.37.43_CEVOpen",
+    "mtime": 1764759016.0202267,
+    "processed_at": "2026-05-15T14:12:32.303910+00:00",
+    "session_date": "2025-12-03",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-03 09.37.43 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-03 09.37.43 CEVOpen/2025-12-03_09.37.43_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-03 14.20.40 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-03_14.20.40_CEVOpen",
+    "mtime": 1764773091.0483327,
+    "processed_at": "2026-05-15T14:11:49.536883+00:00",
+    "session_date": "2025-12-03",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-03 14.20.40 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-03 14.20.40 CEVOpen/2025-12-03_14.20.40_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-04 08.03.23 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-04_08.03.23_CEVOpen",
+    "mtime": 1764838837.8285992,
+    "processed_at": "2026-05-15T14:11:12.707684+00:00",
+    "session_date": "2025-12-04",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-04 08.03.23 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-04 08.03.23 CEVOpen/2025-12-04_08.03.23_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-04 09.32.42 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-04_09.32.42_CEVOpen",
+    "mtime": 1764846113.3365576,
+    "processed_at": "2026-05-15T14:10:20.295278+00:00",
+    "session_date": "2025-12-04",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-04 09.32.42 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-04 09.32.42 CEVOpen/2025-12-04_09.32.42_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-05 08.01.38 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-05_08.01.38_CEVOpen",
+    "mtime": 1764925327.1221075,
+    "processed_at": "2026-05-15T14:09:38.166294+00:00",
+    "session_date": "2025-12-05",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-05 08.01.38 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-05 08.01.38 CEVOpen/2025-12-05_08.01.38_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-08 09.53.08 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-08_09.53.08_CEVOpen",
+    "mtime": 1765192093.508032,
+    "processed_at": "2026-05-15T14:08:21.127270+00:00",
+    "session_date": "2025-12-08",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-08 09.53.08 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-08 09.53.08 CEVOpen/2025-12-08_09.53.08_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-10 08.02.10 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-10_08.02.10_CEVOpen",
+    "mtime": 1765357258.5807705,
+    "processed_at": "2026-05-15T14:06:58.610628+00:00",
+    "session_date": "2025-12-10",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-10 08.02.10 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-10 08.02.10 CEVOpen/2025-12-10_08.02.10_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-10 09.35.02 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-10_09.35.02_CEVOpen",
+    "mtime": 1765361227.328562,
+    "processed_at": "2026-05-15T14:05:51.268955+00:00",
+    "session_date": "2025-12-10",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-10 09.35.02 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-10 09.35.02 CEVOpen/2025-12-10_09.35.02_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-11 08.04.07 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-11_08.04.07_CEVOpen",
+    "mtime": 1765443834.3018637,
+    "processed_at": "2026-05-15T14:05:13.315945+00:00",
+    "session_date": "2025-12-11",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-11 08.04.07 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-11 08.04.07 CEVOpen/2025-12-11_08.04.07_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-11 09.33.33 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-11_09.33.33_CEVOpen",
+    "mtime": 1765449398.4693902,
+    "processed_at": "2026-05-15T14:04:01.419241+00:00",
+    "session_date": "2025-12-11",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-11 09.33.33 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-11 09.33.33 CEVOpen/2025-12-11_09.33.33_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-12 08.04.59 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-12_08.04.59_CEVOpen",
+    "mtime": 1765530506.2432375,
+    "processed_at": "2026-05-15T14:03:23.628025+00:00",
+    "session_date": "2025-12-12",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-12 08.04.59 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-12 08.04.59 CEVOpen/2025-12-12_08.04.59_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-12 09.41.40 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-12_09.41.40_CEVOpen",
+    "mtime": 1765536001.077296,
+    "processed_at": "2026-05-15T14:02:17.626766+00:00",
+    "session_date": "2025-12-12",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-12 09.41.40 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-12 09.41.40 CEVOpen/2025-12-12_09.41.40_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-15 08.04.46 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-15_08.04.46_CEVOpen",
+    "mtime": 1765789445.3006446,
+    "processed_at": "2026-05-15T14:01:15.750349+00:00",
+    "session_date": "2025-12-15",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-15 08.04.46 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-15 08.04.46 CEVOpen/2025-12-15_08.04.46_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-16 08.34.29 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-16_08.34.29_CEVOpen",
+    "mtime": 1765875449.5650551,
+    "processed_at": "2026-05-15T13:59:57.222047+00:00",
+    "session_date": "2025-12-16",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-16 08.34.29 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-16 08.34.29 CEVOpen/2025-12-16_08.34.29_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-17 08.05.47 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-17_08.05.47_CEVOpen",
+    "mtime": 1765962516.7538333,
+    "processed_at": "2026-05-15T13:59:05.589328+00:00",
+    "session_date": "2025-12-17",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-17 08.05.47 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-17 08.05.47 CEVOpen/2025-12-17_08.05.47_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-17 09.36.11 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-17_09.36.11_CEVOpen",
+    "mtime": 1765967798.529721,
+    "processed_at": "2026-05-15T13:57:13.388599+00:00",
+    "session_date": "2025-12-17",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-17 09.36.11 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-17 09.36.11 CEVOpen/2025-12-17_09.36.11_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-18 08.07.24 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-18_08.07.24_CEVOpen",
+    "mtime": 1766049021.1010287,
+    "processed_at": "2026-05-15T13:56:16.497493+00:00",
+    "session_date": "2025-12-18",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-18 08.07.24 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-18 08.07.24 CEVOpen/2025-12-18_08.07.24_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-18 09.35.53 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-18_09.35.53_CEVOpen",
+    "mtime": 1766054202.0935562,
+    "processed_at": "2026-05-15T13:54:39.721741+00:00",
+    "session_date": "2025-12-18",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-18 09.35.53 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-18 09.35.53 CEVOpen/2025-12-18_09.35.53_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-19 08.02.41 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-19_08.02.41_CEVOpen",
+    "mtime": 1766134404.2444274,
+    "processed_at": "2026-05-15T13:53:13.524200+00:00",
+    "session_date": "2025-12-19",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-19 08.02.41 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-19 08.02.41 CEVOpen/2025-12-19_08.02.41_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-19 09.10.22 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-19_09.10.22_CEVOpen",
+    "mtime": 1766140560.223235,
+    "processed_at": "2026-05-15T13:52:16.727069+00:00",
+    "session_date": "2025-12-19",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-19 09.10.22 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-19 09.10.22 CEVOpen/2025-12-19_09.10.22_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-22 08.06.45 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-22_08.06.45_CEVOpen",
+    "mtime": 1766394885.022187,
+    "processed_at": "2026-05-15T13:50:12.394788+00:00",
+    "session_date": "2025-12-22",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-22 08.06.45 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-22 08.06.45 CEVOpen/2025-12-22_08.06.45_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2025-12-22 09.37.36 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2025-12-22_09.37.36_CEVOpen",
+    "mtime": 1766400557.56403,
+    "processed_at": "2026-05-15T13:49:10.692089+00:00",
+    "session_date": "2025-12-22",
+    "session_dir": "/Users/pm286/Documents/Zoom/2025-12-22 09.37.36 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2025-12-22 09.37.36 CEVOpen/2025-12-22_09.37.36_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-05 08.07.59 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-05_08.07.59_CEVOpen",
+    "mtime": 1767603830.955147,
+    "processed_at": "2026-05-15T13:47:45.803102+00:00",
+    "session_date": "2026-01-05",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-05 08.07.59 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-05 08.07.59 CEVOpen/2026-01-05_08.07.59_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-06 08.26.20 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-06_08.26.20_CEVOpen",
+    "mtime": 1767692570.2202916,
+    "processed_at": "2026-05-15T13:46:32.838860+00:00",
+    "session_date": "2026-01-06",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-06 08.26.20 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-06 08.26.20 CEVOpen/2026-01-06_08.26.20_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-07 08.01.46 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-07_08.01.46_CEVOpen",
+    "mtime": 1767776392.7128012,
+    "processed_at": "2026-05-15T13:44:35.516578+00:00",
+    "session_date": "2026-01-07",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-07 08.01.46 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-07 08.01.46 CEVOpen/2026-01-07_08.01.46_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-07 09.37.07 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-07_09.37.07_CEVOpen",
+    "mtime": 1767781109.9671185,
+    "processed_at": "2026-05-15T13:43:12.293489+00:00",
+    "session_date": "2026-01-07",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-07 09.37.07 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-07 09.37.07 CEVOpen/2026-01-07_09.37.07_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-08 08.05.05 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-08_08.05.05_CEVOpen",
+    "mtime": 1767863124.0520453,
+    "processed_at": "2026-05-15T13:42:06.229931+00:00",
+    "session_date": "2026-01-08",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-08 08.05.05 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-08 08.05.05 CEVOpen/2026-01-08_08.05.05_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-08 09.34.10 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-08_09.34.10_CEVOpen",
+    "mtime": 1767865347.431067,
+    "processed_at": "2026-05-15T13:40:37.842977+00:00",
+    "session_date": "2026-01-08",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-08 09.34.10 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-08 09.34.10 CEVOpen/2026-01-08_09.34.10_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-09 08.06.06 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-09_08.06.06_CEVOpen",
+    "mtime": 1767949202.010223,
+    "processed_at": "2026-05-15T13:40:23.464113+00:00",
+    "session_date": "2026-01-09",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-09 08.06.06 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-09 08.06.06 CEVOpen/2026-01-09_08.06.06_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-09 09.13.15 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-09_09.13.15_CEVOpen",
+    "mtime": 1767951463.2560253,
+    "processed_at": "2026-05-15T13:39:01.968026+00:00",
+    "session_date": "2026-01-09",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-09 09.13.15 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-09 09.13.15 CEVOpen/2026-01-09_09.13.15_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-12 08.06.11 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-12_08.06.11_CEVOpen",
+    "mtime": 1768206793.0536888,
+    "processed_at": "2026-05-15T13:38:28.275625+00:00",
+    "session_date": "2026-01-12",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-12 08.06.11 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-12 08.06.11 CEVOpen/2026-01-12_08.06.11_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-13 08.01.58 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-13_08.01.58_CEVOpen",
+    "mtime": 1768295064.96624,
+    "processed_at": "2026-05-15T13:37:41.275055+00:00",
+    "session_date": "2026-01-13",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-13 08.01.58 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-13 08.01.58 CEVOpen/2026-01-13_08.01.58_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-13 09.33.39 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-13_09.33.39_CEVOpen",
+    "mtime": 1768298191.051738,
+    "processed_at": "2026-05-15T13:36:19.135813+00:00",
+    "session_date": "2026-01-13",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-13 09.33.39 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-13 09.33.39 CEVOpen/2026-01-13_09.33.39_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-14 08.02.06 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-14_08.02.06_CEVOpen",
+    "mtime": 1768381213.5280213,
+    "processed_at": "2026-05-15T13:35:41.479174+00:00",
+    "session_date": "2026-01-14",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-14 08.02.06 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-14 08.02.06 CEVOpen/2026-01-14_08.02.06_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-14 09.33.16 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-14_09.33.16_CEVOpen",
+    "mtime": 1768385992.7331088,
+    "processed_at": "2026-05-15T13:34:28.720400+00:00",
+    "session_date": "2026-01-14",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-14 09.33.16 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-14 09.33.16 CEVOpen/2026-01-14_09.33.16_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-15 08.03.48 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-15_08.03.48_CEVOpen",
+    "mtime": 1768468047.3349862,
+    "processed_at": "2026-05-15T13:33:37.200689+00:00",
+    "session_date": "2026-01-15",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-15 08.03.48 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-15 08.03.48 CEVOpen/2026-01-15_08.03.48_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-15 09.31.50 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-15_09.31.50_CEVOpen",
+    "mtime": 1768473542.917319,
+    "processed_at": "2026-05-15T13:32:13.560200+00:00",
+    "session_date": "2026-01-15",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-15 09.31.50 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-15 09.31.50 CEVOpen/2026-01-15_09.31.50_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-15 10.55.01 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-15_10.55.01_CEVOpen",
+    "mtime": 1768477647.6018174,
+    "processed_at": "2026-05-15T13:31:18.338850+00:00",
+    "session_date": "2026-01-15",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-15 10.55.01 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-15 10.55.01 CEVOpen/2026-01-15_10.55.01_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-19 08.02.37 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-19_08.02.37_CEVOpen",
+    "mtime": 1768813380.8250208,
+    "processed_at": "2026-05-15T13:30:24.997620+00:00",
+    "session_date": "2026-01-19",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-19 08.02.37 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-19 08.02.37 CEVOpen/2026-01-19_08.02.37_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-19 09.35.23 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-19_09.35.23_CEVOpen",
+    "mtime": 1768821087.3681967,
+    "processed_at": "2026-05-15T13:28:58.704414+00:00",
+    "session_date": "2026-01-19",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-19 09.35.23 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-19 09.35.23 CEVOpen/2026-01-19_09.35.23_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-20 08.01.37 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-20_08.01.37_CEVOpen",
+    "mtime": 1768899932.6799767,
+    "processed_at": "2026-05-15T13:27:11.161201+00:00",
+    "session_date": "2026-01-20",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-20 08.01.37 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-20 08.01.37 CEVOpen/2026-01-20_08.01.37_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-20 09.36.15 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-20_09.36.15_CEVOpen",
+    "mtime": 1768905850.121469,
+    "processed_at": "2026-05-15T13:25:43.747431+00:00",
+    "session_date": "2026-01-20",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-20 09.36.15 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-20 09.36.15 CEVOpen/2026-01-20_09.36.15_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-21 08.03.25 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-21_08.03.25_CEVOpen",
+    "mtime": 1768986702.193812,
+    "processed_at": "2026-05-15T13:24:40.293215+00:00",
+    "session_date": "2026-01-21",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-21 08.03.25 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-21 08.03.25 CEVOpen/2026-01-21_08.03.25_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-21 09.37.49 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-21_09.37.49_CEVOpen",
+    "mtime": 1768993645.6296263,
+    "processed_at": "2026-05-15T13:23:04.076286+00:00",
+    "session_date": "2026-01-21",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-21 09.37.49 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-21 09.37.49 CEVOpen/2026-01-21_09.37.49_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-22 08.06.13 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-22_08.06.13_CEVOpen",
+    "mtime": 1769072473.9865375,
+    "processed_at": "2026-05-15T13:21:29.099030+00:00",
+    "session_date": "2026-01-22",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-22 08.06.13 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-22 08.06.13 CEVOpen/2026-01-22_08.06.13_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-22 09.33.49 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-22_09.33.49_CEVOpen",
+    "mtime": 1769078365.7347398,
+    "processed_at": "2026-05-15T13:20:15.515781+00:00",
+    "session_date": "2026-01-22",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-22 09.33.49 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-22 09.33.49 CEVOpen/2026-01-22_09.33.49_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-23 08.02.05 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-23_08.02.05_CEVOpen",
+    "mtime": 1769160199.2304866,
+    "processed_at": "2026-05-15T13:19:01.961736+00:00",
+    "session_date": "2026-01-23",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-23 08.02.05 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-23 08.02.05 CEVOpen/2026-01-23_08.02.05_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-27 08.03.28 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-27_08.03.28_CEVOpen",
+    "mtime": 1769506851.0683923,
+    "processed_at": "2026-05-15T13:17:38.830441+00:00",
+    "session_date": "2026-01-27",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-27 08.03.28 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-27 08.03.28 CEVOpen/2026-01-27_08.03.28_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-27 10.04.15 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-27_10.04.15_CEVOpen",
+    "mtime": 1769512185.479984,
+    "processed_at": "2026-05-15T13:15:50.979390+00:00",
+    "session_date": "2026-01-27",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-27 10.04.15 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-27 10.04.15 CEVOpen/2026-01-27_10.04.15_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-28 08.19.40 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-28_08.19.40_CEVOpen",
+    "mtime": 1769590630.7034507,
+    "processed_at": "2026-05-15T13:14:51.605053+00:00",
+    "session_date": "2026-01-28",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-28 08.19.40 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-28 08.19.40 CEVOpen/2026-01-28_08.19.40_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-29 08.03.03 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-29_08.03.03_CEVOpen",
+    "mtime": 1769676781.910742,
+    "processed_at": "2026-05-15T13:14:09.018689+00:00",
+    "session_date": "2026-01-29",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-29 08.03.03 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-29 08.03.03 CEVOpen/2026-01-29_08.03.03_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-30 08.01.48 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-30_08.01.48_CEVOpen",
+    "mtime": 1769764327.6647012,
+    "processed_at": "2026-05-15T13:12:55.078537+00:00",
+    "session_date": "2026-01-30",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-30 08.01.48 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-30 08.01.48 CEVOpen/2026-01-30_08.01.48_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-30 09.38.28 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-30_09.38.28_CEVOpen",
+    "mtime": 1769767689.9341834,
+    "processed_at": "2026-05-15T13:11:17.564738+00:00",
+    "session_date": "2026-01-30",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-30 09.38.28 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-30 09.38.28 CEVOpen/2026-01-30_09.38.28_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-01-30 10.26.54 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-01-30_10.26.54_CEVOpen",
+    "mtime": 1769772218.3764777,
+    "processed_at": "2026-05-15T13:10:28.684755+00:00",
+    "session_date": "2026-01-30",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-01-30 10.26.54 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-01-30 10.26.54 CEVOpen/2026-01-30_10.26.54_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-02 08.02.24 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-02_08.02.24_CEVOpen",
+    "mtime": 1770023047.9947262,
+    "processed_at": "2026-05-15T13:09:28.994074+00:00",
+    "session_date": "2026-02-02",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-02 08.02.24 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-02 08.02.24 CEVOpen/2026-02-02_08.02.24_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-03 08.02.43 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-03_08.02.43_CEVOpen",
+    "mtime": 1770109503.6135318,
+    "processed_at": "2026-05-15T13:07:56.845574+00:00",
+    "session_date": "2026-02-03",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-03 08.02.43 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-03 08.02.43 CEVOpen/2026-02-03_08.02.43_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-03 09.43.10 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-03_09.43.10_CEVOpen",
+    "mtime": 1770117071.35968,
+    "processed_at": "2026-05-15T13:06:18.051884+00:00",
+    "session_date": "2026-02-03",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-03 09.43.10 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-03 09.43.10 CEVOpen/2026-02-03_09.43.10_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-04 08.01.53 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-04_08.01.53_CEVOpen",
+    "mtime": 1770196046.1654763,
+    "processed_at": "2026-05-15T13:04:23.150727+00:00",
+    "session_date": "2026-02-04",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-04 08.01.53 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-04 08.01.53 CEVOpen/2026-02-04_08.01.53_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-04 09.33.50 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-04_09.33.50_CEVOpen",
+    "mtime": 1770202436.8697207,
+    "processed_at": "2026-05-15T13:02:55.022032+00:00",
+    "session_date": "2026-02-04",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-04 09.33.50 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-04 09.33.50 CEVOpen/2026-02-04_09.33.50_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-05 08.05.51 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-05_08.05.51_CEVOpen",
+    "mtime": 1770283223.2288775,
+    "processed_at": "2026-05-15T13:01:30.972087+00:00",
+    "session_date": "2026-02-05",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-05 08.05.51 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-05 08.05.51 CEVOpen/2026-02-05_08.05.51_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-05 09.46.29 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-05_09.46.29_CEVOpen",
+    "mtime": 1770289235.9995832,
+    "processed_at": "2026-05-15T12:59:57.400555+00:00",
+    "session_date": "2026-02-05",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-05 09.46.29 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-05 09.46.29 CEVOpen/2026-02-05_09.46.29_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-06 08.01.45 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-06_08.01.45_CEVOpen",
+    "mtime": 1770369281.4982183,
+    "processed_at": "2026-05-15T12:58:33.597905+00:00",
+    "session_date": "2026-02-06",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-06 08.01.45 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-06 08.01.45 CEVOpen/2026-02-06_08.01.45_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-06 09.46.17 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-06_09.46.17_CEVOpen",
+    "mtime": 1770375609.8106923,
+    "processed_at": "2026-05-15T12:57:07.688948+00:00",
+    "session_date": "2026-02-06",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-06 09.46.17 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-06 09.46.17 CEVOpen/2026-02-06_09.46.17_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-09 08.04.43 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-09_08.04.43_CEVOpen",
+    "mtime": 1770629735.2702029,
+    "processed_at": "2026-05-15T12:55:30.087554+00:00",
+    "session_date": "2026-02-09",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-09 08.04.43 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-09 08.04.43 CEVOpen/2026-02-09_08.04.43_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-10 08.05.48 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-10_08.05.48_CEVOpen",
+    "mtime": 1770715464.2789495,
+    "processed_at": "2026-05-15T12:53:23.220123+00:00",
+    "session_date": "2026-02-10",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-10 08.05.48 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-10 08.05.48 CEVOpen/2026-02-10_08.05.48_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-10 09.57.34 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-10_09.57.34_CEVOpen",
+    "mtime": 1770721622.043063,
+    "processed_at": "2026-05-15T12:51:50.850069+00:00",
+    "session_date": "2026-02-10",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-10 09.57.34 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-10 09.57.34 CEVOpen/2026-02-10_09.57.34_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-11 08.04.57 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-11_08.04.57_CEVOpen",
+    "mtime": 1770801133.1334813,
+    "processed_at": "2026-05-15T12:51:03.661703+00:00",
+    "session_date": "2026-02-11",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-11 08.04.57 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-11 08.04.57 CEVOpen/2026-02-11_08.04.57_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-11 09.45.53 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-11_09.45.53_CEVOpen",
+    "mtime": 1770806170.0718172,
+    "processed_at": "2026-05-15T12:49:49.755107+00:00",
+    "session_date": "2026-02-11",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-11 09.45.53 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-11 09.45.53 CEVOpen/2026-02-11_09.45.53_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-12 08.02.04 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-12_08.02.04_CEVOpen",
+    "mtime": 1770887104.7290692,
+    "processed_at": "2026-05-15T12:48:52.576291+00:00",
+    "session_date": "2026-02-12",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-12 08.02.04 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-12 08.02.04 CEVOpen/2026-02-12_08.02.04_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-12 09.33.03 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-12_09.33.03_CEVOpen",
+    "mtime": 1770894178.2422433,
+    "processed_at": "2026-05-15T12:47:28.674112+00:00",
+    "session_date": "2026-02-12",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-12 09.33.03 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-12 09.33.03 CEVOpen/2026-02-12_09.33.03_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-13 08.04.44 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-13_08.04.44_CEVOpen",
+    "mtime": 1770973902.2551272,
+    "processed_at": "2026-05-15T12:46:04.890851+00:00",
+    "session_date": "2026-02-13",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-13 08.04.44 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-13 08.04.44 CEVOpen/2026-02-13_08.04.44_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-16 08.00.19 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-16_08.00.19_CEVOpen",
+    "mtime": 1771232795.5291767,
+    "processed_at": "2026-05-15T12:45:04.417939+00:00",
+    "session_date": "2026-02-16",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-16 08.00.19 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-16 08.00.19 CEVOpen/2026-02-16_08.00.19_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-16 09.35.35 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-16_09.35.35_CEVOpen",
+    "mtime": 1771239410.5217247,
+    "processed_at": "2026-05-15T12:43:42.779497+00:00",
+    "session_date": "2026-02-16",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-16 09.35.35 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-16 09.35.35 CEVOpen/2026-02-16_09.35.35_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-17 08.04.12 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-17_08.04.12_CEVOpen",
+    "mtime": 1771319935.8746493,
+    "processed_at": "2026-05-15T12:42:52.814182+00:00",
+    "session_date": "2026-02-17",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-17 08.04.12 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-17 08.04.12 CEVOpen/2026-02-17_08.04.12_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-17 09.36.39 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-17_09.36.39_CEVOpen",
+    "mtime": 1771322954.7835903,
+    "processed_at": "2026-05-15T12:41:12.493886+00:00",
+    "session_date": "2026-02-17",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-17 09.36.39 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-17 09.36.39 CEVOpen/2026-02-17_09.36.39_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-18 08.01.37 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-18_08.01.37_CEVOpen",
+    "mtime": 1771405624.257135,
+    "processed_at": "2026-05-15T12:40:27.554156+00:00",
+    "session_date": "2026-02-18",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-18 08.01.37 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-18 08.01.37 CEVOpen/2026-02-18_08.01.37_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-18 09.42.35 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-18_09.42.35_CEVOpen",
+    "mtime": 1771411784.226774,
+    "processed_at": "2026-05-15T12:38:42.601035+00:00",
+    "session_date": "2026-02-18",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-18 09.42.35 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-18 09.42.35 CEVOpen/2026-02-18_09.42.35_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-19 08.03.00 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-19_08.03.00_CEVOpen",
+    "mtime": 1771491950.406208,
+    "processed_at": "2026-05-15T12:37:30.165917+00:00",
+    "session_date": "2026-02-19",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-19 08.03.00 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-19 08.03.00 CEVOpen/2026-02-19_08.03.00_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-19 09.37.21 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-19_09.37.21_CEVOpen",
+    "mtime": 1771501041.8893747,
+    "processed_at": "2026-05-15T12:36:03.864176+00:00",
+    "session_date": "2026-02-19",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-19 09.37.21 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-19 09.37.21 CEVOpen/2026-02-19_09.37.21_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-20 08.04.01 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-20_08.04.01_CEVOpen",
+    "mtime": 1771579136.519706,
+    "processed_at": "2026-05-15T12:33:02.217718+00:00",
+    "session_date": "2026-02-20",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-20 08.04.01 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-20 08.04.01 CEVOpen/2026-02-20_08.04.01_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-20 09.45.27 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-20_09.45.27_CEVOpen",
+    "mtime": 1771583053.5549335,
+    "processed_at": "2026-05-15T12:31:21.860600+00:00",
+    "session_date": "2026-02-20",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-20 09.45.27 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-20 09.45.27 CEVOpen/2026-02-20_09.45.27_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-23 08.03.56 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-23_08.03.56_CEVOpen",
+    "mtime": 1771839243.954861,
+    "processed_at": "2026-05-15T12:30:28.801276+00:00",
+    "session_date": "2026-02-23",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-23 08.03.56 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-23 08.03.56 CEVOpen/2026-02-23_08.03.56_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-23 10.04.52 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-23_10.04.52_CEVOpen",
+    "mtime": 1771847897.9681575,
+    "processed_at": "2026-05-15T12:28:32.364885+00:00",
+    "session_date": "2026-02-23",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-23 10.04.52 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-23 10.04.52 CEVOpen/2026-02-23_10.04.52_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-24 08.02.09 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-24_08.02.09_CEVOpen",
+    "mtime": 1771924600.5952177,
+    "processed_at": "2026-05-15T12:25:57.393582+00:00",
+    "session_date": "2026-02-24",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-24 08.02.09 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-24 08.02.09 CEVOpen/2026-02-24_08.02.09_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-24 09.35.45 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-24_09.35.45_CEVOpen",
+    "mtime": 1771926969.6630023,
+    "processed_at": "2026-05-15T12:24:44.627883+00:00",
+    "session_date": "2026-02-24",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-24 09.35.45 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-24 09.35.45 CEVOpen/2026-02-24_09.35.45_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-25 08.01.32 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-25_08.01.32_CEVOpen",
+    "mtime": 1772010508.564791,
+    "processed_at": "2026-05-15T12:24:12.127720+00:00",
+    "session_date": "2026-02-25",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-25 08.01.32 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-25 08.01.32 CEVOpen/2026-02-25_08.01.32_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-25 09.35.25 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-25_09.35.25_CEVOpen",
+    "mtime": 1772019457.1063871,
+    "processed_at": "2026-05-15T12:22:33.166739+00:00",
+    "session_date": "2026-02-25",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-25 09.35.25 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-25 09.35.25 CEVOpen/2026-02-25_09.35.25_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-26 08.01.51 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-26_08.01.51_CEVOpen",
+    "mtime": 1772094382.2457733,
+    "processed_at": "2026-05-15T12:19:58.892619+00:00",
+    "session_date": "2026-02-26",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-26 08.01.51 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-26 08.01.51 CEVOpen/2026-02-26_08.01.51_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-26 09.48.39 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-26_09.48.39_CEVOpen",
+    "mtime": 1772104289.888235,
+    "processed_at": "2026-05-15T12:19:19.804671+00:00",
+    "session_date": "2026-02-26",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-26 09.48.39 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-26 09.48.39 CEVOpen/2026-02-26_09.48.39_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-27 08.03.45 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-27_08.03.45_CEVOpen",
+    "mtime": 1772183509.919882,
+    "processed_at": "2026-05-15T12:17:07.558280+00:00",
+    "session_date": "2026-02-27",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-27 08.03.45 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-27 08.03.45 CEVOpen/2026-02-27_08.03.45_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-02-27 09.35.20 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-02-27_09.35.20_CEVOpen",
+    "mtime": 1772192380.7340963,
+    "processed_at": "2026-05-15T12:15:19.311822+00:00",
+    "session_date": "2026-02-27",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-02-27 09.35.20 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-02-27 09.35.20 CEVOpen/2026-02-27_09.35.20_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-02 08.02.01 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-02_08.02.01_CEVOpen",
+    "mtime": 1772442838.9930515,
+    "processed_at": "2026-05-15T12:12:33.655283+00:00",
+    "session_date": "2026-03-02",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-02 08.02.01 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-02 08.02.01 CEVOpen/2026-03-02_08.02.01_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-02 09.43.15 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-02_09.43.15_CEVOpen",
+    "mtime": 1772452202.4286919,
+    "processed_at": "2026-05-15T12:10:46.833148+00:00",
+    "session_date": "2026-03-02",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-02 09.43.15 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-02 09.43.15 CEVOpen/2026-03-02_09.43.15_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-03 08.05.58 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-03_08.05.58_CEVOpen",
+    "mtime": 1772529639.3241148,
+    "processed_at": "2026-05-15T12:08:10.033292+00:00",
+    "session_date": "2026-03-03",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-03 08.05.58 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-03 08.05.58 CEVOpen/2026-03-03_08.05.58_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-03 09.45.26 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-03_09.45.26_CEVOpen",
+    "mtime": 1772535078.2677324,
+    "processed_at": "2026-05-15T12:06:09.642317+00:00",
+    "session_date": "2026-03-03",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-03 09.45.26 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-03 09.45.26 CEVOpen/2026-03-03_09.45.26_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-06 08.05.04 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-06_08.05.04_CEVOpen",
+    "mtime": 1772787767.7103758,
+    "processed_at": "2026-05-15T12:04:46.652049+00:00",
+    "session_date": "2026-03-06",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-06 08.05.04 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-06 08.05.04 CEVOpen/2026-03-06_08.05.04_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-06 09.33.43 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-06_09.33.43_CEVOpen",
+    "mtime": 1772794844.6817775,
+    "processed_at": "2026-05-15T12:03:16.224430+00:00",
+    "session_date": "2026-03-06",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-06 09.33.43 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-06 09.33.43 CEVOpen/2026-03-06_09.33.43_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-09 08.03.52 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-09_08.03.52_CEVOpen",
+    "mtime": 1773049446.683246,
+    "processed_at": "2026-05-15T12:01:26.586168+00:00",
+    "session_date": "2026-03-09",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-09 08.03.52 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-09 08.03.52 CEVOpen/2026-03-09_08.03.52_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-17 09.18.48 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-17_09.18.48_CEVOpen",
+    "mtime": 1773743670.1389132,
+    "processed_at": "2026-05-15T11:58:51.456308+00:00",
+    "session_date": "2026-03-17",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-17 09.18.48 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-17 09.18.48 CEVOpen/2026-03-17_09.18.48_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-19 08.09.18 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-19_08.09.18_CEVOpen",
+    "mtime": 1773912480.8130896,
+    "processed_at": "2026-05-15T11:57:29.554286+00:00",
+    "session_date": "2026-03-19",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-19 08.09.18 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-19 08.09.18 CEVOpen/2026-03-19_08.09.18_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-20 08.09.38 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-20_08.09.38_CEVOpen",
+    "mtime": 1773998530.8176038,
+    "processed_at": "2026-05-15T11:55:27.827473+00:00",
+    "session_date": "2026-03-20",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-20 08.09.38 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-20 08.09.38 CEVOpen/2026-03-20_08.09.38_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-03-23 08.06.51 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-03-23_08.06.51_CEVOpen",
+    "mtime": 1774257003.1727881,
+    "processed_at": "2026-05-15T11:53:40.017737+00:00",
+    "session_date": "2026-03-23",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-03-23 08.06.51 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-03-23 08.06.51 CEVOpen/2026-03-23_08.06.51_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-04-23 10.31.02 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-04-23_10.31.02_CEVOpen",
+    "mtime": 1776941524.2892745,
+    "processed_at": "2026-05-15T11:52:49.573630+00:00",
+    "session_date": "2026-04-23",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-04-23 10.31.02 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-04-23 10.31.02 CEVOpen/2026-04-23_10.31.02_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-04-24 09.07.10 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-04-24_09.07.10_CEVOpen",
+    "mtime": 1777021552.0499523,
+    "processed_at": "2026-05-15T11:50:54.238848+00:00",
+    "session_date": "2026-04-24",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-04-24 09.07.10 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-04-24 09.07.10 CEVOpen/2026-04-24_09.07.10_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-04-24 10.31.47 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-04-24_10.31.47_CEVOpen",
+    "mtime": 1777027616.5792491,
+    "processed_at": "2026-05-15T11:49:28.647476+00:00",
+    "session_date": "2026-04-24",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-04-24 10.31.47 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-04-24 10.31.47 CEVOpen/2026-04-24_10.31.47_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-04-27 09.03.06 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-04-27_09.03.06_CEVOpen",
+    "mtime": 1777280884.145018,
+    "processed_at": "2026-05-15T11:48:06.059276+00:00",
+    "session_date": "2026-04-27",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-04-27 09.03.06 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-04-27 09.03.06 CEVOpen/2026-04-27_09.03.06_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-04-27 10.31.20 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-04-27_10.31.20_CEVOpen",
+    "mtime": 1777286383.9184763,
+    "processed_at": "2026-05-15T11:46:50.734878+00:00",
+    "session_date": "2026-04-27",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-04-27 10.31.20 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-04-27 10.31.20 CEVOpen/2026-04-27_10.31.20_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-04-28 09.05.09 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-04-28_09.05.09_CEVOpen",
+    "mtime": 1777367610.8460188,
+    "processed_at": "2026-05-15T11:45:46.807813+00:00",
+    "session_date": "2026-04-28",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-04-28 09.05.09 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-04-28 09.05.09 CEVOpen/2026-04-28_09.05.09_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-04-29 09.01.41 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-04-29_09.01.41_CEVOpen",
+    "mtime": 1777453729.2141514,
+    "processed_at": "2026-05-15T11:44:19.642603+00:00",
+    "session_date": "2026-04-29",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-04-29 09.01.41 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-04-29 09.01.41 CEVOpen/2026-04-29_09.01.41_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-04-29 10.32.11 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-04-29_10.32.11_CEVOpen",
+    "mtime": 1777458062.8022487,
+    "processed_at": "2026-05-15T11:43:22.376466+00:00",
+    "session_date": "2026-04-29",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-04-29 10.32.11 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-04-29 10.32.11 CEVOpen/2026-04-29_10.32.11_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-04-30 09.04.20 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-04-30_09.04.20_CEVOpen",
+    "mtime": 1777540146.0677142,
+    "processed_at": "2026-05-15T11:42:17.932061+00:00",
+    "session_date": "2026-04-30",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-04-30 09.04.20 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-04-30 09.04.20 CEVOpen/2026-04-30_09.04.20_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-04-30 10.35.18 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-04-30_10.35.18_CEVOpen",
+    "mtime": 1777544614.937973,
+    "processed_at": "2026-05-15T11:40:33.678925+00:00",
+    "session_date": "2026-04-30",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-04-30 10.35.18 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-04-30 10.35.18 CEVOpen/2026-04-30_10.35.18_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-01 17.42.57 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-01_17.42.57_CEVOpen",
+    "mtime": 1777660297.9812236,
+    "processed_at": "2026-05-15T11:39:29.064123+00:00",
+    "session_date": "2026-05-01",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-01 17.42.57 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-01 17.42.57 CEVOpen/2026-05-01_17.42.57_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-04 09.02.07 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-04_09.02.07_CEVOpen",
+    "mtime": 1777885598.2083647,
+    "processed_at": "2026-05-15T11:37:08.634141+00:00",
+    "session_date": "2026-05-04",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-04 09.02.07 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-04 09.02.07 CEVOpen/2026-05-04_09.02.07_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-04 10.34.29 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-04_10.34.29_CEVOpen",
+    "mtime": 1777891721.1772003,
+    "processed_at": "2026-05-15T11:35:51.827458+00:00",
+    "session_date": "2026-05-04",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-04 10.34.29 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-04 10.34.29 CEVOpen/2026-05-04_10.34.29_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-05 09.05.46 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-05_09.05.46_CEVOpen",
+    "mtime": 1777978226.467921,
+    "processed_at": "2026-05-15T11:34:36.635011+00:00",
+    "session_date": "2026-05-05",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-05 09.05.46 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-05 09.05.46 CEVOpen/2026-05-05_09.05.46_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-07 09.03.28 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-07_09.03.28_CEVOpen",
+    "mtime": 1778144889.7399614,
+    "processed_at": "2026-05-15T11:32:22.730502+00:00",
+    "session_date": "2026-05-07",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-07 09.03.28 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-07 09.03.28 CEVOpen/2026-05-07_09.03.28_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-07 10.38.08 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-07_10.38.08_CEVOpen",
+    "mtime": 1778150228.3017578,
+    "processed_at": "2026-05-15T11:30:57.628101+00:00",
+    "session_date": "2026-05-07",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-07 10.38.08 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-07 10.38.08 CEVOpen/2026-05-07_10.38.08_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-08 09.02.50 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-08_09.02.50_CEVOpen",
+    "mtime": 1778230504.2982454,
+    "processed_at": "2026-05-15T11:29:52.224016+00:00",
+    "session_date": "2026-05-08",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-08 09.02.50 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-08 09.02.50 CEVOpen/2026-05-08_09.02.50_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-08 10.35.52 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-08_10.35.52_CEVOpen",
+    "mtime": 1778245507.8515427,
+    "processed_at": "2026-05-15T11:28:41.150892+00:00",
+    "session_date": "2026-05-08",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-08 10.35.52 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-08 10.35.52 CEVOpen/2026-05-08_10.35.52_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-10 19.32.32 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-10_19.32.32_CEVOpen",
+    "mtime": 1778442352.8901675,
+    "processed_at": "2026-05-15T11:27:08.546608+00:00",
+    "session_date": "2026-05-10",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-10 19.32.32 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-10 19.32.32 CEVOpen/2026-05-10_19.32.32_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-11 09.01.43 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-11_09.01.43_CEVOpen",
+    "mtime": 1778489961.5300725,
+    "processed_at": "2026-05-15T11:25:33.435275+00:00",
+    "session_date": "2026-05-11",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-11 09.01.43 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-11 09.01.43 CEVOpen/2026-05-11_09.01.43_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-12 09.07.25 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-12_09.07.25_CEVOpen",
+    "mtime": 1778576348.3884776,
+    "processed_at": "2026-05-15T11:24:23.659499+00:00",
+    "session_date": "2026-05-12",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-12 09.07.25 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-12 09.07.25 CEVOpen/2026-05-12_09.07.25_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-12 10.32.17 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-12_10.32.17_CEVOpen",
+    "mtime": 1778584028.1161318,
+    "processed_at": "2026-05-15T11:23:16.912182+00:00",
+    "session_date": "2026-05-12",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-12 10.32.17 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-12 10.32.17 CEVOpen/2026-05-12_10.32.17_CEVOpen_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-13 09.29.53 CEVOpen/meeting_saved_closed_caption.txt": {
+    "mtime": 1778664288.613176,
+    "processed_at": "2026-05-15T10:33:34.689093+00:00",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-13 09.29.53 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/workspace/chatbot/docs/summary/2026_05_15_11_33_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-14 09.06.45 CEVOpen/meeting_saved_closed_caption.txt": {
+    "mtime": 1778749667.3080087,
+    "processed_at": "2026-05-15T10:32:07.685873+00:00",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-14 09.06.45 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/workspace/chatbot/docs/summary/2026_05_15_11_32_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-14 10.32.40 CEVOpen/meeting_saved_closed_caption.txt": {
+    "mtime": 1778754191.4656513,
+    "processed_at": "2026-05-15T10:30:35.637497+00:00",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-14 10.32.40 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/workspace/chatbot/docs/summary/2026_05_15_11_30_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-15 09.08.28 CEVOpen/meeting_saved_closed_caption.txt": {
+    "mtime": 1778835857.997758,
+    "processed_at": "2026-05-15T10:29:31.031655+00:00",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-15 09.08.28 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/workspace/chatbot/docs/summary/2026_05_15_11_29_summary.md"
+  },
+  "/Users/pm286/Documents/Zoom/2026-05-15 10.37.49 CEVOpen/meeting_saved_closed_caption.txt": {
+    "meeting_id": "2026-05-15_10.37.49_CEVOpen",
+    "mtime": 1778841550.669087,
+    "processed_at": "2026-05-15T11:21:45.720685+00:00",
+    "session_date": "2026-05-15",
+    "session_dir": "/Users/pm286/Documents/Zoom/2026-05-15 10.37.49 CEVOpen",
+    "slack_uploaded": false,
+    "summary_path": "/Users/pm286/Documents/Zoom/2026-05-15 10.37.49 CEVOpen/2026-05-15_10.37.49_CEVOpen_summary.md"
+  }
+}
