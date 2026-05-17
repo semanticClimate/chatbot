@@ -1,0 +1,8 @@
+{
+  "channel_id": "C0123456789",
+  "upload_transcript": true,
+  "upload_all_session_files": true,
+  "max_file_mb": 1024,
+  "exclude_names": [".DS_Store", "Thumbs.db", "desktop.ini"],
+  "initial_comment": "Zoom session files (auto-uploaded from Mac)"
+}
