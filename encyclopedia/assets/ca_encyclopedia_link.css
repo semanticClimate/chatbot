@@ -1,0 +1,10 @@
+a.ca-encyclopedia-link {
+  color: #1a5a39;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a.ca-encyclopedia-link:hover {
+  color: #0d3d26;
+  background: #e8f4ee;
+}

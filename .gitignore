@@ -1,3 +1,4 @@
+.DS_Store
 .streamlit/secrets.toml
 venv/
 .venv/
@@ -9,3 +10,6 @@ chroma_db/
 .env.remote-test
 web_client/tunnel-api-base.txt
 .quick-tunnel-runtime/
+encyclopedia/output/
+encyclopedia/temp/
+encyclopedia/source/

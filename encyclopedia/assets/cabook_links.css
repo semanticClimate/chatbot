@@ -1,0 +1,58 @@
+/* CABook + encyclopedia link styles (2026-05-17) */
+
+/* Annotator: book term → local CA encyclopedia entry */
+a.ca-encyclopedia-link {
+  color: #1a5a39;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-underline-offset: 2px;
+  border-bottom: none;
+}
+
+a.ca-encyclopedia-link:hover {
+  color: #0d3d26;
+  background: #e8f4ee;
+}
+
+/* Wikipedia (absolute URLs in book footnotes, fixed /wiki/ in encyclopedia) */
+a.ca-wikipedia-link,
+a.wikipedia-link {
+  color: #0645ad;
+  font-weight: normal;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+}
+
+a.ca-wikipedia-link:hover,
+a.wikipedia-link:hover {
+  color: #0b0080;
+  background: #eaf3ff;
+}
+
+/* Wikidata ids in encyclopedia headers */
+a.ca-wikidata-link,
+a.wikidata-link {
+  color: #54595d;
+  font-size: 0.92em;
+  text-decoration: none;
+  border-bottom: 1px dashed #72777d;
+}
+
+a.ca-wikidata-link:hover,
+a.wikidata-link:hover {
+  color: #202122;
+  background: #f8f9fa;
+}
+
+/* In-book anchors (TOC, footnote back-links) */
+a.ca-internal-link {
+  color: #5a4a3a;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+}
+
+a.ca-internal-link:hover {
+  background: #f5f0e8;
+}

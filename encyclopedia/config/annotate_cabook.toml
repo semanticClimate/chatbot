@@ -1,0 +1,66 @@
+# CABook encyclopedia annotation — paths and parameters
+# Generated/maintained: 2026-05-17 (system date)
+# Paths are relative to the chatbot repository root unless absolute.
+
+[paths]
+repo_root = "."
+
+[paths.input]
+book_html = "input/full_student_book.html"
+book_media_dir = "input/media"
+encyclopedia_html = "../demo_CAbookEncyclopedia/CA_knowledge_graph2026/CA_encyclopedia_new.html"
+
+[media]
+# src values in the book HTML are like "media/image1.png" relative to the book file
+media_src_prefix = "media"
+
+[paths.source]
+prepared_encyclopedia_html = "encyclopedia/source/CA_encyclopedia_new.html"
+
+[paths.output]
+annotated_book_html = "encyclopedia/output/full_student_book_annotated.html"
+annotation_report_json = "encyclopedia/output/annotation_report.json"
+
+[paths.temp]
+book_with_para_ids_html = "encyclopedia/temp/full_student_book_with_para_ids.html"
+
+[paths.assets]
+link_css = "encyclopedia/assets/cabook_links.css"
+
+[links]
+# Relative from annotated book (output/) to prepared encyclopedia (source/)
+href_template = "../source/CA_encyclopedia_new.html#{fragment}"
+fragment_template = "entry-{wikidata_id}"
+link_class = "ca-encyclopedia-link"
+data_entry_id_attr = "data-entry-id"
+data_canonical_term_attr = "data-canonical-term"
+# Rewrite href="/wiki/..." from Wikipedia extracts to full URLs
+wikipedia_base_url = "https://en.wikipedia.org"
+wikipedia_link_class = "ca-wikipedia-link"
+wikidata_link_class = "ca-wikidata-link"
+internal_link_class = "ca-internal-link"
+
+[encyclopedia_prepare]
+entry_id_attribute = "id"
+copy_source_if_missing = true
+overwrite_prepared = false
+
+[variants]
+expand_plurals = true
+expand_verbs = false
+min_surface_form_length = 3
+strip_canonical_suffix = " (canonical)"
+
+[matching]
+ignore_case = true
+longest_match_first = true
+min_term_length = 2
+skip_tags = ["a", "script", "style", "title", "noscript"]
+
+[paragraph_ids]
+enabled = false
+id_prefix = "cabook-p-"
+
+[report]
+include_per_entry_counts = true
+include_unmatched_surface_forms = false
