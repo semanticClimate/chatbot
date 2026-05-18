@@ -1,6 +1,8 @@
 body {
     font-family: Georgia, "Times New Roman", serif;
-    font-size: 15px; line-height: 1.8; color: #1a1a1a;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #1a1a1a;
     width: 100%;
     max-width: none;
     margin: 0;
@@ -9,14 +11,50 @@ body {
     background: #fdfcf8;
     overflow-x: hidden;
 }
-h1 { font-size: 1.7em; color: #1a3a2a; margin-bottom: 0.3em; }
-h2 { font-size: 1.35em; color: #1a3a2a; margin-top: 1.6em; }
-h3 { font-size: 1.15em; color: #2a4a3a; margin-top: 1.4em; }
-h4 { font-size: 1.05em; color: #2a4a3a; margin-top: 1.2em; }
-p  { margin: 0.6em 0; }
-ul, ol { margin: 0.4em 0 0.6em 1.4em; }
-li { margin: 0.25em 0; }
-img, table, pre, code { max-width: 100% !important; }
+
+h1 {
+    font-size: 1.7em;
+    color: #1a3a2a;
+    margin-bottom: 0.3em;
+}
+
+h2 {
+    font-size: 1.35em;
+    color: #1a3a2a;
+    margin-top: 1.6em;
+}
+
+h3 {
+    font-size: 1.15em;
+    color: #2a4a3a;
+    margin-top: 1.4em;
+}
+
+h4 {
+    font-size: 1.05em;
+    color: #2a4a3a;
+    margin-top: 1.2em;
+}
+
+p {
+    margin: 0.6em 0;
+}
+
+ul,
+ol {
+    margin: 0.4em 0 0.6em 1.4em;
+}
+
+li {
+    margin: 0.25em 0;
+}
+
+img,
+table,
+pre,
+code {
+    max-width: 100% !important;
+}
 
 .ca-section {
     margin: 0.3em 0;
@@ -27,10 +65,22 @@ img, table, pre, code { max-width: 100% !important; }
 
 /* Section-level highlight (fallback) */
 @keyframes ca-flash {
-    0%   { background: #ffe566; border-left-color: #e6a817; }
-    60%  { background: #fff3c4; border-left-color: #e6a817; }
-    100% { background: #fffbe8; border-left-color: #c89614; }
+    0% {
+        background: #ffe566;
+        border-left-color: #e6a817;
+    }
+
+    60% {
+        background: #fff3c4;
+        border-left-color: #e6a817;
+    }
+
+    100% {
+        background: #fffbe8;
+        border-left-color: #c89614;
+    }
 }
+
 .ca-highlight {
     background: #fffbe8 !important;
     border-left: 3px solid #c89614 !important;
@@ -42,10 +92,21 @@ img, table, pre, code { max-width: 100% !important; }
 
 /* Paragraph-level highlight — this is what fires from "View Source" */
 @keyframes para-flash {
-    0%   { background: #ffe566; outline: 2px solid #e6a817; }
-    50%  { background: #fff3c4; }
-    100% { background: #fffbe8; outline: 2px solid #c89614; }
+    0% {
+        background: #ffe566;
+        outline: 2px solid #e6a817;
+    }
+
+    50% {
+        background: #fff3c4;
+    }
+
+    100% {
+        background: #fffbe8;
+        outline: 2px solid #c89614;
+    }
 }
+
 .ca-para-highlight {
     background: #fffbe8 !important;
     outline: 2px solid #c89614;
