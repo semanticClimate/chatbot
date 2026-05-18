@@ -7,6 +7,8 @@ import {
   getHealth,
   getReady,
   bookDocumentUrl,
+  encyclopediaEmptyUrl,
+  encyclopediaEntryUrl,
   exportConversationCsv,
   fetchLogsCsvBlob,
 } from "./api.js";
@@ -27,7 +29,8 @@ import { applyShellUiStrings, t } from "./ui_strings.js";
 
 const STORAGE_KEY_API = "climate_web_client_api_base";
 
-const DEFAULT_API_BASE = "http://127.0.0.1:8800";
+/** Empty default: quick-tunnel run fills web_client/tunnel-api-base.txt (trycloudflare API URL). */
+const DEFAULT_API_BASE = "";
 
 function trimBaseUrl(baseUrl) {
   return String(baseUrl || "").trim().replace(/\/+$/, "");
@@ -53,9 +56,10 @@ function isLoopbackApiBase(raw) {
   }
 }
 
-/** Prefer empty API base on remote tunnel pages over misleading localhost. */
+/** Prefer empty API base on remote tunnel pages; same-machine dev may use loopback. */
 function fallbackApiBase() {
-  return isRemoteWebOrigin() ? "" : DEFAULT_API_BASE;
+  if (isRemoteWebOrigin()) return "";
+  return DEFAULT_API_BASE || "http://127.0.0.1:8800";
 }
 
 /**
@@ -144,15 +148,50 @@ async function syncBookPanel(apiBase, statusLine) {
 
   if (!apiBase || !isAcceptableApiBase(apiBase)) {
     iframe.removeAttribute("src");
+    syncEncyclopediaPanel(apiBase, null);
     return;
   }
 
   try {
     iframe.src = bookDocumentUrl(apiBase);
+    syncEncyclopediaPanel(apiBase, null);
   } catch (e) {
     iframe.removeAttribute("src");
+    syncEncyclopediaPanel(apiBase, null);
     setStatus(statusLine, String(e.message || e), "error");
   }
+}
+
+/**
+ * @param {string} apiBase
+ * @param {string | null} entryId
+ */
+function syncEncyclopediaPanel(apiBase, entryId) {
+  const iframe = document.getElementById("encyclopediaFrame");
+  if (!iframe) return;
+  if (!apiBase || !isAcceptableApiBase(apiBase)) {
+    iframe.removeAttribute("src");
+    return;
+  }
+  try {
+    iframe.src = entryId
+      ? encyclopediaEntryUrl(apiBase, entryId)
+      : encyclopediaEmptyUrl(apiBase);
+  } catch {
+    iframe.removeAttribute("src");
+  }
+}
+
+/**
+ * @param {string} apiBase
+ * @param {string} entryId
+ */
+function openEncyclopediaEntry(apiBase, entryId) {
+  const id = String(entryId || "").trim();
+  if (!id || !apiBase || !isAcceptableApiBase(apiBase)) return;
+  syncEncyclopediaPanel(apiBase, id);
+  const iframe = document.getElementById("encyclopediaFrame");
+  iframe?.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 async function fetchTunnelHintApiBase() {
@@ -335,8 +374,18 @@ async function wire() {
       if (iframe) {
         iframe.src = bookDocumentUrl(base);
       }
+      syncEncyclopediaPanel(base, null);
     });
   }
+
+  window.addEventListener("message", (ev) => {
+    const base = apiInput.value.trim();
+    const origin = apiOriginFromBase(base);
+    if (!origin || ev.origin !== origin) return;
+    if (ev.data?.type === "ca-encyclopedia-open" && ev.data.entry_id) {
+      openEncyclopediaEntry(base, ev.data.entry_id);
+    }
+  });
 
   btnClear.addEventListener("click", () => {
     clearConversation();

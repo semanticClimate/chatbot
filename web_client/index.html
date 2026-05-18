@@ -25,7 +25,7 @@
       </p>
       <label class="field">
         <span class="field-label" data-i18n="labelApiUrl">API base URL</span>
-        <input type="url" id="apiBaseUrl" class="field-input" data-i18n="placeholderApiUrl" placeholder="http://127.0.0.1:8800" autocomplete="off" />
+        <input type="url" id="apiBaseUrl" class="field-input" data-i18n="placeholderApiUrl" placeholder="https://your-api.trycloudflare.com" autocomplete="off" />
       </label>
       <div class="row-actions row-actions-primary">
         <button type="button" id="btnHealth" class="btn btn-secondary" data-i18n="btnHealth">Check health</button>
@@ -71,6 +71,17 @@
           id="bookFrame"
           class="book-frame"
           title="Climate Academy Student Book"
+          sandbox="allow-scripts allow-same-origin"
+        ></iframe>
+        <div class="encyclopedia-toolbar">
+          <h2 class="panel-heading" id="encyclopediaHeadingEl" data-i18n="encyclopediaHeading">
+            Encyclopedia
+          </h2>
+        </div>
+        <iframe
+          id="encyclopediaFrame"
+          class="encyclopedia-frame"
+          title="Climate Academy encyclopedia entry"
           sandbox="allow-scripts allow-same-origin"
         ></iframe>
       </section>

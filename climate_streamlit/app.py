@@ -46,6 +46,8 @@ try:
         format_passage_for_prompt,
         parse_html_path_to_chunks,
     )
+    from climate_streamlit.rag.book_document import inject_book_viewer_assets
+    from climate_streamlit.rag.indexing import INDEX_SCHEMA_VERSION
     from climate_streamlit.db import (
         init_db,
         log_interaction,
@@ -59,6 +61,8 @@ except ModuleNotFoundError:
         format_passage_for_prompt,
         parse_html_path_to_chunks,
     )
+    from rag.book_document import inject_book_viewer_assets
+    from rag.indexing import INDEX_SCHEMA_VERSION
     from db import init_db, log_interaction, update_feedback, get_all_logs, get_logs_csv_string
 
 CLIMATE_API_BASE_URL = os.environ.get("CLIMATE_API_BASE_URL", "").strip()
@@ -371,140 +375,7 @@ def get_annotated_book_html(html_path: str) -> str:
     raw       = html_file.read_text(encoding="utf-8")
     annotated = annotate_html_with_section_ids(raw)
     annotated = inline_local_images(annotated, html_file.parent)
-
-    highlight_css = """
-<style>
-body {
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 15px; line-height: 1.8; color: #1a1a1a;
-    width: 100%;
-    max-width: none;
-    margin: 0;
-    box-sizing: border-box;
-    padding: 22px 24px 72px;
-    background: #fdfcf8;
-    overflow-x: hidden;
-}
-h1 { font-size: 1.7em; color: #1a3a2a; margin-bottom: 0.3em; }
-h2 { font-size: 1.35em; color: #1a3a2a; margin-top: 1.6em; }
-h3 { font-size: 1.15em; color: #2a4a3a; margin-top: 1.4em; }
-h4 { font-size: 1.05em; color: #2a4a3a; margin-top: 1.2em; }
-p  { margin: 0.6em 0; }
-ul, ol { margin: 0.4em 0 0.6em 1.4em; }
-li { margin: 0.25em 0; }
-img, table, pre, code { max-width: 100% !important; }
-
-.ca-section {
-    margin: 0.3em 0;
-    padding: 4px 0 4px 0;
-    border-left: 3px solid transparent;
-    transition: border-left-color 0.3s ease;
-}
-
-/* Section-level highlight (fallback) */
-@keyframes ca-flash {
-    0%   { background: #ffe566; border-left-color: #e6a817; }
-    60%  { background: #fff3c4; border-left-color: #e6a817; }
-    100% { background: #fffbe8; border-left-color: #c89614; }
-}
-.ca-highlight {
-    background: #fffbe8 !important;
-    border-left: 3px solid #c89614 !important;
-    border-radius: 0 6px 6px 0;
-    padding-left: 12px !important;
-    animation: ca-flash 0.8s ease forwards;
-    scroll-margin-top: 32px;
-}
-
-/* Paragraph-level highlight — this is what fires from "View Source" */
-@keyframes para-flash {
-    0%   { background: #ffe566; outline: 2px solid #e6a817; }
-    50%  { background: #fff3c4; }
-    100% { background: #fffbe8; outline: 2px solid #c89614; }
-}
-.ca-para-highlight {
-    background: #fffbe8 !important;
-    outline: 2px solid #c89614;
-    border-radius: 4px;
-    padding: 2px 4px !important;
-    animation: para-flash 0.9s ease forwards;
-    scroll-margin-top: 80px;
-}
-</style>
-"""
-
-    # This script listens for postMessage from Streamlit.
-    # It handles two jump types:
-    #   type = "ca-jump-para"    →  jump to exact paragraph element (anchor_id)
-    #   type = "ca-jump"         →  jump to section wrapper (legacy fallback)
-    jump_script = """
-<script>
-window.addEventListener('message', function(e) {
-    var data = e.data;
-    if (!data || !data.type) return;
-
-    // ── Remove all previous highlights ──────────────────────────────────────
-    document.querySelectorAll('.ca-highlight').forEach(function(el) {
-        el.classList.remove('ca-highlight');
-    });
-    document.querySelectorAll('.ca-para-highlight').forEach(function(el) {
-        el.classList.remove('ca-para-highlight');
-    });
-
-    // ── PARAGRAPH jump (precise — from "View Source" button) ────────────────
-    if (data.type === 'ca-jump-para') {
-        var anchorId = data.anchor_id || '';
-        var target   = anchorId ? document.getElementById(anchorId) : null;
-
-        // Fallback: try section-level wrapper if paragraph not found
-        if (!target && data.section) {
-            target = document.querySelector('.ca-section[data-section-number="' + data.section + '"]');
-            if (target) target.classList.add('ca-highlight');
-        } else if (target) {
-            target.classList.add('ca-para-highlight');
-        }
-
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return;
-    }
-
-    // ── SECTION jump (legacy, from chip buttons) ─────────────────────────────
-    if (data.type === 'ca-jump') {
-        var sec    = data.section;
-        var kws    = data.keywords || [];
-        var origId = data.heading_id || '';
-        var target = null;
-
-        target = document.querySelector('.ca-section[data-section-number="' + sec + '"]');
-        if (!target) target = document.querySelector('[data-section-number="' + sec + '"]');
-        if (!target) target = document.getElementById('section-' + sec.replace(/\\./g, '-'));
-        if (!target && origId) {
-            target = document.getElementById(origId);
-            if (target) { var w = target.closest('.ca-section'); if (w) target = w; }
-        }
-
-        if (target) {
-            target.classList.add('ca-highlight');
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }
-});
-</script>
-"""
-
-    if "</head>" in annotated:
-        annotated = annotated.replace("</head>", highlight_css + "</head>")
-    else:
-        annotated = highlight_css + annotated
-
-    if "</body>" in annotated:
-        annotated = annotated.replace("</body>", jump_script + "</body>")
-    else:
-        annotated += jump_script
-
-    return annotated
+    return inject_book_viewer_assets(annotated)
 
 
 # ─────────────────────────────────────────────────────
@@ -535,11 +406,19 @@ def build_knowledge_base():
         settings=Settings(anonymized_telemetry=False),
     )
     collection = chroma.get_or_create_collection(
-        name=COLLECTION_NAME, metadata={"hnsw:space": "cosine"},
+        name=COLLECTION_NAME,
+        metadata={"hnsw:space": "cosine", "index_schema_version": INDEX_SCHEMA_VERSION},
     )
-    if collection.count() > 0:
+    stored_version = (collection.metadata or {}).get("index_schema_version")
+    if collection.count() > 0 and stored_version == INDEX_SCHEMA_VERSION:
         st.sidebar.success(f"✅ {collection.count():,} paragraph chunks loaded.")
         return collection, embedder
+    if collection.count() > 0:
+        chroma.delete_collection(COLLECTION_NAME)
+        collection = chroma.get_or_create_collection(
+            name=COLLECTION_NAME,
+            metadata={"hnsw:space": "cosine", "index_schema_version": INDEX_SCHEMA_VERSION},
+        )
 
     if not HTML_PATH.is_file():
         st.error(f"⚠️ HTML book not found at `{HTML_PATH}`.")
@@ -603,7 +482,7 @@ def retrieve(query: str, collection, embedder):
     use      = filtered if filtered else triples
 
     chunks = []
-    for doc, _dist, meta in use:
+    for doc, dist, meta in use:
         chunks.append({
             "document":       doc,
             "section_number": meta.get("section_number", ""),
@@ -611,6 +490,7 @@ def retrieve(query: str, collection, embedder):
             "heading_id":     meta.get("heading_id", ""),
             "chunk_id":       meta.get("chunk_id", ""),
             "anchor_id":      meta.get("anchor_id", ""),
+            "distance":       float(dist),
         })
     return chunks
 

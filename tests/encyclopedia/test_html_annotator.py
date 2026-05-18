@@ -1,7 +1,12 @@
+from lxml import etree
 from lxml import html as lxml_html
 
 from encyclopedia.cabook_annotate.encyclopedia_index import build_term_index
-from encyclopedia.cabook_annotate.html_annotator import annotate_book_html
+from encyclopedia.cabook_annotate.html_annotator import (
+    _apply_parts_to_text_attr,
+    _link_element,
+    annotate_book_html,
+)
 from encyclopedia.cabook_annotate.prepare_encyclopedia import prepare_encyclopedia_html
 
 
@@ -25,3 +30,27 @@ def test_annotate_book_links_terms(fixture_settings):
 
     nested = root.xpath("//a[@href='https://example.com']//a")
     assert nested == []
+
+
+def test_apply_parts_to_text_attr_keeps_subscript_after_co2(fixture_settings):
+    """Links in parent.text must not be appended after <sub> (which drops the 'CO')."""
+    root = lxml_html.fromstring(
+        "<p>monthly mean atmospheric CO<sub>2</sub> level</p>",
+    )
+    p = root
+    link = _link_element(
+        "atmospheric",
+        "../source/CA_encyclopedia_new.html#entry-Q1",
+        "Q1",
+        "atmospheric",
+        fixture_settings,
+    )
+    _apply_parts_to_text_attr(
+        p,
+        ["monthly mean ", link, " CO"],
+    )
+    out = etree.tostring(p, encoding="unicode", method="html")
+    assert "CO<sub>2</sub>" in out
+    assert "<sub>2</sub> level" in out
+    assert out.index("CO<sub>") < out.index("<sub>2</sub>")
+    assert "<p><sub>2</sub>" not in out

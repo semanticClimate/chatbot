@@ -54,8 +54,8 @@ strip_canonical_suffix = " (canonical)"
 [matching]
 ignore_case = true
 longest_match_first = true
-min_term_length = 2
-skip_tags = ["a", "script", "style", "title", "noscript"]
+min_term_length = 3
+skip_tags = ["a", "script", "style", "title", "noscript", "sub", "sup"]
 
 [paragraph_ids]
 enabled = false
