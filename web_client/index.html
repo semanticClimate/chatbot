@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Climate Academy — chat</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1 class="app-title" data-i18n="appTitle">Climate Academy chat</h1>
+      <p class="app-subtitle" data-i18n="appSubtitle">Book-grounded answers via your API below.</p>
+    </header>
+
+    <section class="panel panel-settings" aria-label="Connection">
+      <label class="field">
+        <span class="field-label" data-i18n="labelChatLang">Chat language</span>
+        <select id="chatLangSelect" class="field-input field-select" aria-describedby="chatLangHint"></select>
+      </label>
+      <p id="chatLangHint" class="field-hint" data-i18n="hintChatLang">
+        Answers use this language only. Ask in the same language. The Climate Academy student book stays in English.
+      </p>
+      <label class="field">
+        <span class="field-label" data-i18n="labelApiUrl">API base URL</span>
+        <input type="url" id="apiBaseUrl" class="field-input" data-i18n="placeholderApiUrl" placeholder="http://127.0.0.1:8800" autocomplete="off" />
+      </label>
+      <div class="row-actions row-actions-primary">
+        <button type="button" id="btnHealth" class="btn btn-secondary" data-i18n="btnHealth">Check health</button>
+        <button type="button" id="btnClear" class="btn btn-secondary" data-i18n="btnClear">Clear chat</button>
+      </div>
+      <details class="settings-more">
+        <summary class="settings-more-summary" data-i18n="exportCsvSummary">Export CSV…</summary>
+        <div class="row-actions row-actions-secondary">
+          <button type="button" id="btnExportChat" class="btn btn-secondary" data-i18n="btnExportChat">Download chat</button>
+          <button type="button" id="btnExportLogs" class="btn btn-secondary" data-i18n="btnExportLogs">Server logs</button>
+        </div>
+      </details>
+      <p id="statusLine" class="status-line" role="status"></p>
+    </section>
+
+    <main class="main-grid">
+      <div class="main-middle">
+        <section class="panel panel-chat" id="conversationPanel">
+          <div id="thread" class="thread"></div>
+          <div id="examplesMount" class="examples-mount"></div>
+          <form id="composer" class="composer">
+            <label class="sr-only" for="question" id="lblQuestionSr" data-i18n="srQuestionLabel">Your question</label>
+            <textarea id="question" class="composer-input" rows="2" placeholder="Ask about the book…" required></textarea>
+            <button type="submit" class="btn btn-primary" id="btnSend" data-i18n="btnSend">Send</button>
+          </form>
+        </section>
+
+        <aside class="panel panel-sources" id="sourcesPanel">
+          <h2 class="panel-heading" id="sourcesHeading" data-i18n="sourcesHeading">Sources</h2>
+          <p id="sourcesHintEl" class="sources-hint" data-i18n="sourcesHint">Click a citation number on an answer.</p>
+          <div id="sourcesDetail" class="sources-detail"></div>
+        </aside>
+      </div>
+
+      <section class="panel panel-book" id="panelBookShell" aria-label="Student book">
+        <div class="book-toolbar">
+          <h2 class="panel-heading" id="bookHeadingEl" data-i18n="bookHeading">Student book</h2>
+          <button type="button" id="btnResetBook" class="btn btn-secondary" data-i18n="btnResetBook">
+            Reset highlight
+          </button>
+        </div>
+        <iframe
+          id="bookFrame"
+          class="book-frame"
+          title="Climate Academy Student Book"
+          sandbox="allow-scripts allow-same-origin"
+        ></iframe>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

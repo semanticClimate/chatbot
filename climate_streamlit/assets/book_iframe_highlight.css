@@ -1,0 +1,56 @@
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 15px; line-height: 1.8; color: #1a1a1a;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    box-sizing: border-box;
+    padding: 22px 24px 72px;
+    background: #fdfcf8;
+    overflow-x: hidden;
+}
+h1 { font-size: 1.7em; color: #1a3a2a; margin-bottom: 0.3em; }
+h2 { font-size: 1.35em; color: #1a3a2a; margin-top: 1.6em; }
+h3 { font-size: 1.15em; color: #2a4a3a; margin-top: 1.4em; }
+h4 { font-size: 1.05em; color: #2a4a3a; margin-top: 1.2em; }
+p  { margin: 0.6em 0; }
+ul, ol { margin: 0.4em 0 0.6em 1.4em; }
+li { margin: 0.25em 0; }
+img, table, pre, code { max-width: 100% !important; }
+
+.ca-section {
+    margin: 0.3em 0;
+    padding: 4px 0 4px 0;
+    border-left: 3px solid transparent;
+    transition: border-left-color 0.3s ease;
+}
+
+/* Section-level highlight (fallback) */
+@keyframes ca-flash {
+    0%   { background: #ffe566; border-left-color: #e6a817; }
+    60%  { background: #fff3c4; border-left-color: #e6a817; }
+    100% { background: #fffbe8; border-left-color: #c89614; }
+}
+.ca-highlight {
+    background: #fffbe8 !important;
+    border-left: 3px solid #c89614 !important;
+    border-radius: 0 6px 6px 0;
+    padding-left: 12px !important;
+    animation: ca-flash 0.8s ease forwards;
+    scroll-margin-top: 32px;
+}
+
+/* Paragraph-level highlight — this is what fires from "View Source" */
+@keyframes para-flash {
+    0%   { background: #ffe566; outline: 2px solid #e6a817; }
+    50%  { background: #fff3c4; }
+    100% { background: #fffbe8; outline: 2px solid #c89614; }
+}
+.ca-para-highlight {
+    background: #fffbe8 !important;
+    outline: 2px solid #c89614;
+    border-radius: 4px;
+    padding: 2px 4px !important;
+    animation: para-flash 0.9s ease forwards;
+    scroll-margin-top: 80px;
+}

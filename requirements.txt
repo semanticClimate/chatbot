@@ -1,0 +1,15 @@
+streamlit==1.36.0
+tomli>=2.0.0; python_version < "3.11"
+beautifulsoup4==4.12.3
+chromadb==0.5.3
+posthog<3.0.0
+sentence-transformers==3.0.1
+groq==0.9.0
+httpx==0.27.0
+pymupdf>=1.24.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+
+# For separated installs prefer:
+# - climate_streamlit/streamlit_app/requirements.txt
+# - fastapi_app/requirements.txt

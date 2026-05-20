@@ -1,0 +1,12 @@
+---
+description: Read browser/UI constraints before editing the vanilla web client
+globs: web_client/**/*
+alwaysApply: false
+---
+
+Before adding or editing files under **`web_client/`** (including HTML/CSS/vanilla ES modules tied to this client), read **[`docs/web-client-guidelines.md`](docs/web-client-guidelines.md)** first, then:
+
+- **[`docs/web-client-browser-constraints.md`](docs/web-client-browser-constraints.md)** — runtime, security, i18n, tunnels
+- **[`docs/web-client-layout-contract.md`](docs/web-client-layout-contract.md)** — when changing shell layout
+
+For user-visible chrome copy, extend **[`web_client/js/ui_strings.js`](web_client/js/ui_strings.js)** for **en / fr / es / pt / hi** rather than embedding English literals.

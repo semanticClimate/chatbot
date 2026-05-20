@@ -1,6 +1,42 @@
 # chatbot
 
-Cursor's explanation
+## Running the RAG API + browser client (quick reference)
+
+Dependencies are listed in the repo-root [`requirements.txt`](requirements.txt). Use a **Python 3.11+** venv for the API.
+
+**Terminal A — API (needs `GROQ_API_KEY`; do not commit the key)**
+
+```bash
+cd /path/to/chatbot
+source .venv/bin/activate
+export GROQ_API_KEY='gsk_…'   # must be exported; verify with: printenv GROQ_API_KEY
+
+python -m uvicorn fastapi_app.main:app --host 127.0.0.1 --port 8800
+```
+
+Use `python -m uvicorn`, not necessarily bare `uvicorn`, if your shell’s `uvicorn` points at an older Python (e.g. 3.8 without `tomllib`).
+
+**Terminal B — static web UI (no API key)**
+
+```bash
+cd /path/to/chatbot/web_client
+python -m http.server 8081
+```
+
+Open `http://127.0.0.1:8081` and set the API base URL to `http://127.0.0.1:8800`. If the browser blocks cross-origin requests, start Terminal A with e.g. `export CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8081`.
+
+**Smoke checks**
+
+```bash
+curl -s http://127.0.0.1:8800/health
+curl -s http://127.0.0.1:8800/ready
+```
+
+More detail: [`web_client/README.md`](web_client/README.md), [`climate_streamlit/Getting_started.md`](climate_streamlit/Getting_started.md) for Streamlit.
+
+**Web client (layout & content):** start at [`docs/web-client-guidelines.md`](docs/web-client-guidelines.md). **Issues / bugs / features:** [github.com/semanticclimate/chatbot/issues](https://github.com/semanticclimate/chatbot/issues).
+
+---
 
 ## How climate_streamlit/app.py works
 It’s a Streamlit app that does a simple RAG (Retrieval-Augmented Generation) loop:
@@ -38,29 +74,28 @@ sends it to Groq (GROQ_MODEL = "llama-3.3-70b-versatile") and returns the assist
 The assistant response is appended to st.session_state.messages and rendered.
 
 
-## How to run it
-From the repo root:
+## How to run it (Streamlit)
 
-Go into the app folder:
+For paths, book assets under `input/`, and current entrypoints, see [`climate_streamlit/Getting_started.md`](climate_streamlit/Getting_started.md).
 
-cd climate_streamlit
-Make sure you have a Groq API key in:
+From repo root, install deps:
 
-climate_streamlit/.streamlit/secrets.toml
-It must be GROQ_API_KEY = "gsk_...your_key_here" (the file currently has a placeholder).
-Ensure the PDF is present in the same folder as app.py:
-
-climate_streamlit/ClimateAcademy_Book.pdf
-Create/activate a virtualenv and install requirements:
-
-python -m venv venv
-source venv/bin/activate
+```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-Start the app:
+```
 
+Groq key: environment variable `GROQ_API_KEY` and/or `climate_streamlit/.streamlit/secrets.toml` per that guide.
+
+Example (adjust if your Streamlit entrypoint differs):
+
+```bash
+cd climate_streamlit
 streamlit run app.py
-Then open http://localhost:8501
-On the first run, it will take a couple minutes to build ./chroma_db. Subsequent runs should be fast.
+```
+
+Then open http://localhost:8501 . First run may build `chroma_db/` at the repo root; later runs reuse it.
 
 Fixing your chroma-hnswlib build error on macOS
 Your failure is happening while installing chromadb’s dependency chroma-hnswlib, and the log shows:

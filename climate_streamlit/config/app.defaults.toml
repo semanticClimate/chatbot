@@ -1,0 +1,64 @@
+[paths]
+html = "input/full_student_book.html"
+pdf = "input/2025_10/climate_academy_book.pdf"
+chroma_dir = "chroma_db"
+
+[chroma]
+collection_name = "climate_academy_paragraphs_v2"
+
+[retrieval]
+top_k = 14
+max_distance = 1.5
+
+[indexing]
+batch_size = 64
+
+[embed]
+model_label = "all-MiniLM-L6-v2 (ONNX)"
+
+[llm]
+model = "llama-3.3-70b-versatile"
+max_tokens = 4096
+temperature = 0.15
+history_turns = 8
+
+[pdf]
+max_query_words = 14
+keyword_max_words = 24
+
+[ui]
+page_title = "Climate Academy Chatbot"
+page_icon = "🌍"
+layout = "wide"
+initial_sidebar_state = "expanded"
+book_viewer_height = 760
+spinner_text = "Thinking..."
+
+[ui.chat_history]
+min_height = 360
+max_height = 680
+base = 170
+per_message = 105
+
+[ui.sidebar]
+chats_heading = "Chats"
+new_chat = "➕ New Chat"
+clear_chat = "🧹 Clear Current Chat"
+delete_chat = "🗑️ Delete Current Chat"
+
+[ui.panels]
+chat_title = "🌍 Climate Academy Assistant"
+chat_subtitle = "Ask a question and get grounded answers with paragraph-level sources."
+book_title = "📖 Climate Academy Student Book"
+book_subtitle = "Matthew Pye · 2025 · Click <b>View Source</b> on any answer card to jump to the exact paragraph."
+section_label_conversation = "Conversation"
+reset_book = "📖 Reset Book View"
+
+[ui.messages]
+welcome = """Hello! I'm the Climate Academy Assistant.
+
+Ask me anything about the book. Answers are combined into clear paragraphs, and each paragraph has numbered source chips. Click a chip (1, 2, 3...) to jump to that source in the book."""
+
+disclaimer_template = "Answers based solely on the Climate Academy Student Book.<br>Embeddings: {embed_model} · LLM: {llm_model}"
+
+chat_input_placeholder = "Ask about climate change..."

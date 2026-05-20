@@ -40,12 +40,29 @@ from chromadb.config import Settings
 from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
 from groq import Groq
 
-from html_sectioning import (
-    annotate_html_with_section_ids,
-    format_passage_for_prompt,
-    parse_html_path_to_chunks,
-)
-from db import init_db, log_interaction, update_feedback, get_all_logs, get_logs_csv_string
+try:
+    from climate_streamlit.html_sectioning import (
+        annotate_html_with_section_ids,
+        format_passage_for_prompt,
+        parse_html_path_to_chunks,
+    )
+    from climate_streamlit.db import (
+        init_db,
+        log_interaction,
+        update_feedback,
+        get_all_logs,
+        get_logs_csv_string,
+    )
+except ModuleNotFoundError:
+    from html_sectioning import (
+        annotate_html_with_section_ids,
+        format_passage_for_prompt,
+        parse_html_path_to_chunks,
+    )
+    from db import init_db, log_interaction, update_feedback, get_all_logs, get_logs_csv_string
+
+CLIMATE_API_BASE_URL = os.environ.get("CLIMATE_API_BASE_URL", "").strip()
+USE_REMOTE_API = bool(CLIMATE_API_BASE_URL)
 
 # ─────────────────────────────────────────────────────
 # PAGE CONFIG — must be the very first Streamlit call
@@ -500,11 +517,16 @@ def load_embedder():
 
 @st.cache_resource
 def load_groq():
-    api_key = os.environ.get("GROQ_API_KEY") or st.secrets.get("GROQ_API_KEY", "")
+    from dotenv import load_dotenv
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    load_dotenv(os.path.join(root_dir, ".env"), override=True)
+    load_dotenv(os.path.join(root_dir, "venv", ".env"), override=True)
+
+    api_key = os.environ.get("GROQ_API_KEY", "").strip()
     if not api_key:
         st.error(
             "⚠️ GROQ_API_KEY not set.\n\n"
-            "Add to .streamlit/secrets.toml:\n   GROQ_API_KEY = 'gsk_...'"
+            "Please ensure it is set in your .env file."
         )
         st.stop()
     return Groq(api_key=api_key)
@@ -633,13 +655,14 @@ Climate Academy Student Book by Matthew Pye (2025).
 
 RULES (STRICTLY ENFORCE):
 1. Answer ONLY from the numbered sources below. Do NOT use outside knowledge.
-2. AUTOMATICALLY detect the user's language and reply in that same language.
-3. You MAY combine information from multiple sources into one paragraph.
-4. Every answer paragraph MUST include citations using source numbers.
-5. Citations must reference only valid SOURCE_ID values from context.
-6. If the answer is not in the sources, output one paragraph saying that and
+2. Detect the language of each user message and write every answer paragraph in that exact language—including UI-facing phrases like apologies, disclaimers that the book does not cover the topic, and requests to rephrase—even when the passages below are mostly English. Treat English, Hindi, French, Portuguese, and Spanish as first-class alongside any other language the user may write in (match script as well as language, e.g. Devanagari for Hindi).
+3. Sources are in English: translate or paraphrase faithfully into the user's language without adding facts that are not supported by those sources.
+4. You MAY combine information from multiple sources into one paragraph.
+5. Every answer paragraph MUST include citations using source numbers.
+6. Citations must reference only valid SOURCE_ID values from context.
+7. If the answer is not in the sources, output one paragraph saying that and
    use an empty citations list.
-7. Never invent facts.
+8. Never invent facts.
 
 OUTPUT FORMAT — respond with JSON object and nothing else:
 {{
@@ -661,6 +684,55 @@ If you cannot produce valid JSON, output {{"answer_blocks": []}}.
 # ─────────────────────────────────────────────────────
 # GROQ
 # ─────────────────────────────────────────────────────
+def _parse_llm_json_blob(raw: str) -> dict | list | None:
+    """
+    Parse the first useful JSON object/array from model output.
+    Handles prose + inline [1,2,3] citations before trailing JSON payload.
+    """
+    text = (raw or "").strip()
+    if not text:
+        return None
+    if text.startswith("```"):
+        text = re.sub(r"^```[a-zA-Z0-9_-]*\s*\n?", "", text)
+        text = re.sub(r"\s*```\s*$", "", text).strip()
+
+    decoder = json.JSONDecoder()
+    candidates: list[object] = []
+    for i, ch in enumerate(text):
+        if ch not in "{[":
+            continue
+        try:
+            obj, _end = decoder.raw_decode(text, i)
+            candidates.append(obj)
+        except json.JSONDecodeError:
+            continue
+    if not candidates:
+        return None
+
+    # Prefer explicit answer objects if present.
+    for obj in candidates:
+        if isinstance(obj, dict) and any(k in obj for k in ("answer_blocks", "blocks", "answers", "paragraphs")):
+            return obj
+
+    # Then any object.
+    for obj in candidates:
+        if isinstance(obj, dict):
+            return obj
+
+    # Then list of dict blocks.
+    for obj in candidates:
+        if isinstance(obj, list) and obj and isinstance(obj[0], dict):
+            return obj
+
+    # Skip plain inline numeric citation arrays like [1,2,3].
+    for obj in candidates:
+        if isinstance(obj, list) and obj and all(isinstance(x, int) and not isinstance(x, bool) for x in obj):
+            continue
+        return obj
+
+    return None
+
+
 def ask_groq(groq_client, chunks: list[dict], history: list, user_message: str, pdf_chunk_map: Optional[dict] = None) -> dict:
     """
     Calls Groq and returns:
@@ -702,17 +774,9 @@ def ask_groq(groq_client, chunks: list[dict], history: list, user_message: str, 
         if raw.startswith("```"):
             raw = re.sub(r"^```[a-z]*\n?", "", raw).rstrip("` \n")
 
-        parsed = None
-        try:
-            parsed = json.loads(raw)
-        except Exception:
-            obj_match = re.search(r"\{[\s\S]*\}", raw)
-            arr_match = re.search(r"\[[\s\S]*\]", raw)
-            candidate = obj_match.group(0) if obj_match else (arr_match.group(0) if arr_match else "")
-            if candidate:
-                parsed = json.loads(candidate)
-            else:
-                parsed = {"answer_blocks": []}
+        parsed = _parse_llm_json_blob(raw)
+        if parsed is None:
+            parsed = {"answer_blocks": []}
         raw_blocks = []
         if isinstance(parsed, dict):
             raw_blocks = parsed.get("answer_blocks", [])
@@ -1017,8 +1081,11 @@ _init_session()
 # ─────────────────────────────────────────────────────
 # LOAD RESOURCES
 # ─────────────────────────────────────────────────────
-collection, embedder = build_knowledge_base()
-groq_client          = load_groq()
+if USE_REMOTE_API:
+    collection = embedder = groq_client = None
+else:
+    collection, embedder = build_knowledge_base()
+    groq_client = load_groq()
 
 ensure_html_media_assets(HTML_PATH, DOCX_PATH)
 
@@ -1035,6 +1102,8 @@ BOOK_PDF_URI = load_pdf_data_uri(str(PDF_PATH)) if PDF_PATH.is_file() else ""
 # LAYOUT
 # ─────────────────────────────────────────────────────
 with st.sidebar:
+    if USE_REMOTE_API:
+        st.caption(f"RAG backend: {CLIMATE_API_BASE_URL}")
     st.markdown("### Chats")
     if st.button("➕ New Chat", use_container_width=True):
         _create_chat()
@@ -1200,10 +1269,22 @@ with col_chat:
         if current_chat["name"].startswith("New Chat"):
             current_chat["name"] = (user_input[:28] + "...") if len(user_input) > 28 else user_input
 
+        message_id = str(uuid4())
         with st.spinner("Thinking..."):
-            chunks = retrieve(user_input, collection, embedder)
-            pdf_chunk_map = map_chunks_to_pdf(chunks, str(PDF_PATH)) if PDF_PATH.is_file() else {}
-            answer = ask_groq(groq_client, chunks, messages[:-1], user_input, pdf_chunk_map=pdf_chunk_map)
+            if USE_REMOTE_API:
+                from api_client import ask_via_api, messages_to_api_conversation
+
+                answer = ask_via_api(
+                    CLIMATE_API_BASE_URL,
+                    user_input,
+                    messages_to_api_conversation(messages[:-1]),
+                    chat_id=st.session_state.current_chat_id,
+                    message_id=message_id,
+                )
+            else:
+                chunks = retrieve(user_input, collection, embedder)
+                pdf_chunk_map = map_chunks_to_pdf(chunks, str(PDF_PATH)) if PDF_PATH.is_file() else {}
+                answer = ask_groq(groq_client, chunks, messages[:-1], user_input, pdf_chunk_map=pdf_chunk_map)
 
         blocks = answer.get("blocks", [])
         sources = answer.get("sources", [])
@@ -1220,9 +1301,17 @@ with col_chat:
             st.session_state.jump_pdf_query = first_source.get("pdf_query", "")
             st.session_state.jump_pdf_page = first_source.get("pdf_page", 1)
 
-        message_id = str(uuid4())
-        messages.append({"role": "assistant", "content": None, "blocks": blocks, "sources": sources, "message_id": message_id})
-        
+        assistant_msg = {
+            "role": "assistant",
+            "content": None,
+            "blocks": blocks,
+            "sources": sources,
+            "message_id": message_id,
+        }
+        if answer.get("operator_detail"):
+            assistant_msg["operator_detail"] = answer["operator_detail"]
+        messages.append(assistant_msg)
+
         bot_resp_text = ""
         if blocks:
             bot_resp_text = "\n\n".join(b.get("text", "") for b in blocks)
