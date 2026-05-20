@@ -79,6 +79,24 @@ export function bookDocumentUrl(baseUrl) {
 }
 
 /**
+ * Placeholder encyclopedia iframe (no entry selected yet).
+ * @param {string} baseUrl
+ */
+export function encyclopediaEmptyUrl(baseUrl) {
+  return `${trimBaseUrl(baseUrl)}/encyclopedia/empty`;
+}
+
+/**
+ * Single encyclopedia entry iframe document.
+ * @param {string} baseUrl
+ * @param {string} entryId  Wikidata id, e.g. Q125928
+ */
+export function encyclopediaEntryUrl(baseUrl, entryId) {
+  const id = encodeURIComponent(String(entryId || "").trim());
+  return `${trimBaseUrl(baseUrl)}/encyclopedia/entry/${id}`;
+}
+
+/**
  * @param {string} baseUrl
  * @param {object[]} conversation
  */

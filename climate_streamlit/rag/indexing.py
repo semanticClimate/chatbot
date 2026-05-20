@@ -24,6 +24,10 @@ from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
 
 from climate_streamlit.config_loader import AppSettings
 from climate_streamlit.html_sectioning import annotate_html_with_section_ids, parse_html_path_to_chunks
+from climate_streamlit.rag.book_document import inject_book_viewer_assets
+
+# Bump when paragraph anchor_ids change so Chroma metadata stays aligned with the book HTML.
+INDEX_SCHEMA_VERSION = "para-anchor-v2"
 
 
 def load_embedder():
@@ -46,10 +50,17 @@ def build_knowledge_base_core(
     )
     collection = chroma.get_or_create_collection(
         name=settings.collection_name,
-        metadata={"hnsw:space": "cosine"},
+        metadata={"hnsw:space": "cosine", "index_schema_version": INDEX_SCHEMA_VERSION},
     )
-    if collection.count() > 0:
+    stored_version = (collection.metadata or {}).get("index_schema_version")
+    if collection.count() > 0 and stored_version == INDEX_SCHEMA_VERSION:
         return collection, embedder
+    if collection.count() > 0:
+        chroma.delete_collection(settings.collection_name)
+        collection = chroma.get_or_create_collection(
+            name=settings.collection_name,
+            metadata={"hnsw:space": "cosine", "index_schema_version": INDEX_SCHEMA_VERSION},
+        )
 
     html_path = settings.html_path
     if not html_path.is_file():
@@ -98,24 +109,7 @@ def get_annotated_book_html(html_path: str, base_dir_str: str) -> str:
     base_dir = Path(base_dir_str)
     raw = Path(html_path).read_text(encoding="utf-8")
     annotated = annotate_html_with_section_ids(raw)
-
-    hi_css = (base_dir / "assets" / "book_iframe_highlight.css").read_text(encoding="utf-8")
-    highlight_css = f"<style>\n{hi_css}\n</style>"
-
-    jump_js = (base_dir / "assets" / "book_iframe_jump.js").read_text(encoding="utf-8")
-    jump_script = f"<script>\n{jump_js}\n</script>"
-
-    if "</head>" in annotated:
-        annotated = annotated.replace("</head>", highlight_css + "</head>")
-    else:
-        annotated = highlight_css + annotated
-
-    if "</body>" in annotated:
-        annotated = annotated.replace("</body>", jump_script + "</body>")
-    else:
-        annotated += jump_script
-
-    return annotated
+    return inject_book_viewer_assets(annotated, assets_dir=base_dir / "assets")
 
 
 @st.cache_resource

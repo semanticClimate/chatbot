@@ -17,7 +17,7 @@ Implementation lives primarily in [`web_client/css/layout.css`](../web_client/cs
 | **WORKBENCH** | `<div>` | `main-middle` — not a landmark; grouping wrapper | — |
 | **CHAT** | `<section>` | `panel panel-chat`; `#thread`, `#examplesMount`, `#composer` | `aria-label="Conversation"` |
 | **SOURCES** | `<aside>` | `panel panel-sources` `#sourcesPanel` | `aria-label="Sources"` |
-| **BOOK** | `<section>` | `panel panel-book`; toolbar + `#bookFrame` | `aria-label="Student book"` |
+| **BOOK** | `<section>` | `panel panel-book`; toolbar + `#bookFrame` + encyclopedia toolbar + `#encyclopediaFrame` | `aria-label="Student book"` |
 
 **`main`** uses class `main-grid` and wraps **WORKBENCH** + **BOOK** only. HEADER and SETTINGS sit **outside** `<main>` to keep reading order stable.
 
@@ -89,6 +89,7 @@ Changing any of these thresholds requires updating this table and validating CHA
 | **CHAT shell** (`panel-chat`) | No (except thread) | Column flex; `min-height/min(48dvh,480px)`, `max-height: 78dvh` (narrow sizing intent). Wide: `max-height: none`. |
 | **SOURCES** (`#sourcesDetail` area) | **When narrow + panel overflows** | Panel gets `overflow-y: auto` with `max-height: 40dvh` via sticky_SOURCES. |
 | **BOOK iframe** | Internal | Iframe owns its document scroll; host gives fixed `height`/`min-height` on `.book-frame`. |
+| **ENCYCLOPEDIA iframe** (`#encyclopediaFrame`) | Internal | Below the book frame in **BOOK**; shows one CA encyclopedia entry when the user clicks a linked term in the book. |
 
 **Rule:** Prefer **THREAD** absorbing conversation growth; avoid making the entire **CHAT** panel the only scroll unless this contract changes.
 
@@ -101,7 +102,8 @@ Changing any of these thresholds requires updating this table and validating CHA
 | **Shell `.app`** | `max-width: min(1680px, 100%);` horizontal centering; padding `var(--space-md)`, bottom respects `safe-area-inset-bottom`. |
 | **`panel-chat`** | `min-height: min(48dvh, 480px)`, `max-height: 78dvh` below wide MAIN; wide MAIN removes chat `max-height` cap via media rule. |
 | **`panel-sources`** (narrow) | Sticky footer band: `max-height: 40dvh`. |
-| **`.book-frame`** | `min-height: 360px`; `height: min(62dvh, 680px)`; width 100%. |
+| **`.book-frame`** | `min-height: 280px`; `height: min(42dvh, 480px)`; width 100%. |
+| **`.encyclopedia-frame`** | `min-height: 160px`; `height: min(24dvh, 280px)`; width 100%. |
 | **User bubbles** (content) | `max-width: min(92%, 560px)` (components layer). |
 
 ---

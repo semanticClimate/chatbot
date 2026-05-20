@@ -162,9 +162,28 @@
   width: 100%;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
-  min-height: 360px;
-  height: min(62dvh, 680px);
+  min-height: 280px;
+  height: min(42dvh, 480px);
   background: #fdfcf8;
+}
+
+.encyclopedia-toolbar {
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.encyclopedia-toolbar .panel-heading {
+  margin: 0;
+}
+
+.encyclopedia-frame {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  min-height: 160px;
+  height: min(24dvh, 280px);
+  background: #f8faf9;
 }
 
 .examples-mount {

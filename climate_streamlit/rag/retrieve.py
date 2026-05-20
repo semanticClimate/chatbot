@@ -35,7 +35,7 @@ def retrieve(
     use = filtered if filtered else triples
 
     chunks = []
-    for doc, _dist, meta in use:
+    for doc, dist, meta in use:
         chunks.append({
             "document":       doc,
             "section_number": meta.get("section_number", ""),
@@ -43,5 +43,6 @@ def retrieve(
             "heading_id":     meta.get("heading_id", ""),
             "chunk_id":       meta.get("chunk_id", ""),
             "anchor_id":      meta.get("anchor_id", ""),
+            "distance":       float(dist),
         })
     return chunks

@@ -28,6 +28,53 @@ def _append_class(element: etree._Element, class_name: str) -> None:
         element.set("class", " ".join(existing))
 
 
+def _set_link_title(anchor: etree._Element, link_kind: str) -> None:
+    """Browser tooltips: avoid inheriting parent title='Encyclopedia'."""
+    if link_kind == "wikipedia":
+        existing = (anchor.get("title") or "").strip()
+        if existing and existing.lower() != "encyclopedia":
+            return
+        anchor.set("title", "Wikipedia")
+    elif link_kind == "wikidata":
+        anchor.set("title", "Wikidata")
+    elif link_kind == "encyclopedia":
+        anchor.set("title", "Climate Academy encyclopedia")
+
+
+def _fix_encyclopedia_container_titles(root: etree._Element) -> None:
+    for node in root.xpath(
+        './/*[@role="ami_encyclopedia"] | .//*[contains(@class, "encyclopedia")]'
+    ):
+        if (node.get("title") or "").strip().lower() == "encyclopedia":
+            node.attrib.pop("title", None)
+            if not node.get("aria-label"):
+                node.set("aria-label", "Climate Academy encyclopedia")
+
+
+def _demote_unresolved_wikipedia_links(root: etree._Element) -> int:
+    """
+    Entries without a retrieved first paragraph should not link to empty Wikipedia pages.
+    Returns count of header Wikipedia links converted to plain text.
+    """
+    demoted = 0
+    for entry in root.xpath('.//*[@role="ami_entry"]'):
+        if entry.get("data-first-paragraph-retrieved", "").lower() != "false":
+            continue
+        for anchor in entry.xpath(
+            './/a[contains(@class, "wikipedia-link") or contains(@class, "ca-wikipedia-link")]'
+        ):
+            label = "".join(anchor.itertext()).strip() or anchor.get("title") or "Wikipedia"
+            span = etree.Element("span")
+            span.set("class", "no-wikipedia")
+            span.text = label
+            parent = anchor.getparent()
+            if parent is None:
+                continue
+            parent.replace(anchor, span)
+            demoted += 1
+    return demoted
+
+
 def _classify_link(href: str, settings: AnnotateSettings) -> str | None:
     if href.startswith("#"):
         return settings.links.internal_link_class
@@ -45,6 +92,9 @@ def _classify_link(href: str, settings: AnnotateSettings) -> str | None:
 
 def normalize_links_in_tree(root: etree._Element, settings: AnnotateSettings) -> Tuple[int, int]:
     """Return (hrefs_fixed, classes_applied). Skips ca-encyclopedia-link anchors."""
+    _fix_encyclopedia_container_titles(root)
+    _demote_unresolved_wikipedia_links(root)
+
     ca_class = settings.links.link_class
     hrefs_fixed = 0
     classes_applied = 0
@@ -63,16 +113,25 @@ def normalize_links_in_tree(root: etree._Element, settings: AnnotateSettings) ->
 
         if "wikipedia-link" in classes.split():
             _append_class(anchor, settings.links.wikipedia_link_class)
+            _set_link_title(anchor, "wikipedia")
             classes_applied += 1
             continue
         if "wikidata-link" in classes.split():
             _append_class(anchor, settings.links.wikidata_link_class)
+            _set_link_title(anchor, "wikidata")
             classes_applied += 1
+            continue
+        if ca_class in classes.split():
+            _set_link_title(anchor, "encyclopedia")
             continue
 
         link_class = _classify_link(href, settings)
         if link_class:
             _append_class(anchor, link_class)
+            if link_class == settings.links.wikipedia_link_class:
+                _set_link_title(anchor, "wikipedia")
+            elif link_class == settings.links.wikidata_link_class:
+                _set_link_title(anchor, "wikidata")
             classes_applied += 1
 
     return hrefs_fixed, classes_applied

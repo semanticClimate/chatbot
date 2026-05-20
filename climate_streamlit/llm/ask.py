@@ -26,6 +26,30 @@ _RESPONSE_LANGUAGE_LABELS = {
     "hi": "Hindi",
 }
 
+_ENCYCLOPEDIA_HINT = {
+    "en": (
+        "I could not find a strong match in the Climate Academy Student Book for this question. "
+        "Try browsing terms linked in the book (Climate Academy encyclopedia entries), "
+        "or rephrase your question using chapter vocabulary."
+    ),
+    "fr": (
+        "Je n'ai pas trouvé de passage pertinent dans le manuel Climate Academy. "
+        "Consultez les entrées encyclopédiques liées dans le livre, ou reformulez votre question."
+    ),
+    "es": (
+        "No encontré un pasaje relevante en el libro Climate Academy. "
+        "Pruebe las entradas de la enciclopedia enlazadas en el libro, o reformule su pregunta."
+    ),
+    "pt": (
+        "Não encontrei uma passagem relevante no manual Climate Academy. "
+        "Veja as entradas da enciclopédia ligadas no livro, ou reformule a pergunta."
+    ),
+    "hi": (
+        "Climate Academy छात्र पुस्तक में इस प्रश्न के लिए कोई मजबूत मिलान नहीं मिला। "
+        "पुस्तक में जुड़े विश्वकोश प्रविष्टियों को देखें, या प्रश्न दोबारा लिखें।"
+    ),
+}
+
 _CANNED_LINES = {
     "rate_limit": {
         "en": "You've hit a temporary usage limit. Wait a minute and try again.",
@@ -112,6 +136,17 @@ def _canned_line(kind: str, lang: str) -> str:
     return _CANNED_LINES.get(kind, {}).get(code) or _CANNED_LINES[kind]["en"]
 
 
+def _encyclopedia_fallback_line(lang: str) -> str:
+    code = _normalize_response_language(lang)
+    return _ENCYCLOPEDIA_HINT.get(code) or _ENCYCLOPEDIA_HINT["en"]
+
+
+def _retrieval_is_weak(chunks: list[dict], settings: AppSettings) -> bool:
+    if not chunks:
+        return True
+    return all(c.get("distance", 0) >= settings.max_distance for c in chunks)
+
+
 def ask_groq(
     groq_client,
     chunks: list[dict],
@@ -129,6 +164,14 @@ def ask_groq(
         "operator_detail": optional str (technical diagnostics for operators),
       }
     """
+    rl = _normalize_response_language(response_language)
+    if _retrieval_is_weak(chunks, settings):
+        return {
+            "blocks": [{"text": _encyclopedia_fallback_line(rl), "citations": []}],
+            "sources": [],
+            "operator_detail": "retrieve=weak_or_empty;encyclopedia_fallback=1",
+        }
+
     sources = build_sources(chunks, settings, pdf_chunk_map=pdf_chunk_map)
     context_parts = []
     for s in sources:
@@ -142,7 +185,6 @@ def ask_groq(
         context_parts.append(passage)
     context = "\n\n---\n\n".join(context_parts)
 
-    rl = _normalize_response_language(response_language)
     template = load_system_prompt_template(settings.base_dir)
     system = template.format(context=context) + _language_mode_appendix(rl)
     messages = [{"role": "system", "content": system}]

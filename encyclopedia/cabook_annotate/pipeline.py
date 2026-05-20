@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import shutil
+import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
@@ -16,6 +18,7 @@ from encyclopedia.cabook_annotate.link_normalizer import (
 )
 from encyclopedia.cabook_annotate.media_paths import rewrite_media_in_file
 from encyclopedia.cabook_annotate.prepare_encyclopedia import prepare_encyclopedia_html
+from encyclopedia.cabook_annotate.progress import PipelineProgress
 from encyclopedia.config_loader import AnnotateSettings, load_annotate_settings
 
 
@@ -74,6 +77,7 @@ def _write_report(
 
 def run_annotation_pipeline(config_path: Path | None = None) -> Dict[str, Any]:
     settings = load_annotate_settings(config_path)
+    t0 = time.perf_counter()
 
     for path in (
         settings.paths.annotated_book_html,
@@ -82,23 +86,40 @@ def run_annotation_pipeline(config_path: Path | None = None) -> Dict[str, Any]:
     ):
         _ensure_parent(path)
 
+    progress = PipelineProgress()
+
+    progress.start_stage(0)
     prepared = prepare_encyclopedia_html(settings)
+
+    progress.start_stage(1, f"{time.perf_counter() - t0:.1f}s elapsed")
     term_index = build_term_index(prepared, settings)
+    print(
+        f"    {len(term_index.entries_by_id)} entries, "
+        f"{len(term_index.compiled_phrases)} compiled phrases",
+        file=sys.stderr,
+        flush=True,
+    )
     book_input = _resolve_book_input(settings)
 
+    progress.start_stage(2, "matching phrases in student book")
+    t_annotate = time.perf_counter()
     links_inserted, counts = annotate_book_html(
         book_input,
         settings.paths.annotated_book_html,
         term_index,
         settings,
     )
+    progress.finish_annotate(links_inserted, time.perf_counter() - t_annotate)
 
+    progress.start_stage(3)
     normalize_links_in_file(settings.paths.annotated_book_html, settings)
     rewrite_media_in_file(settings.paths.annotated_book_html, settings)
     inject_stylesheet_for_output(
         settings.paths.annotated_book_html,
         settings.paths.link_css,
     )
+
+    progress.start_stage(4)
 
     report_path = _write_report(
         settings,

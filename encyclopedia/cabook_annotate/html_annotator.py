@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from collections import Counter
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 from lxml import etree
 from lxml import html as lxml_html
 
 from encyclopedia.cabook_annotate.encyclopedia_index import TermIndex
+from encyclopedia.cabook_annotate.progress import ProgressBar
 from encyclopedia.cabook_annotate.link_normalizer import (
     inject_stylesheet,
     stylesheet_href_for_html,
@@ -49,6 +50,7 @@ def _parts_for_text(
         term_index.phrase_to_entry_id,
         ignore_case=settings.matching.ignore_case,
         min_term_length=settings.matching.min_term_length,
+        compiled_phrases=term_index.compiled_phrases,
     )
     if not matches:
         return [text]
@@ -76,13 +78,16 @@ def _parts_for_text(
 
 
 def _apply_parts_to_text_attr(parent: etree._Element, parts: List[Part]) -> None:
-    parent.text = None
+    """Rebuild parent.text inline markup; insert links before existing children (e.g. sub)."""
     if not parts:
         return
+    insert_pos = 0
     index = 0
     if isinstance(parts[0], str):
         parent.text = parts[0]
         index = 1
+    else:
+        parent.text = None
     last_elem = None
     for part in parts[index:]:
         if isinstance(part, str):
@@ -91,7 +96,8 @@ def _apply_parts_to_text_attr(parent: etree._Element, parts: List[Part]) -> None
             else:
                 parent.text = (parent.text or "") + part
         else:
-            parent.append(part)
+            parent.insert(insert_pos, part)
+            insert_pos += 1
             last_elem = part
 
 
@@ -112,17 +118,51 @@ def _apply_parts_to_tail(parent: etree._Element, parts: List[Part]) -> None:
             anchor = part
 
 
+def _in_footnote_context(elem: etree._Element) -> bool:
+    node: etree._Element | None = elem
+    while node is not None:
+        tag = node.tag.lower() if isinstance(node.tag, str) else ""
+        classes = (node.get("class") or "").split()
+        if tag == "section" and "footnotes" in classes:
+            return True
+        if tag == "a" and "footnote-ref" in classes:
+            return True
+        if tag == "sup" and node.getparent() is not None:
+            parent = node.getparent()
+            pclasses = (parent.get("class") or "").split()
+            if parent.tag.lower() == "a" and "footnote-ref" in pclasses:
+                return True
+        node = node.getparent()
+    return False
+
+
+def _count_annotate_segments(root: etree._Element, settings: AnnotateSettings) -> int:
+    skip = set(settings.matching.skip_tags)
+    total = 0
+    for elem in root.iter():
+        tag = elem.tag.lower() if isinstance(elem.tag, str) else ""
+        if tag in skip or _in_footnote_context(elem):
+            continue
+        if elem.text and elem.text.strip():
+            total += 1
+        for child in elem:
+            if child.tail and child.tail.strip():
+                total += 1
+    return total
+
+
 def _walk_and_annotate(
     root: etree._Element,
     term_index: TermIndex,
     settings: AnnotateSettings,
     counts: Counter,
+    progress: Optional[ProgressBar] = None,
 ) -> None:
     skip = set(settings.matching.skip_tags)
 
     for elem in root.iter():
         tag = elem.tag.lower() if isinstance(elem.tag, str) else ""
-        if tag in skip:
+        if tag in skip or _in_footnote_context(elem):
             continue
         if elem.text and elem.text.strip():
             parts = _parts_for_text(elem.text, term_index, settings, counts)
@@ -130,6 +170,8 @@ def _walk_and_annotate(
                 _apply_parts_to_text_attr(elem, parts)
             elif parts and isinstance(parts[0], str) and parts[0] != elem.text:
                 elem.text = parts[0]
+            if progress is not None:
+                progress.update(1)
         for child in elem:
             if child.tail and child.tail.strip():
                 parts = _parts_for_text(child.tail, term_index, settings, counts)
@@ -137,6 +179,8 @@ def _walk_and_annotate(
                     _apply_parts_to_tail(child, parts)
                 elif parts and isinstance(parts[0], str) and parts[0] != child.tail:
                     child.tail = parts[0]
+                if progress is not None:
+                    progress.update(1)
 
 
 def annotate_book_html(
@@ -152,7 +196,10 @@ def annotate_book_html(
 
     body = root.find(".//body")
     target = body if body is not None else root
-    _walk_and_annotate(target, term_index, settings, counts)
+    segment_total = _count_annotate_segments(target, settings)
+    bar = ProgressBar(segment_total, label="annotate")
+    _walk_and_annotate(target, term_index, settings, counts, progress=bar)
+    bar.close()
 
     css_href = stylesheet_href_for_html(output_path, settings.paths.link_css)
     inject_stylesheet(root, css_href)

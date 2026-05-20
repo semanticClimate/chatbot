@@ -8,6 +8,7 @@ from typing import Dict, List, Set
 
 from lxml import html as lxml_html
 
+from encyclopedia.cabook_annotate.phrase_matcher import CompiledPhrase, compile_phrase_patterns
 from encyclopedia.cabook_annotate.variant_expander import expand_surface_forms
 from encyclopedia.config_loader import AnnotateSettings
 
@@ -26,6 +27,7 @@ class TermIndex:
     entries_by_id: Dict[str, EncyclopediaEntry]
     phrase_to_entry_id: Dict[str, str]
     sorted_phrases: List[str]
+    compiled_phrases: List[CompiledPhrase]
 
 
 def _clean_synonym(text: str, strip_suffix: str) -> str:
@@ -124,8 +126,15 @@ def build_term_index(
         key=lambda p: (len(p), p.lower()),
         reverse=True,
     )
+    compiled = compile_phrase_patterns(
+        sorted_phrases,
+        phrase_to_entry_id,
+        ignore_case=ignore_case,
+        min_term_length=settings.matching.min_term_length,
+    )
     return TermIndex(
         entries_by_id=entries_by_id,
         phrase_to_entry_id=phrase_to_entry_id,
         sorted_phrases=sorted_phrases,
+        compiled_phrases=compiled,
     )
