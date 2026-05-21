@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Starts local API + web servers and exposes both via Cloudflare Quick Tunnels.
 #
-# - API is served locally on 127.0.0.1:8800
-# - Web UI is served locally on 127.0.0.1:8081
+# - API and web bind on 127.0.0.1 (ports 8800 / 8081) for cloudflared only
+# - Browsers use the printed https://….trycloudflare.com URLs (see tunnel-api-base.txt)
 # - cloudflared creates public trycloudflare.com URLs for each local service
 #
 # The script writes logs and PID files under .quick-tunnel-runtime so the paired
@@ -37,9 +37,10 @@ fi
 # shadow `.venv/bin/python` when child shells re-source the profile).
 VenvPython="${RepoRoot}/.venv/bin/python"
 
-# Local service ports (web uses 8081 to avoid common 8080 conflicts).
+# Local bind ports (cloudflared tunnels these; browsers must use trycloudflare URLs).
 ApiPort=8800
 WebPort=8081
+LocalApiBase="http://127.0.0.1:${ApiPort}"
 
 # Shared runtime folder for logs and PID files.
 RuntimeDir="${RepoRoot}/.quick-tunnel-runtime"
@@ -121,6 +122,45 @@ extract_quick_tunnel_public_url_from_log() {
 log_has_quick_tunnel_registration_failure() {
     local LogPath="$1"
     [[ -f "${LogPath}" ]] && LC_ALL=C grep -aFq 'failed to request quick Tunnel' "${LogPath}" 2>/dev/null
+}
+
+verify_api_features_local() {
+    # Server-side checks only (curl to LocalApiBase). Remote browsers must not use 127.0.0.1.
+    local ok=1
+    if curl -fsS -o /dev/null "${LocalApiBase}/health"; then
+        echo "  API /health: OK"
+    else
+        echo "  API /health: FAILED" >&2
+        ok=0
+    fi
+    if curl -fsS "${LocalApiBase}/encyclopedia/empty" 2>/dev/null | LC_ALL=C grep -q 'encyclopedia-empty'; then
+        echo "  Encyclopedia panel (/encyclopedia/empty): OK"
+    else
+        echo "  Encyclopedia panel (/encyclopedia/empty): FAILED" >&2
+        ok=0
+    fi
+    local book_snip
+    book_snip="$(curl -fsS "${LocalApiBase}/book/document" 2>/dev/null | head -c 120000 || true)"
+    if [[ -n "${book_snip}" ]]; then
+        if echo "${book_snip}" | LC_ALL=C grep -q 'ca-encyclopedia-link'; then
+            echo "  Book document (encyclopedia links): OK"
+        else
+            echo "  Book document: OK (no ca-encyclopedia-link — run: python -m encyclopedia.scripts.annotate_cabook)" >&2
+        fi
+        if echo "${book_snip}" | LC_ALL=C grep -q 'ca-encyclopedia-open'; then
+            echo "  Book bridge (click → encyclopedia panel): OK"
+        else
+            echo "  Book bridge script: missing" >&2
+            ok=0
+        fi
+    else
+        echo "  Book document (/book/document): FAILED" >&2
+        ok=0
+    fi
+    if [[ "${ok}" -eq 1 ]]; then
+        return 0
+    fi
+    return 1
 }
 
 wait_for_both_quick_tunnel_urls() {
@@ -256,10 +296,10 @@ start_logged_process "API" \
 # If we skip this and the API crashes on import, cloudflared still happily
 # publishes a public URL that returns 502 Bad Gateway, which looks like a
 # tunnel/CORS bug to remote testers.
-echo "Waiting for API to come up on 127.0.0.1:${ApiPort}..."
+echo "Waiting for API to come up on ${LocalApiBase} (local bind only)..."
 ApiReady=0
 for _ in $(seq 1 30); do
-    if curl -fsS -o /dev/null "http://127.0.0.1:${ApiPort}/health"; then
+    if curl -fsS -o /dev/null "${LocalApiBase}/health"; then
         ApiReady=1
         break
     fi
@@ -267,7 +307,7 @@ for _ in $(seq 1 30); do
 done
 if [[ "${ApiReady}" -ne 1 ]]; then
     echo "" >&2
-    echo "ERROR: API failed to start on 127.0.0.1:${ApiPort}." >&2
+    echo "ERROR: API failed to start on ${LocalApiBase}." >&2
     echo "Last 20 lines of ${ApiLog}:" >&2
     echo "----------------------------------------" >&2
     tail -n 20 "${ApiLog}" >&2 || true
@@ -276,6 +316,8 @@ if [[ "${ApiReady}" -ne 1 ]]; then
     exit 1
 fi
 echo "API healthy."
+echo "Verifying book + encyclopedia API routes (local bind)..."
+verify_api_features_local || echo "WARNING: One or more API feature checks failed (see above)." >&2
 
 # Start static web server locally using the venv interpreter directly.
 start_logged_process "Web UI" \
@@ -343,18 +385,20 @@ if [[ -z "${WebPublic}" || -z "${ApiPublic}" ]]; then
     echo "The API base URL in the chat UI must be the printed https://…trycloudflare.com URL for the API tunnel, not a .log file path." >&2
     echo "Placeholder lines were written to api-public-url.txt / web-public-url.txt (do not paste those into the UI)." >&2
 else
-    # Team B only needs web URL; API URL is prefilled from tunnel-api-base.txt when tunnels succeed.
+    # Team B opens the web tunnel only; API base is prefilled from tunnel-api-base.txt (not 127.0.0.1).
     echo "Team B should open: ${WebPublic}"
     echo "API base URL defaults to: ${ApiPublic} (served as web_client/tunnel-api-base.txt)"
+    echo "In the book, click a green encyclopedia term — the entry opens in the panel below the book."
     echo "(Also saved under ${RuntimeDir}/api-public-url.txt for copying.)"
 fi
 
 echo ""
-echo "Local servers (leave running for Team B; stop with stop-quick-tunnel.sh):"
-echo "  API  http://127.0.0.1:${ApiPort}/health"
+echo "Local bind (for Team A diagnostics only — remote browsers must use trycloudflare URLs above):"
+echo "  API  ${LocalApiBase}/health"
 echo "  Web  http://127.0.0.1:${WebPort}/"
-if curl -fsS -o /dev/null "http://127.0.0.1:${ApiPort}/health" 2>/dev/null; then
+if curl -fsS -o /dev/null "${LocalApiBase}/health" 2>/dev/null; then
     echo "  API health check: OK"
+    verify_api_features_local || true
 else
     echo "  API health check: FAILED — see ${ApiLog}" >&2
 fi

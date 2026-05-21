@@ -36,8 +36,33 @@ h4 {
     margin-top: 1.2em;
 }
 
+/* Visible § numbers (data-section-number is set by annotate_html_with_section_ids) */
+:is(h1, h2, h3, h4, h5, h6)[data-section-number]::before {
+    content: "§ " attr(data-section-number) " — ";
+    color: #4a6a5a;
+    font-weight: 600;
+    font-size: 0.82em;
+    letter-spacing: 0.02em;
+}
+
 p {
     margin: 0.6em 0;
+}
+
+sub,
+sup {
+    font-size: 0.75em;
+    line-height: 0;
+    vertical-align: baseline;
+    position: relative;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+sup {
+    top: -0.35em;
 }
 
 ul,
@@ -54,6 +79,17 @@ table,
 pre,
 code {
     max-width: 100% !important;
+}
+
+img {
+    height: auto !important;
+    object-fit: contain;
+    display: block;
+    margin: 0.6em auto;
+}
+
+figure img {
+    width: 100%;
 }
 
 .ca-section {

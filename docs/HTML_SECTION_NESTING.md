@@ -41,3 +41,35 @@ The PDF pipeline flattens structure; HTML lets us preserve **nested outline** an
 ### Prototype file
 
 - See `<root>/input/sample_ca_book.html` for the minimal subset example.
+
+## Visible section numbers in the viewer (2026-05-18)
+
+RAG citations and “View source” jumps use decimal section ids (`1`, `1.2`, `1.2.3`). Those ids must also appear **in the book iframe** so readers can match a chat citation to the heading they see.
+
+### Pipeline
+
+1. **`annotate_html_with_section_ids()`** (`climate_streamlit/html_sectioning.py`) assigns `data-section-number` on outline nodes and stamps the same value on each section’s title heading.
+   - **Format A** (nested `<section data-outline-level="…">`): number on `<section>` and on the first title `<h1>`–`<h6>` in that section.
+   - **Format B** (flat export, `<h1>`–`<h3>` only): number on the heading and on a wrapping `<div class="ca-section">` around heading + body.
+2. **`inject_book_viewer_assets()`** (`climate_streamlit/rag/book_document.py`) injects `climate_streamlit/assets/book_iframe_highlight.css` and `book_iframe_jump.js` into the HTML served to Streamlit, FastAPI (`/book/document`), and the static web client iframe.
+
+### Display rule (CSS)
+
+Headings that carry `data-section-number` render a prefix via `::before`:
+
+```css
+:is(h1, h2, h3, h4, h5, h6)[data-section-number]::before {
+    content: "§ " attr(data-section-number) " — ";
+}
+```
+
+Example visible title: **§ 1.2 — The greenhouse effect** (same shape as RAG prompt headers `[§ 1.2 — …]`).
+
+### What stays unnumbered
+
+- Skippable front-matter `<h1>` ids (`section`, `contents`, …) and headings with no body text (same rules as the parser).
+- The book title in `<header>` when it is not a numbered `<section>`.
+
+### Tests
+
+- `tests/test_html_sectioning.py` — heading stamps (formats A and B), CSS injection, asset file contains the visible-§ rule.

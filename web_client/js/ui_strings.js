@@ -81,6 +81,8 @@ export function applyShellUiStrings(lang) {
   if (pb) pb.setAttribute("aria-label", t("ariaStudentBook"));
   const bf = document.getElementById("bookFrame");
   if (bf) bf.setAttribute("title", t("bookIframeTitle"));
+  const ef = document.getElementById("encyclopediaFrame");
+  if (ef) ef.setAttribute("title", t("encyclopediaIframeTitle"));
 
   const ls = document.getElementById("chatLangSelect");
   if (ls instanceof HTMLSelectElement) {
@@ -106,7 +108,7 @@ const STRINGS = {
     hintChatLang:
       "Answers use this language only. Ask in the same language. The Climate Academy student book stays in English.",
     labelApiUrl: "API base URL",
-    placeholderApiUrl: "http://127.0.0.1:8800",
+    placeholderApiUrl: "https://your-api.trycloudflare.com",
     btnHealth: "Check health",
     btnClear: "Clear chat",
     exportCsvSummary: "Export CSV…",
@@ -126,6 +128,8 @@ const STRINGS = {
     btnResetBook: "Reset highlight",
     ariaStudentBook: "Student book",
     bookIframeTitle: "Climate Academy Student Book",
+    encyclopediaHeading: "Encyclopedia",
+    encyclopediaIframeTitle: "Climate Academy encyclopedia entry",
     sampleQuestionsSummary: "Sample questions",
     sampleQuestionsIntro:
       "Lines match Chat language above; book text stays English.",
@@ -146,7 +150,7 @@ const STRINGS = {
     errTunnelBaseNotFound:
       "Could not load tunnel-api-base.txt from this page. Paste the API tunnel URL or reload.",
     errUseFullUrl:
-      "Use a full URL such as https://….trycloudflare.com or http://127.0.0.1:8800 — not a log file path.",
+      "Use a full URL such as https://….trycloudflare.com (from start-quick-tunnel.sh) — not a log file path.",
     errSetApiFirst: "Set API base URL first.",
     nothingToExport: "Nothing to export yet.",
     preparingCsv: "Preparing CSV…",
@@ -176,7 +180,7 @@ const STRINGS = {
     hintChatLang:
       "Les réponses utilisent uniquement cette langue ; posez vos questions dans cette langue. Le manuel Climate Academy reste en anglais.",
     labelApiUrl: "URL de base de l’API",
-    placeholderApiUrl: "http://127.0.0.1:8800",
+    placeholderApiUrl: "https://your-api.trycloudflare.com",
     btnHealth: "Vérifier l’état",
     btnClear: "Effacer le chat",
     exportCsvSummary: "Exporter CSV…",
@@ -196,6 +200,8 @@ const STRINGS = {
     btnResetBook: "Réinitialiser le surlignage",
     ariaStudentBook: "Manuel étudiant",
     bookIframeTitle: "Manuel Climate Academy",
+    encyclopediaHeading: "Encyclopédie",
+    encyclopediaIframeTitle: "Entrée encyclopédie Climate Academy",
     sampleQuestionsSummary: "Exemples de questions",
     sampleQuestionsIntro:
       "Les lignes suivent la langue ci-dessus ; le livre reste en anglais.",
@@ -216,7 +222,7 @@ const STRINGS = {
     errTunnelBaseNotFound:
       "Impossible de charger tunnel-api-base.txt. Collez l’URL tunnel de l’API ou rechargez.",
     errUseFullUrl:
-      "Utilisez une URL complète (https://….trycloudflare.com ou http://127.0.0.1:8800), pas un chemin de fichier journal.",
+      "Utilisez une URL complète (https://….trycloudflare.com), pas un chemin de fichier journal.",
     errSetApiFirst: "Indiquez d’abord l’URL de base de l’API.",
     nothingToExport: "Rien à exporter pour le moment.",
     preparingCsv: "Préparation du CSV…",
@@ -245,7 +251,7 @@ const STRINGS = {
     hintChatLang:
       "Las respuestas solo usan este idioma ; pregunte en ese idioma. El libro del estudiante Climate Academy permanece en inglés.",
     labelApiUrl: "URL base de la API",
-    placeholderApiUrl: "http://127.0.0.1:8800",
+    placeholderApiUrl: "https://your-api.trycloudflare.com",
     btnHealth: "Comprobar estado",
     btnClear: "Borrar chat",
     exportCsvSummary: "Exportar CSV…",
@@ -265,6 +271,8 @@ const STRINGS = {
     btnResetBook: "Restablecer resaltado",
     ariaStudentBook: "Libro del estudiante",
     bookIframeTitle: "Libro Climate Academy",
+    encyclopediaHeading: "Enciclopedia",
+    encyclopediaIframeTitle: "Entrada de la enciclopedia Climate Academy",
     sampleQuestionsSummary: "Preguntas de ejemplo",
     sampleQuestionsIntro:
       "Las líneas coinciden con el idioma de arriba ; el libro sigue en inglés.",
@@ -285,7 +293,7 @@ const STRINGS = {
     errTunnelBaseNotFound:
       "No se pudo cargar tunnel-api-base.txt. Pega la URL del tunnel de la API o recarga.",
     errUseFullUrl:
-      "Usa una URL completa (https://….trycloudflare.com o http://127.0.0.1:8800), no una ruta de log.",
+      "Usa una URL completa (https://….trycloudflare.com), no una ruta de log.",
     errSetApiFirst: "Primero establece la URL base de la API.",
     nothingToExport: "Aún no hay nada que exportar.",
     preparingCsv: "Preparando CSV…",
@@ -314,7 +322,7 @@ const STRINGS = {
     hintChatLang:
       "As respostas usam só este idioma ; faça perguntas nesse idioma. O manual Climate Academy continua em inglês.",
     labelApiUrl: "URL base da API",
-    placeholderApiUrl: "http://127.0.0.1:8800",
+    placeholderApiUrl: "https://your-api.trycloudflare.com",
     btnHealth: "Verificar estado",
     btnClear: "Limpar chat",
     exportCsvSummary: "Exportar CSV…",
@@ -334,6 +342,8 @@ const STRINGS = {
     btnResetBook: "Repor destaque",
     ariaStudentBook: "Manual do aluno",
     bookIframeTitle: "Manual Climate Academy",
+    encyclopediaHeading: "Enciclopédia",
+    encyclopediaIframeTitle: "Entrada da enciclopédia Climate Academy",
     sampleQuestionsSummary: "Perguntas de exemplo",
     sampleQuestionsIntro:
       "As linhas seguem o idioma acima ; o texto do livro continua em inglês.",
@@ -354,7 +364,7 @@ const STRINGS = {
     errTunnelBaseNotFound:
       "Não foi possível carregar tunnel-api-base.txt. Cole o URL do tunnel da API ou recarregue.",
     errUseFullUrl:
-      "Use um URL completo (https://….trycloudflare.com ou http://127.0.0.1:8800), não um caminho de log.",
+      "Use um URL completo (https://….trycloudflare.com), não um caminho de log.",
     errSetApiFirst: "Defina primeiro o URL base da API.",
     nothingToExport: "Ainda não há nada para exportar.",
     preparingCsv: "A preparar CSV…",
@@ -383,7 +393,7 @@ const STRINGS = {
     hintChatLang:
       "उत्तर केवल इसी भाषा में होंगे; प्रश्न भी इसी भाषा में लिखें। Climate Academy पुस्तक अंग्रेज़ी में ही रहती है।",
     labelApiUrl: "API आधार URL",
-    placeholderApiUrl: "http://127.0.0.1:8800",
+    placeholderApiUrl: "https://your-api.trycloudflare.com",
     btnHealth: "स्वास्थ्य जाँचें",
     btnClear: "चैट साफ़ करें",
     exportCsvSummary: "CSV निर्यात…",
@@ -403,6 +413,8 @@ const STRINGS = {
     btnResetBook: "हाइलाइट रीसेट",
     ariaStudentBook: "छात्र पुस्तक",
     bookIframeTitle: "Climate Academy छात्र पुस्तक",
+    encyclopediaHeading: "विश्वकोश",
+    encyclopediaIframeTitle: "Climate Academy विश्वकोश प्रविष्टि",
     sampleQuestionsSummary: "नमूना प्रश्न",
     sampleQuestionsIntro:
       "पंक्तियाँ ऊपर की भाषा से मेल खाती हैं; पुस्तक अंग्रेज़ी में रहती है।",
@@ -423,7 +435,7 @@ const STRINGS = {
     errTunnelBaseNotFound:
       "इस पृष्ठ से tunnel-api-base.txt लोड नहीं हो सका। API टनल URL पेस्ट करें या रीलोड करें।",
     errUseFullUrl:
-      "पूरा URL लिखें (जैसे https://….trycloudflare.com या http://127.0.0.1:8800), लॉग फाइल पथ नहीं।",
+      "पूरा URL लिखें (जैसे https://….trycloudflare.com), लॉग फाइल पथ नहीं।",
     errSetApiFirst: "पहले API आधार URL सेट करें।",
     nothingToExport: "अभी निर्यात के लिए कुछ नहीं।",
     preparingCsv: "CSV तैयार हो रहा है…",

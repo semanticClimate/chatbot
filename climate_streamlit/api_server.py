@@ -24,6 +24,12 @@ from climate_streamlit.db import get_logs_csv_string, log_interaction
 from climate_streamlit.html_sectioning import load_html_file, parse_book_html
 from climate_streamlit.llm.groq_client import load_groq_from_env
 from climate_streamlit.rag.book_document import build_annotated_book_document
+from climate_streamlit.rag.encyclopedia_document import (
+    build_encyclopedia_entry_document,
+    build_encyclopedia_placeholder_document,
+    normalize_entry_id,
+    prepared_encyclopedia_path,
+)
 from climate_streamlit.rag.indexing import build_knowledge_base_core
 from climate_streamlit.services.chat_service import run_ask, run_retrieve
 from climate_streamlit.services.conversation import (
@@ -195,6 +201,36 @@ def book_document(request: Request) -> HTMLResponse:
     if not s.html_path.is_file():
         raise HTTPException(status_code=503, detail="Book HTML not available")
     return HTMLResponse(content=_cached_book_html(request.app))
+
+
+def _cached_encyclopedia_placeholder(app: FastAPI) -> str:
+    if getattr(app.state, "_encyclopedia_placeholder_html", None) is None:
+        app.state._encyclopedia_placeholder_html = build_encyclopedia_placeholder_document()
+    return app.state._encyclopedia_placeholder_html
+
+
+@app.get("/encyclopedia/empty", response_class=HTMLResponse)
+def encyclopedia_empty(request: Request) -> HTMLResponse:
+    """Placeholder document for the encyclopedia iframe before a term is chosen."""
+    return HTMLResponse(content=_cached_encyclopedia_placeholder(request.app))
+
+
+@app.get("/encyclopedia/entry/{entry_id}", response_class=HTMLResponse)
+def encyclopedia_entry(entry_id: str, request: Request) -> HTMLResponse:
+    """Single CA encyclopedia entry for the browser client iframe."""
+    s: AppSettings = request.app.state.settings
+    enc = prepared_encyclopedia_path(s)
+    if not enc.is_file():
+        raise HTTPException(status_code=503, detail="Encyclopedia HTML not available")
+    try:
+        wid = normalize_entry_id(entry_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    try:
+        html = build_encyclopedia_entry_document(wid, s)
+    except LookupError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+    return HTMLResponse(content=html)
 
 
 @app.post("/retrieve")

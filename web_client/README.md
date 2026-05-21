@@ -4,18 +4,29 @@
 
 Static HTML/CSS/JS that talks to the FastAPI backend (`POST /ask`). ES modules must be served over HTTP (not `file://`).
 
-## Run locally
+## Run (recommended: quick tunnel)
 
-From repo root:
+From repo root (API + web + Cloudflare tunnels; API URL auto-filled for remote testers):
 
 ```bash
-cd web_client
-python -m http.server 8081
+bash docs/installation/start-quick-tunnel.sh
 ```
 
-Open http://127.0.0.1:8081 — set **API base URL** to `http://127.0.0.1:8800` (or your deployed URL).
+Open the printed **Web URL** (`https://….trycloudflare.com`). The API base defaults from `tunnel-api-base.txt` — do not paste `127.0.0.1` into a remote browser.
 
-Ensure the API allows this origin (e.g. `CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8081` or `*` for dev).
+Click a green encyclopedia term in the book; the entry appears in the panel below the book.
+
+## Run locally (optional, same machine only)
+
+```bash
+# terminal 1 — API
+.venv/bin/python -m uvicorn fastapi_app.main:app --host 127.0.0.1 --port 8800
+
+# terminal 2 — web
+cd web_client && python -m http.server 8081
+```
+
+Open `http://127.0.0.1:8081` and set **API base URL** to `http://127.0.0.1:8800`. Use `CLIMATE_API_CORS_ORIGINS=*` or include the web origin.
 
 ## Layout & constraints
 
