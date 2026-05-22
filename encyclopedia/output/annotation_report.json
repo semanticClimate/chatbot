@@ -1,16 +1,16 @@
 {
-  "generated": "2026-05-18T17:46:02Z",
-  "config": "/Users/pm286/workspace/chatbot/encyclopedia/config/annotate_cabook.toml",
+  "generated": "2026-05-22T05:04:22Z",
+  "config": "C:\\Users\\PersonalPC\\Documents\\projects\\semanticClimate\\chatbot_2\\chatbot\\encyclopedia\\config\\annotate_cabook.toml",
   "inputs": {
-    "book_html": "/Users/pm286/workspace/chatbot/input/full_student_book.html",
-    "encyclopedia_input_html": "/Users/pm286/workspace/demo_CAbookEncyclopedia/CA_knowledge_graph2026/CA_encyclopedia_new.html"
+    "book_html": "C:\\Users\\PersonalPC\\Documents\\projects\\semanticClimate\\chatbot_2\\chatbot\\input\\full_student_book.html",
+    "encyclopedia_input_html": "C:\\Users\\PersonalPC\\Documents\\projects\\semanticClimate\\chatbot_2\\demo_CAbookEncyclopedia\\CA_knowledge_graph2026\\CA_encyclopedia_new.html"
   },
   "outputs": {
-    "prepared_encyclopedia_html": "/Users/pm286/workspace/chatbot/encyclopedia/source/CA_encyclopedia_new.html",
-    "annotated_book_html": "/Users/pm286/workspace/chatbot/encyclopedia/output/full_student_book_annotated.html"
+    "prepared_encyclopedia_html": "C:\\Users\\PersonalPC\\Documents\\projects\\semanticClimate\\chatbot_2\\chatbot\\encyclopedia\\source\\CA_encyclopedia_new.html",
+    "annotated_book_html": "C:\\Users\\PersonalPC\\Documents\\projects\\semanticClimate\\chatbot_2\\chatbot\\encyclopedia\\output\\full_student_book_annotated.html"
   },
   "temp": {
-    "book_with_para_ids_html": "/Users/pm286/workspace/chatbot/encyclopedia/temp/full_student_book_with_para_ids.html"
+    "book_with_para_ids_html": "C:\\Users\\PersonalPC\\Documents\\projects\\semanticClimate\\chatbot_2\\chatbot\\encyclopedia\\temp\\full_student_book_with_para_ids.html"
   },
   "summary": {
     "encyclopedia_entries": 379,

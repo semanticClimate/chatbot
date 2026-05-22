@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
 Starts local API + web servers and exposes both via Cloudflare Quick Tunnels.
 
@@ -222,7 +222,7 @@ try {
 } catch { }
 
 Write-Host ""
-Write-Host "Waiting for tunnel URLs from cloudflared (default wait ${tunnelDeadline}s; early exit ${earlyExitSeconds}s if both logs show registration failure)…"
+Write-Host "Waiting for tunnel URLs from cloudflared (default wait ${tunnelDeadline}s; early exit ${earlyExitSeconds}s if both logs show registration failure)..."
 Write-Host "Tune: `$env:QUICK_TUNNEL_URL_TIMEOUT_SECONDS=600; `$env:QUICK_TUNNEL_EARLY_EXIT_SECONDS=0"
 
 $urls = Wait-ForBothQuickTunnelUrls -ApiTunnelLog $ApiTunnelLog -WebTunnelLog $WebTunnelLog -TimeoutSeconds $tunnelDeadline -EarlyExitSeconds $earlyExitSeconds
