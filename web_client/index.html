@@ -15,6 +15,7 @@
     <header class="app-header">
       <h1 class="app-title" data-i18n="appTitle">Climate Academy chat</h1>
       <p class="app-subtitle" data-i18n="appSubtitle">Book-grounded answers via your API below.</p>
+        <button id="helpBtn" aria-label="Help" class="header-icon">❔</button>
     </header>
 
     <section class="panel panel-settings" aria-label="Connection">
@@ -88,7 +89,22 @@
     </main>
   </div>
 
+  <div id="helpOverlay" class="hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="helpCard">
+      <header class="helpHeader">
+        <h2 id="helpTitle"></h2>
+        <button id="helpClose" aria-label="Close help" class="closeBtn">✕</button>
+      </header>
+      <section class="helpBody">
+        <ol id="helpSteps"></ol>
+      </section>
+      <footer class="helpFooter">
+        <button id="helpGotIt" class="primaryBtn"></button>
+      </footer>
+    </div>
+  </div>
   <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/help.js"></script>
 </body>
 
 </html>
