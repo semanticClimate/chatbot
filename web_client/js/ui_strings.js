@@ -169,6 +169,10 @@ const STRINGS = {
     langName_es: "Español",
     langName_pt: "Português",
     langName_hi: "हिन्दी",
+    helpBtnTitle: "Help",
+    helpModalTitle: "How to use this chatbot",
+    helpCloseLabel: "Close help",
+    helpLoadError: "Could not load help content. Please try again later.",
   },
 
   fr: {
@@ -241,6 +245,10 @@ const STRINGS = {
     langName_es: "Espagnol",
     langName_pt: "Portugais",
     langName_hi: "Hindi",
+    helpBtnTitle: "Aide",
+    helpModalTitle: "Comment utiliser ce chatbot",
+    helpCloseLabel: "Fermer l'aide",
+    helpLoadError: "Impossible de charger le contenu d'aide. Réessayez plus tard.",
   },
 
   es: {
@@ -312,6 +320,10 @@ const STRINGS = {
     langName_es: "Español",
     langName_pt: "Portugués",
     langName_hi: "Hindi",
+    helpBtnTitle: "Ayuda",
+    helpModalTitle: "Cómo usar este chatbot",
+    helpCloseLabel: "Cerrar ayuda",
+    helpLoadError: "No se pudo cargar el contenido de ayuda. Inténtelo más tarde.",
   },
 
   pt: {
@@ -383,6 +395,10 @@ const STRINGS = {
     langName_es: "Espanhol",
     langName_pt: "Português",
     langName_hi: "Hindi",
+    helpBtnTitle: "Ajuda",
+    helpModalTitle: "Como usar este chatbot",
+    helpCloseLabel: "Fechar ajuda",
+    helpLoadError: "Não foi possível carregar o conteúdo de ajuda. Tente mais tarde.",
   },
 
   hi: {
@@ -454,5 +470,9 @@ const STRINGS = {
     langName_es: "स्पैनिश",
     langName_pt: "पुर्तगाली",
     langName_hi: "हिन्दी",
+    helpBtnTitle: "सहायता",
+    helpModalTitle: "इस चैटबॉट का उपयोग कैसे करें",
+    helpCloseLabel: "सहायता बंद करें",
+    helpLoadError: "सहायता सामग्री लोड नहीं हो सकी। कृपया बाद में पुनः प्रयास करें।",
   },
 };
