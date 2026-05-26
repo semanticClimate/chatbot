@@ -454,37 +454,5 @@ const STRINGS = {
     langName_es: "स्पैनिश",
     langName_pt: "पुर्तगाली",
     langName_hi: "हिन्दी",
-    // ---------- Help window strings ----------
-    help: {
-      en: {
-        title: "Welcome to the Climate Academy chat UI",
-        gotIt: "Got it!",
-        steps: [
-          "Use the top‑right Help (❔) button to reopen this guide anytime.",
-          "Select a language from the dropdown to set the chat language.",
-          "Type a question in the input box and press Send.",
-          "Read the citation numbers in answers to open the English book.",
-          "Open Settings (gear icon) to set the API URL, clear chat, or export CSV.",
-          "Enjoy exploring the Climate Academy chat!"
-        ]
-      },
-      fr: {
-        title: "Bienvenue dans l'interface du chat Climate Academy",
-        gotIt: "Compris !",
-        steps: [
-          "Utilisez le bouton Aide (❔) en haut à droite pour rouvrir ce guide à tout moment.",
-          "Choisissez une langue dans le sélecteur pour définir la langue du chat.",
-          "Tapez votre question dans la zone de saisie et cliquez sur Envoyer.",
-          "Cliquez sur les numéros de citation dans les réponses pour ouvrir le livre en anglais.",
-          "Ouvrez les Paramètres (icône roue dentée) pour saisir l'URL de l'API, vider le chat ou exporter le CSV.",
-          "Bonne exploration du chat Climate Academy !"
-        ]
-      }
-    },
-    // end help strings
-    
-    
-    
-    
-      },
-export const UI_STRINGS = STRINGS;
+  },
+};
