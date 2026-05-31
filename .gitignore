@@ -12,3 +12,5 @@ web_client/tunnel-api-base.txt
 .quick-tunnel-runtime/
 config/zoom_daily_summary/slack.env
 config/zoom_daily_summary/slack.json
+.idea/
+temp/
