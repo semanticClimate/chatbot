@@ -209,6 +209,28 @@ body {
   cursor: pointer;
 }
 
+.field-compact {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.field-compact .field-label {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.field-select-compact {
+  width: auto;
+  max-width: 100%;
+  flex: 0 1 auto;
+  min-width: 0;
+  padding-right: 1.5rem;
+  background-position: calc(100% - 0.55rem) 50%, calc(100% - 0.3rem) 50%;
+}
+
 .field-hint {
   margin: 0 0 var(--space-sm);
   font-size: 0.78rem;

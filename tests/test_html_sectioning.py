@@ -109,6 +109,14 @@ def test_annotated_format_b_headings_and_ca_section_wrappers():
     assert numbers == ["1", "1.1"]
 
 
+def test_annotated_format_b_paragraphs_carry_paragraph_numbers():
+    soup = BeautifulSoup(annotate_html_with_section_ids(FORMAT_B_FIXTURE), "html.parser")
+    first_para = soup.find("p", attrs={"data-paragraph-number": "1.1"})
+    second_para = soup.find("p", attrs={"data-paragraph-number": "1.1.1"})
+    assert first_para is not None
+    assert second_para is not None
+
+
 def test_inject_book_viewer_assets_adds_visible_section_css():
     minimal = "<html><head></head><body><h2 data-section-number='1'>Title</h2></body></html>"
     out = inject_book_viewer_assets(minimal)
@@ -122,6 +130,20 @@ def test_book_iframe_highlight_css_defines_visible_section_rule():
     css = (package_assets_dir() / "book_iframe_highlight.css").read_text(encoding="utf-8")
     assert VISIBLE_SECTION_CSS_MARKER in css
     assert 'content: "§ " attr(data-section-number)' in css
+    assert "[data-paragraph-number]::before" in css
+
+
+def test_annotated_paragraph_ids_match_display_numbers():
+    """Anchor id suffix must equal the paragraph number suffix (1-based, not off-by-one)."""
+    soup = BeautifulSoup(annotate_html_with_section_ids(FORMAT_B_FIXTURE), "html.parser")
+    for node in soup.find_all(attrs={"data-paragraph-number": True}):
+        para_num = node["data-paragraph-number"]
+        section, para_n = para_num.rsplit(".", 1)
+        expected_id = f"para-{section}-{para_n}"
+        assert node.get("id") == expected_id, (
+            f"id {node.get('id')!r} != {expected_id!r} "
+            f"for data-paragraph-number={para_num!r}"
+        )
 
 
 def test_chunk_anchor_ids_exist_in_annotated_html():

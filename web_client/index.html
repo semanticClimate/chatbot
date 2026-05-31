@@ -12,21 +12,18 @@
   <div class="app">
     <header class="app-header">
       <h1 class="app-title" data-i18n="appTitle">Climate Academy chat</h1>
-      <p class="app-subtitle" data-i18n="appSubtitle">Book-grounded answers via your API below.</p>
+      <p class="app-subtitle" data-i18n="appSubtitle">Book-grounded answers from the Climate Academy student book.</p>
     </header>
 
     <section class="panel panel-settings" aria-label="Connection">
-      <label class="field">
+      <label class="field field-compact">
         <span class="field-label" data-i18n="labelChatLang">Chat language</span>
-        <select id="chatLangSelect" class="field-input field-select" aria-describedby="chatLangHint"></select>
+        <select id="chatLangSelect" class="field-input field-select field-select-compact" aria-describedby="chatLangHint"></select>
       </label>
       <p id="chatLangHint" class="field-hint" data-i18n="hintChatLang">
         Answers use this language only. Ask in the same language. The Climate Academy student book stays in English.
       </p>
-      <label class="field">
-        <span class="field-label" data-i18n="labelApiUrl">API base URL</span>
-        <input type="url" id="apiBaseUrl" class="field-input" data-i18n="placeholderApiUrl" placeholder="https://your-api.trycloudflare.com" autocomplete="off" />
-      </label>
+      <input type="hidden" id="apiBaseUrl" value="" />
       <div class="row-actions row-actions-primary">
         <button type="button" id="btnHealth" class="btn btn-secondary" data-i18n="btnHealth">Check health</button>
         <button type="button" id="btnClear" class="btn btn-secondary" data-i18n="btnClear">Clear chat</button>

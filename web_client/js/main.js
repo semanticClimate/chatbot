@@ -300,6 +300,23 @@ async function refreshView(apiBase) {
   scrollThreadToBottom();
 }
 
+function fitSelectToLongestOption(sel) {
+  if (!(sel instanceof HTMLSelectElement)) return;
+  const probe = document.createElement("span");
+  probe.style.cssText =
+    "position:absolute;visibility:hidden;white-space:nowrap;pointer-events:none;";
+  const font = getComputedStyle(sel).font;
+  probe.style.font = font;
+  document.body.appendChild(probe);
+  let max = 0;
+  for (const opt of sel.options) {
+    probe.textContent = opt.textContent || "";
+    max = Math.max(max, probe.offsetWidth);
+  }
+  probe.remove();
+  sel.style.width = `${Math.ceil(max) + 26}px`;
+}
+
 function wireChatLanguageSelect() {
   const sel = document.getElementById("chatLangSelect");
   if (!sel || !(sel instanceof HTMLSelectElement)) return null;
@@ -312,6 +329,7 @@ function wireChatLanguageSelect() {
     if (id === initial) opt.selected = true;
     sel.appendChild(opt);
   }
+  fitSelectToLongestOption(sel);
   return sel;
 }
 
@@ -320,6 +338,7 @@ async function wire() {
   applyShellUiStrings(
     langSelect ? normalizeChatLangId(langSelect.value) : loadChatLanguage()
   );
+  if (langSelect) fitSelectToLongestOption(langSelect);
 
   const apiInput = $("apiBaseUrl");
   const statusLine = $("statusLine");
@@ -351,6 +370,7 @@ async function wire() {
       const lid = normalizeChatLangId(langSelect.value);
       saveChatLanguage(lid);
       applyShellUiStrings(lid);
+      fitSelectToLongestOption(langSelect);
       exampleControls?.refill();
       refreshView(apiInput.value.trim());
     });
