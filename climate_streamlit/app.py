@@ -41,6 +41,7 @@ from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
 from groq import Groq
 
 from html_sectioning import (
+    annotate_html_with_numbering,
     annotate_html_with_section_ids,
     format_passage_for_prompt,
     parse_html_path_to_chunks,
@@ -547,6 +548,7 @@ def build_knowledge_base():
                 {
                     "section_number": c.section_number,
                     "section_title":  c.section_title or "",
+                    "paragraph_number": c.paragraph_number or "",
                     "chunk_index":    str(c.chunk_index),
                     "heading_id":     c.heading_id or "",
                     "chunk_id":       c.chunk_id or "",
@@ -560,6 +562,13 @@ def build_knowledge_base():
     bar.empty()
     st.success(f"✅ Knowledge base ready — {collection.count():,} paragraph chunks indexed!")
     return collection, embedder
+
+
+@st.cache_data
+def get_numbered_html_preview(html_path: Path) -> str:
+    """Load source HTML and annotate it with section/paragraph numbering."""
+    raw_html = html_path.read_text(encoding="utf-8", errors="replace")
+    return annotate_html_with_numbering(raw_html)
 
 
 # ─────────────────────────────────────────────────────
@@ -1073,8 +1082,9 @@ BOOK_PDF_URI = load_pdf_data_uri(str(PDF_PATH)) if PDF_PATH.is_file() else ""
 
 
 # ─────────────────────────────────────────────────────
-# LAYOUT
+# SIDEBAR
 # ─────────────────────────────────────────────────────
+show_numbered_preview = False
 with st.sidebar:
     st.markdown("### Chats")
     if st.button("➕ New Chat", use_container_width=True):
@@ -1123,6 +1133,34 @@ with st.sidebar:
     if st.button("📊 View Logs / Analytics", use_container_width=True):
         st.session_state.show_logs = not st.session_state.get("show_logs", False)
         st.rerun()
+
+    st.markdown("---")
+    show_numbered_preview = st.checkbox("Show numbered HTML preview", value=False)
+
+
+# ─────────────────────────────────────────────────────
+# HEADER
+# ─────────────────────────────────────────────────────
+st.markdown("""
+<div class="header">
+  <h2>🌍 Climate Academy Assistant</h2>
+  <p>Powered by the Climate Academy Student Book · Matthew Pye (2025)</p>
+</div>""", unsafe_allow_html=True)
+
+if show_numbered_preview:
+    if HTML_PATH.is_file():
+        numbered_html = get_numbered_html_preview(HTML_PATH)
+        with st.expander("📑 Numbered HTML Preview", expanded=False):
+            st.caption("Displays section and paragraph numbering injected into the source HTML.")
+            components.html(numbered_html, height=360, scrolling=True)
+            st.download_button(
+                label="Download numbered HTML",
+                data=numbered_html,
+                file_name=f"{HTML_PATH.stem}_numbered.html",
+                mime="text/html",
+            )
+    else:
+        st.warning(f"Numbered HTML preview unavailable: `{HTML_PATH}` not found.")
 
 
 current_chat = st.session_state.chats[st.session_state.current_chat_id]

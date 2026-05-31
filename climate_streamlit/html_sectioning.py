@@ -24,7 +24,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 from bs4 import BeautifulSoup, NavigableString, Tag
 
@@ -78,6 +78,7 @@ class IndexedChunk:
     section_number: str
     section_title:  str
     chunk_index:    int
+    paragraph_number: str = ""
     heading_id:     str = ""
     chunk_id:       str = ""
     anchor_id:      str = ""
@@ -615,10 +616,204 @@ def _annotate_format_B_para(soup: BeautifulSoup) -> str:
     return str(soup)
 
 
+# ── word-chunk indexing (tests + numbered_html_cli) ───────────────────────────
+
+def word_chunks(text: str, chunk_size: int, overlap: int) -> List[str]:
+    """Split on words; chunk_size and overlap are word counts."""
+    words = text.split()
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be positive")
+    if overlap < 0 or overlap >= chunk_size:
+        raise ValueError("overlap must be in [0, chunk_size)")
+    chunks: List[str] = []
+    i = 0
+    while i < len(words):
+        chunks.append(" ".join(words[i : i + chunk_size]))
+        i += chunk_size - overlap
+    return chunks
+
+
+def _split_body_paragraphs(body: str) -> List[str]:
+    """Split section body into logical paragraphs using blank-line boundaries."""
+    parts = [p.strip() for p in re.split(r"\n\s*\n+", body) if p.strip()]
+    if parts:
+        return parts
+    one = body.strip()
+    return [one] if one else []
+
+
+def records_to_indexed_chunks(
+    records: Iterable[SectionRecord],
+    chunk_size: int,
+    chunk_overlap: int,
+) -> List[IndexedChunk]:
+    out: List[IndexedChunk] = []
+    for rec in records:
+        chunk_counter = 0
+        paragraphs = _split_body_paragraphs(rec.body)
+        for paragraph_idx, paragraph in enumerate(paragraphs, start=1):
+            paragraph_number = f"{rec.section_number}.{paragraph_idx}"
+            for part in word_chunks(paragraph, chunk_size, chunk_overlap):
+                header = f"[§ {rec.section_number}"
+                if rec.title:
+                    header += f" — {rec.title}"
+                header += f" | ¶ {paragraph_number}]"
+                doc = f"{header}\n{part}"
+                out.append(
+                    IndexedChunk(
+                        document=doc,
+                        section_number=rec.section_number,
+                        section_title=rec.title,
+                        paragraph_number=paragraph_number,
+                        chunk_index=chunk_counter,
+                    )
+                )
+                chunk_counter += 1
+    return out
+
+
+# ── visible HTML numbering (preview / export) ───────────────────────────────────
+
+def _section_level_from_attr(tag: Tag) -> Optional[int]:
+    raw = tag.get("data-outline-level")
+    if raw is None:
+        return None
+    try:
+        n = int(str(raw).strip())
+    except ValueError:
+        return None
+    if 1 <= n <= MAX_OUTLINE_DEPTH:
+        return n
+    return None
+
+
+def _heading_from_direct_content(section: Tag) -> Tuple[Optional[str], Optional[int]]:
+    for child in _direct_child_tags(section):
+        if child.name == "section":
+            continue
+        if child.name in HEADING_TAGS:
+            text = child.get_text(separator=" ", strip=True)
+            if text:
+                return text, int(child.name[1])
+        for h in child.find_all(HEADING_TAGS):
+            parent_sec = h.find_parent("section")
+            if parent_sec is section and h.get_text(strip=True):
+                return h.get_text(separator=" ", strip=True), int(h.name[1])
+    return None, None
+
+
+def _section_title_and_level(
+    tag: Tag, parent_depth: int, default_child_level: int
+) -> Tuple[str, int]:
+    attr_level = _section_level_from_attr(tag)
+    h_title, h_level = _heading_from_direct_content(tag)
+    title = h_title or tag.get("aria-label") or ""
+    title = re.sub(r"\s+", " ", title).strip()
+    if attr_level is not None:
+        level = attr_level
+    elif h_level is not None:
+        level = h_level
+    else:
+        level = default_child_level
+    if level <= parent_depth:
+        level = parent_depth + 1
+    if level > MAX_OUTLINE_DEPTH:
+        level = MAX_OUTLINE_DEPTH
+    return title, level
+
+
+def _prefix_text_once(text: str, prefix: str) -> str:
+    stripped = re.sub(r"\s+", " ", text).strip()
+    if stripped.startswith(prefix):
+        return text
+    return f"{prefix} {text}".strip()
+
+
+def _section_id_from_number(section_number: str) -> str:
+    return f"s{section_number.replace('.', '-')}"
+
+
+def _paragraph_id_from_section(section_id: str, paragraph_index: int) -> str:
+    return f"{section_id}_p{paragraph_index}"
+
+
+def _direct_heading_tag(section: Tag) -> Optional[Tag]:
+    for child in _direct_child_tags(section):
+        if child.name in HEADING_TAGS:
+            return child
+        if child.name == "section":
+            continue
+        nested_heading = child.find(HEADING_TAGS)
+        if nested_heading and nested_heading.find_parent("section") is section:
+            return nested_heading
+    return None
+
+
+def _direct_paragraph_tags(section: Tag) -> List[Tag]:
+    paragraphs: List[Tag] = []
+    for child in _direct_child_tags(section):
+        if child.name == "section":
+            continue
+        if child.name == "p":
+            paragraphs.append(child)
+        paragraphs.extend(
+            p for p in child.find_all("p") if p.find_parent("section") is section
+        )
+    return paragraphs
+
+
+def _annotate_section_tree_for_display(
+    section: Tag, counters: List[int], parent_depth: int
+) -> None:
+    default_child = min(parent_depth + 1, MAX_OUTLINE_DEPTH)
+    title, level = _section_title_and_level(section, parent_depth, default_child)
+    _bump_counters(counters, level)
+    section_number = _format_section_number(counters, level)
+    section_id = _section_id_from_number(section_number)
+    section["id"] = section_id
+    section["data-section-number"] = section_number
+
+    heading_tag = _direct_heading_tag(section)
+    if heading_tag and title:
+        heading_tag.string = _prefix_text_once(
+            heading_tag.get_text(" ", strip=True), section_number
+        )
+
+    for idx, p in enumerate(_direct_paragraph_tags(section), start=1):
+        paragraph_number = f"{section_number}.{idx}"
+        paragraph_id = _paragraph_id_from_section(section_id, idx)
+        p["id"] = paragraph_id
+        p["data-paragraph-number"] = paragraph_number
+        p.string = _prefix_text_once(p.get_text(" ", strip=True), paragraph_number)
+
+    for child in [c for c in _direct_child_tags(section) if c.name == "section"]:
+        _annotate_section_tree_for_display(child, counters, parent_depth=level)
+
+
+def annotate_html_with_numbering(html: str) -> str:
+    """
+    Return HTML with visible hierarchical numbering added to headings and paragraphs.
+
+    - Section headings are prefixed with decimal section numbers.
+    - Paragraphs are prefixed with hierarchical paragraph numbers (<section>.<paragraph>).
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    root = find_book_root(soup)
+    top_sections = [c for c in _direct_child_tags(root) if c.name == "section"]
+    counters = [0] * MAX_OUTLINE_DEPTH
+    if top_sections:
+        for sec in top_sections:
+            _annotate_section_tree_for_display(sec, counters, parent_depth=0)
+    return str(soup)
+
+
 # ── PUBLIC: legacy helpers (app.py imports these) ─────────────────────────────
 
 def format_passage_for_prompt(
-    section_number: str, section_title: str, body: str
+    section_number: str,
+    section_title: str,
+    body: str,
+    paragraph_number: str = "",
 ) -> str:
     t = body.strip()
     if t.startswith("[§"):
@@ -626,6 +821,8 @@ def format_passage_for_prompt(
     line = f"[§ {section_number}"
     if section_title:
         line += f" — {section_title}"
+    if paragraph_number:
+        line += f" | ¶ {paragraph_number}"
     line += "]"
     return f"{line}\n{t}"
 
@@ -642,15 +839,17 @@ def parse_html_path_to_chunks(
     """
     para_chunks = parse_html_to_paragraph_chunks(path)
     out: List[IndexedChunk] = []
-    for i, pc in enumerate(para_chunks):
+    for pc in para_chunks:
+        paragraph_number = f"{pc.section_number}.{pc.para_index + 1}"
         out.append(IndexedChunk(
-            document       = pc.document,
-            section_number = pc.section_number,
-            section_title  = pc.section_title,
-            chunk_index    = pc.para_index,
-            heading_id     = pc.heading_id,
-            chunk_id       = pc.chunk_id,
-            anchor_id      = pc.anchor_id,
+            document         = pc.document,
+            section_number   = pc.section_number,
+            section_title    = pc.section_title,
+            chunk_index      = pc.para_index,
+            paragraph_number = paragraph_number,
+            heading_id       = pc.heading_id,
+            chunk_id         = pc.chunk_id,
+            anchor_id        = pc.anchor_id,
         ))
     return out
 

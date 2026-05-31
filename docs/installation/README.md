@@ -10,3 +10,15 @@ This folder describes how the Climate Academy Streamlit chatbot fits into a depl
 | [Refactor plan: `app.py`](refactor_app_py_plan.md) | Target architecture, **implementation map**, and how to run/test |
 
 The runnable app lives under `climate_streamlit/`; operational setup mirrors the expectations in `climate_streamlit/README.md`.
+# Installation and deployment
+
+Guides for running and hosting the Climate Academy chatbot outside local development.
+
+| Document | Description |
+|----------|-------------|
+| [fastapi_hosting_options.md](fastapi_hosting_options.md) | Lightweight free hosting options for the **FastAPI** API + separate web client |
+
+Related:
+
+- [climate-academy-assistant-explained.md](../climate-academy-assistant-explained.md) — how the assistant works (colleague-facing)
+- [../zoom_daily_summary_local_guide.md](../zoom_daily_summary_local_guide.md) — local Zoom summary tooling (separate workflow)
