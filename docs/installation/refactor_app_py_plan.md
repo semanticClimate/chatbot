@@ -210,7 +210,7 @@ The refactor described here is **implemented** in `climate_streamlit/`:
 
 ### How to run and test
 
-1. **Environment** (from repo root or `climate_streamlit/`): activate your venv, ensure `GROQ_API_KEY` is set (`.streamlit/secrets.toml` or environment), and `pip install -r climate_streamlit/requirements.txt` plus `pymupdf` if needed.
+1. **Environment** (from repo root or `climate_streamlit/`): activate your venv, ensure `GROQ_API_KEY` is set (`.streamlit/secrets.toml` or environment), and `pip install -r requirements.txt` plus `pymupdf` if needed.
 
 2. **Start the app**
    ```bash

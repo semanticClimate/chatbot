@@ -1,3 +1,4 @@
+.DS_Store
 .streamlit/secrets.toml
 venv/
 .venv/
@@ -14,3 +15,6 @@ config/zoom_daily_summary/slack.env
 config/zoom_daily_summary/slack.json
 .idea/
 temp/
+# encyclopedia/output/
+encyclopedia/temp/
+# encyclopedia/source/

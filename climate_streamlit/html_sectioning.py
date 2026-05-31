@@ -228,6 +228,19 @@ def _parse_book_html_format_B(soup: BeautifulSoup) -> List[SectionRecord]:
 
 # ── FORMAT A parsing (nested <section> elements) ──────────────────────────────
 
+def _section_title_heading_A(section: Tag) -> Optional[Tag]:
+    """First heading that carries the section title (Format A)."""
+    for child in _direct_child_tags(section):
+        if child.name == "section":
+            continue
+        if child.name in HEADING_TAGS and child.get_text(strip=True):
+            return child
+        for h in child.find_all(HEADING_TAGS):
+            if h.find_parent("section") is section and h.get_text(strip=True):
+                return h
+    return None
+
+
 def _section_title_and_level_A(
     tag: Tag, parent_depth: int, default_child_level: int
 ) -> Tuple[str, int]:
@@ -240,22 +253,10 @@ def _section_title_and_level_A(
             pass
 
     h_title, h_level = None, None
-    for child in _direct_child_tags(tag):
-        if child.name == "section":
-            continue
-        if child.name in HEADING_TAGS:
-            txt = child.get_text(separator=" ", strip=True)
-            if txt:
-                h_title, h_level = txt, int(child.name[1])
-                break
-        for h in child.find_all(HEADING_TAGS):
-            parent_sec = h.find_parent("section")
-            if parent_sec is tag and h.get_text(strip=True):
-                h_title = h.get_text(separator=" ", strip=True)
-                h_level = int(h.name[1])
-                break
-        if h_title:
-            break
+    title_heading = _section_title_heading_A(tag)
+    if title_heading is not None:
+        h_title = title_heading.get_text(separator=" ", strip=True)
+        h_level = int(title_heading.name[1])
 
     title  = h_title or tag.get("aria-label") or ""
     title  = re.sub(r"\s+", " ", title).strip()
@@ -352,11 +353,7 @@ def _collect_paragraph_texts_for_section(
 
     def flush_list() -> None:
         if current_list:
-            merged = " ".join(current_list)
-            if para_texts and len(merged) < MIN_PARA_CHARS:
-                para_texts[-1] = para_texts[-1] + " " + merged
-            else:
-                para_texts.append(merged)
+            para_texts.append(" ".join(current_list))
             current_list.clear()
 
     node = heading_tag.next_sibling
@@ -380,10 +377,8 @@ def _collect_paragraph_texts_for_section(
                 flush_list()
                 text = node.get_text(separator=" ", strip=True)
                 if text:
-                    if para_texts and len(text) < MIN_PARA_CHARS:
-                        para_texts[-1] = para_texts[-1] + " " + text
-                    else:
-                        para_texts.append(text)
+                    # One DOM block = one chunk/anchor (must match _annotate_format_B_para).
+                    para_texts.append(text)
             elif node.name in ("table", "blockquote", "figure", "div"):
                 flush_list()
                 text = node.get_text(separator=" ", strip=True)
@@ -476,10 +471,14 @@ def parse_html_to_paragraph_chunks(path: Path | str) -> List[ParagraphChunk]:
 
 def annotate_html_with_section_ids(html: str) -> str:
     """
-    1. Assigns §-numbers to headings (same as before).
-    2. NEW: Injects   id="para-{section}-{idx}"   on every paragraph element
-       so the viewer can highlight EXACTLY that paragraph.
-    3. Wraps each section in a ca-section div for fallback section-level highlighting.
+    Annotate book HTML for RAG citations and iframe navigation.
+
+    1. Assigns data-section-number on outline nodes and title headings.
+    2. Injects id="para-{section}-{idx}" on paragraph-level body elements.
+    3. Wraps flat sections in div.ca-section for section-level highlight fallback.
+
+    Visible § labels in the iframe come from book_iframe_highlight.css
+    (inject_book_viewer_assets). See docs/HTML_SECTION_NESTING.md.
     """
     soup = BeautifulSoup(html, "html.parser")
     if _is_nested_section_format(soup):
@@ -500,6 +499,9 @@ def _annotate_format_A(soup: BeautifulSoup) -> str:
         number = _format_section_number(counters, level)
         section["data-section-number"] = number
         section["id"] = f"section-{number.replace('.', '-')}"
+        title_heading = _section_title_heading_A(section)
+        if title_heading is not None:
+            title_heading["data-section-number"] = number
 
         # Inject paragraph anchor IDs on <p> children
         p_idx = 0

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Optional
 
-from config_loader import AppSettings
-from pdf.text import make_pdf_search_query
+from climate_streamlit.config_loader import AppSettings
+from climate_streamlit.pdf.text import make_pdf_search_query
 
 
 def build_sources(

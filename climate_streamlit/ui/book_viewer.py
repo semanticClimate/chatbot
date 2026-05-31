@@ -8,7 +8,7 @@ from typing import Optional
 import streamlit as st
 import streamlit.components.v1 as components
 
-from config_loader import AppSettings
+from climate_streamlit.config_loader import AppSettings
 
 
 def render_book_viewer(

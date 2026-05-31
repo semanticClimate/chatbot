@@ -6,7 +6,7 @@ from uuid import uuid4
 
 import streamlit as st
 
-from config_loader import AppSettings
+from climate_streamlit.config_loader import AppSettings
 
 
 def welcome_message(settings: AppSettings) -> str:

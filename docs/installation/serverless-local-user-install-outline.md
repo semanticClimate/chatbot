@@ -50,7 +50,7 @@ This document is a **plan only**: proposed scripts and procedures for naive user
 ### Phase C — Dependencies
 
 - Scripts run `python -m venv .venv` in a **single canonical location** (repo root or `climate_streamlit/` — choose one and document it consistently).
-- `python -m pip install --upgrade pip`, then `pip install -r climate_streamlit/requirements.txt` and **`pymupdf`** per `climate_streamlit/README.md`.
+- `python -m pip install --upgrade pip`, then `pip install -r requirements.txt` and **`pymupdf`** per `climate_streamlit/README.md`.
 
 ### Phase D — Secrets
 

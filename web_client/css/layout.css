@@ -1,0 +1,233 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background:
+    radial-gradient(1200px 400px at -20% -10%, #e6f1ea 0%, transparent 65%),
+    radial-gradient(900px 380px at 115% 0%, #f4efe4 0%, transparent 62%),
+    var(--color-bg);
+}
+
+.app {
+  max-width: min(1680px, 100%);
+  margin: 0 auto;
+  padding: var(--space-md);
+  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom, 0));
+}
+
+.app-header {
+  margin-bottom: var(--space-md);
+}
+
+.app-title {
+  margin: 0;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.app-subtitle {
+  margin: var(--space-xs) 0 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  align-items: start;
+}
+
+.main-middle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+@media (min-width: 1100px) {
+  .main-grid {
+    grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.15fr);
+    align-items: stretch;
+  }
+
+  .panel-chat {
+    max-height: none;
+  }
+}
+
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: var(--space-md);
+}
+
+.panel-heading {
+  margin: 0 0 var(--space-sm);
+  font-size: 1rem;
+}
+
+.panel-chat {
+  display: flex;
+  flex-direction: column;
+  min-height: min(48dvh, 480px);
+  max-height: 78dvh;
+}
+
+.thread {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-bottom: var(--space-sm);
+  -webkit-overflow-scrolling: touch;
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+@media (min-width: 600px) {
+  .composer {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.row-actions-primary {
+  margin-top: var(--space-sm);
+}
+
+.settings-more {
+  margin-top: var(--space-xs);
+  font-size: 0.85rem;
+}
+
+.settings-more-summary {
+  cursor: pointer;
+  color: var(--color-muted);
+  font-weight: 600;
+  list-style: none;
+  user-select: none;
+}
+
+.settings-more-summary::-webkit-details-marker {
+  display: none;
+}
+
+.settings-more-summary::before {
+  content: "▸ ";
+  color: var(--color-brand-dark);
+}
+
+.settings-more[open] .settings-more-summary::before {
+  content: "▾ ";
+}
+
+.row-actions-secondary {
+  margin-top: var(--space-xs);
+  margin-bottom: 0;
+}
+
+.status-line {
+  margin: var(--space-sm) 0 0;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  word-break: break-word;
+}
+
+.status-line[data-kind="error"] {
+  color: #8b2e2e;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.field-input {
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  font: inherit;
+}
+
+.field-select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--color-muted) 50%),
+    linear-gradient(135deg, var(--color-muted) 50%, transparent 50%);
+  background-position: calc(100% - 1.1rem) 50%, calc(100% - 0.75rem) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+  cursor: pointer;
+}
+
+.field-hint {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.sources-hint {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+@media (max-width: 1099px) {
+  .panel-sources {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    max-height: 40dvh;
+    overflow-y: auto;
+  }
+}

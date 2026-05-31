@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import streamlit as st
 
-from config_loader import AppSettings
-from llm.ask import ask_groq
-from pdf.index import map_chunks_to_pdf
-from rag.retrieve import retrieve
-from ui.book_viewer import render_book_viewer
+from climate_streamlit.config_loader import AppSettings
+from climate_streamlit.llm.ask import ask_groq
+from climate_streamlit.pdf.index import map_chunks_to_pdf
+from climate_streamlit.rag.retrieve import retrieve
+from climate_streamlit.ui.book_viewer import render_book_viewer
 
 
 def render_chat_column(

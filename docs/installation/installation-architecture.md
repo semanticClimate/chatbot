@@ -27,7 +27,7 @@ flowchart TB
   end
 
   subgraph Layer2["2 — Python dependencies"]
-    Req[pip install -r climate_streamlit/requirements.txt]
+    Req[pip install -r requirements.txt]
     MuPDF[pip install PyMuPDF for fitz import]
   end
 
@@ -80,7 +80,7 @@ Code resolves `ROOT_DIR` as the parent of `climate_streamlit/`, so the app expec
 
 - Install Python **3.10+** (3.11/3.12 recommended).
 - Clone or copy this repository maintaining the layout above.
-- Create a venv, upgrade `pip`, run `pip install -r climate_streamlit/requirements.txt` and `pip install pymupdf`.
+- Create a venv, upgrade `pip`, run `pip install -r requirements.txt` and `pip install pymupdf`.
 - Obtain a Groq API key and configure `GROQ_API_KEY` (environment variable preferred for servers).
 
 **Assets:**
@@ -122,3 +122,47 @@ streamlit run app.py --server.port 8501 --server.address 0.0.0.0
 Use your platform’s equivalent for binding address, TLS (often via reverse proxy), logging, and restart policy.
 
 For day-to-day developer setup, follow `climate_streamlit/README.md` step by step.
+
+## Smoke testing: FastAPI + web client (1–2 users, non-production)
+
+Use this when you only need lightweight verification with yourself or one other tester. No subscription or long-lived cloud host is required unless you choose one.
+
+### Local smoke (recommended)
+
+1. **Prep once**  
+   - Clone repo, activate venv, `pip install -r requirements.txt` from repo root.  
+   - Ensure `input/` book assets and `chroma_db/` behavior match `climate_streamlit/Getting_started.md`.
+
+2. **Run API locally**  
+   - `export GROQ_API_KEY='…'` in the **same** terminal as the server; confirm with `printenv GROQ_API_KEY`.  
+   - From repo root: `python -m uvicorn fastapi_app.main:app --host 127.0.0.1 --port 8800`  
+   - Prefer `python -m uvicorn` over bare `uvicorn` if `which uvicorn` points at an older Python (e.g. missing `tomllib`).
+
+3. **Run web UI locally**  
+   - `cd web_client` → `python -m http.server 8081`.  
+   - Browser: `http://127.0.0.1:8081`, set API base to `http://127.0.0.1:8800`.  
+   - If the browser blocks requests: `export CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8081` and restart the API.
+
+4. **Smoke**  
+   - Ask a question; citation chips should populate the sources pane.  
+   - Optional: `curl http://127.0.0.1:8800/health`, `/ready`, and `POST /ask` with JSON body.
+
+5. **Share with one other tester (optional)**  
+   - Same LAN: they use your machine IP for UI and API base; widen CORS to match that origin.  
+   - Off-LAN: use a tunnel (e.g. ngrok, Cloudflare Tunnel, Tailscale) to the **API**; set API base URL in the UI; set **CORS** to the tunnel or UI origin.  
+   - Do not commit the Groq key; it stays only on the API host / your shell.
+   - For a full Cloudflare Tunnel walkthrough, see [`docs/installation/cloudflare-tunnel-testing.md`](./cloudflare-tunnel-testing.md).
+
+6. **Version control**  
+   - Commit from a clean branch; tag or document which revision includes `fastapi_app/` and `web_client/` if others will reproduce.
+
+### GitHub Pages (static UI only, optional later)
+
+1. Enable GitHub Pages on the repo (e.g. publish `web_client/` or `docs/` per GitHub settings).  
+2. Host **FastAPI elsewhere** with **HTTPS** (Pages is HTTPS; mixed `http` API calls are blocked).  
+3. Set **CORS** on the API to your Pages origin.  
+4. Configure or document the **HTTPS API base URL** in the deployed client (no secrets in the repo).
+
+### If you skip cloud entirely
+
+Complete **Local smoke** steps 1–4 only; no PaaS subscription required.
