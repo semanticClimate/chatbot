@@ -1,0 +1,25 @@
+# Temporary VPS: FastAPI + static web_client.
+# Usage on server (from repo root):
+#   cp docs/installation/vps/docker-compose.yml .
+#   cp docs/installation/vps/Dockerfile.api .
+#   docker compose up -d --build
+#
+# Bind to localhost; put Caddy or nginx in front for HTTPS (see temporary-vps-hosting-runbook.md).
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    env_file: .env
+    ports:
+      - "127.0.0.1:8800:8800"
+    restart: unless-stopped
+
+  web:
+    image: nginx:alpine
+    volumes:
+      - ./web_client:/usr/share/nginx/html:ro
+    ports:
+      - "127.0.0.1:8081:80"
+    restart: unless-stopped

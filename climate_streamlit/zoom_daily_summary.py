@@ -1,0 +1,654 @@
+"""
+Local daily Zoom transcript anonymization + summarization.
+
+Input: meeting_saved_closed_caption.txt (Zoom transcript text)
+Output:
+  - <date>_anonymized.txt
+  - <date>_summary.md
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from collections import Counter
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Sequence, Tuple
+
+import httpx
+
+EMAIL_RE = re.compile(r"\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b")
+PHONE_RE = re.compile(r"\b(?:\+?\d[\d\s().-]{7,}\d)\b")
+URL_RE = re.compile(r"\bhttps?://[^\s]+")
+TIMESTAMP_RE = re.compile(r"^\s*(?:\d{1,2}:){1,2}\d{2}(?:\.\d+)?\s*$")
+SPEAKER_PREFIX_RE = re.compile(
+    r"^\s*(?:(?:\d{1,2}:){1,2}\d{2}(?:\.\d+)?\s+)?([A-Za-z][A-Za-z .'\-]{1,60}):\s*(.+)\s*$"
+)
+BRACKET_SPEAKER_RE = re.compile(
+    r"^\s*\[([^\]]+)\]\s+(?:\d{1,2}:){1,2}\d{2}(?:\.\d+)?\s*$"
+)
+WHITESPACE_RE = re.compile(r"\s+")
+MIN_ALIAS_LEN = 3
+NAME_STOPWORDS = {
+    "and",
+    "the",
+    "for",
+    "with",
+    "from",
+    "team",
+    "meeting",
+    "group",
+    "everyone",
+    "all",
+}
+SUMMARY_WARNING = (
+    "WARNING Summary created from transcript of Zoom Session audio. "
+    "May contain errors, particularly names."
+)
+TRANSCRIPT_FILENAME = "meeting_saved_closed_caption.txt"
+ZOOM_UUID_RE = re.compile(
+    r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+)
+ZOOM_FOLDER_DATE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})")
+MEETING_ID_LINE_RE = re.compile(
+    r"(?:Meeting\s+ID|Meeting\s+UUID|UUID)\s*[:#]?\s*([0-9a-fA-F\- ]+)",
+    re.IGNORECASE,
+)
+MEETING_NUM_RE = re.compile(r"\b(\d{9,11})\b")
+
+
+@dataclass
+class PlaceholderMap:
+    people: Dict[str, str]
+    orgs: Dict[str, str]
+    misc: Dict[str, str]
+
+
+def _normalize_space(text: str) -> str:
+    """Collapse whitespace to a single space and trim both ends."""
+    return WHITESPACE_RE.sub(" ", text).strip()
+
+
+def clean_caption_lines(raw_text: str) -> List[str]:
+    """Keep meaningful transcript content and drop obvious timestamp-only lines."""
+    out: List[str] = []
+    for line in raw_text.splitlines():
+        stripped = _normalize_space(line)
+        if not stripped:
+            continue
+        if TIMESTAMP_RE.match(stripped):
+            continue
+        out.append(stripped)
+    return out
+
+
+def parse_speaker_utterances(lines: Sequence[str]) -> List[Tuple[str | None, str]]:
+    """
+    Parse Zoom-style lines into (speaker, text).
+    If no speaker prefix exists, speaker is None.
+    """
+    utterances: List[Tuple[str | None, str]] = []
+    pending_speaker: str | None = None
+    for line in lines:
+        bracket_match = BRACKET_SPEAKER_RE.match(line)
+        if bracket_match:
+            pending_speaker = _normalize_space(bracket_match.group(1))
+            continue
+
+        match = SPEAKER_PREFIX_RE.match(line)
+        if match:
+            speaker = _normalize_space(match.group(1))
+            text = _normalize_space(match.group(2))
+            if text:
+                utterances.append((speaker, text))
+            pending_speaker = None
+            continue
+
+        text = _normalize_space(line)
+        if not text:
+            continue
+        if pending_speaker:
+            utterances.append((pending_speaker, text))
+            pending_speaker = None
+            continue
+        utterances.append((None, text))
+    return utterances
+
+
+def normalize_speaker_name(name: str, alias_map: Dict[str, str]) -> str:
+    """
+    Normalize a speaker name with optional alias overrides.
+
+    Matching is case-insensitive on exact full labels. If no alias is found,
+    the original normalized name is returned.
+    """
+    normalized = _normalize_space(name)
+    if not normalized:
+        return normalized
+    lookup = {k.lower(): _normalize_space(v) for k, v in alias_map.items()}
+    return lookup.get(normalized.lower(), normalized)
+
+
+def apply_regex_name_corrections_to_text(
+    text: str, regex_corrections: Sequence[Tuple[str, str]] | None = None
+) -> str:
+    """
+    Apply regex-based name corrections to free text.
+
+    Corrections are applied in-order and use case-insensitive matching.
+    """
+    if not regex_corrections:
+        return text
+    corrected = text
+    for pattern, replacement in regex_corrections:
+        compiled = re.compile(pattern, flags=re.IGNORECASE)
+        corrected = compiled.sub(replacement, corrected)
+    return corrected
+
+
+def collect_session_attendees(
+    utterances: Sequence[Tuple[str | None, str]],
+    alias_map: Dict[str, str] | None = None,
+    regex_corrections: Sequence[Tuple[str, str]] | None = None,
+) -> List[Tuple[str, int]]:
+    """
+    Return attendee rows as (speaker, turns), sorted by turns descending.
+
+    Speaker names are canonicalized through `alias_map` before counting, which
+    allows simple typo fixes such as "Alina" -> "Aleena".
+    """
+    alias_map = alias_map or {}
+    counts: Counter[str] = Counter()
+    for speaker, _ in utterances:
+        if not speaker:
+            continue
+        canonical = normalize_speaker_name(speaker, alias_map)
+        canonical = apply_regex_name_corrections_to_text(canonical, regex_corrections)
+        if canonical:
+            counts[canonical] += 1
+    return sorted(counts.items(), key=lambda item: (-item[1], item[0].lower()))
+
+
+def attendees_markdown_table(attendees: Sequence[Tuple[str, int]]) -> str:
+    """Render attendees as a markdown table."""
+    if not attendees:
+        return "## Attendees\n\n_No speaker labels detected in transcript._\n"
+    rows = ["## Attendees", "", "| Speaker | Turns |", "|---|---:|"]
+    rows.extend(f"| {speaker} | {turns} |" for speaker, turns in attendees)
+    return "\n".join(rows) + "\n"
+
+
+def apply_name_aliases_to_text(text: str, alias_map: Dict[str, str]) -> str:
+    """
+    Replace known speaker-name variants in free text using alias_map.
+
+    Uses case-insensitive whole-word replacement and applies longer keys first
+    so that specific multi-token names are handled before shorter aliases.
+    """
+    if not alias_map:
+        return text
+
+    normalized_map: Dict[str, str] = {}
+    for source, target in alias_map.items():
+        source_norm = _normalize_space(str(source))
+        target_norm = _normalize_space(str(target))
+        if source_norm and target_norm:
+            normalized_map[source_norm] = target_norm
+
+    safe = text
+    for source in sorted(normalized_map.keys(), key=len, reverse=True):
+        target = normalized_map[source]
+        pattern = re.compile(rf"\b{re.escape(source)}\b", flags=re.IGNORECASE)
+        safe = pattern.sub(target, safe)
+    return safe
+
+
+def sanitize_meeting_id_for_filename(meeting_id: str) -> str:
+    """Filesystem-safe meeting id for summary filenames."""
+    safe = re.sub(r"[^\w.-]+", "_", meeting_id.strip())
+    return safe or "unknown_meeting"
+
+
+def extract_zoom_meeting_id(session_dir: Path) -> str:
+    """
+    Resolve Zoom meeting UUID or numeric meeting ID from session folder.
+
+    Checks folder name, then metadata text/json files, then falls back to a
+    slug derived from the folder name.
+    """
+    folder_match = ZOOM_UUID_RE.search(session_dir.name)
+    if folder_match:
+        return folder_match.group(0).lower()
+
+    for path in sorted(session_dir.iterdir()):
+        if not path.is_file():
+            continue
+        suffix = path.suffix.lower()
+        if suffix not in {".txt", ".json"}:
+            continue
+        if path.name in {TRANSCRIPT_FILENAME, "chat.txt"}:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        uuid_match = ZOOM_UUID_RE.search(text)
+        if uuid_match:
+            return uuid_match.group(0).lower()
+        for line_match in MEETING_ID_LINE_RE.finditer(text):
+            raw = line_match.group(1).strip()
+            uuid_in_line = ZOOM_UUID_RE.search(raw)
+            if uuid_in_line:
+                return uuid_in_line.group(0).lower()
+            digits = re.sub(r"\D", "", raw)
+            if len(digits) >= 9:
+                return digits
+
+    numbers = MEETING_NUM_RE.findall(session_dir.name)
+    if numbers:
+        return numbers[-1]
+
+    slug = sanitize_meeting_id_for_filename(session_dir.name)
+    return slug if slug != "unknown_meeting" else "unknown_meeting"
+
+
+def session_date_for_summary(session_dir: Path, transcript_path: Path | None = None) -> str:
+    """Session date as YYYY-MM-DD from folder name or transcript timestamp."""
+    folder_match = ZOOM_FOLDER_DATE_RE.match(session_dir.name)
+    if folder_match:
+        return folder_match.group(1)
+
+    ref = transcript_path
+    if ref is None or not ref.is_file():
+        ref = session_dir / TRANSCRIPT_FILENAME
+    if ref.is_file():
+        return datetime.fromtimestamp(ref.stat().st_mtime).strftime("%Y-%m-%d")
+    return datetime.now().strftime("%Y-%m-%d")
+
+
+def summary_path_for_session(session_dir: Path, meeting_id: str | None = None) -> Path:
+    """Path for summary markdown inside the Zoom session folder."""
+    resolved_id = meeting_id or extract_zoom_meeting_id(session_dir)
+    safe_id = sanitize_meeting_id_for_filename(resolved_id)
+    return session_dir / f"{safe_id}_summary.md"
+
+
+def format_session_metadata(session_date: str, meeting_id: str) -> str:
+    """Markdown block with session date and Zoom meeting id."""
+    return (
+        "## Session\n\n"
+        f"- **Date:** {session_date}\n"
+        f"- **Zoom meeting ID:** `{meeting_id}`\n"
+    )
+
+
+def prepend_warning_and_attendees(
+    summary_md: str,
+    attendees_md: str = "",
+    *,
+    session_date: str = "",
+    meeting_id: str = "",
+) -> str:
+    """Build final summary output with warning, session metadata, attendees, and body."""
+    sections = [SUMMARY_WARNING]
+    if session_date.strip() or meeting_id.strip():
+        sections.append(
+            format_session_metadata(session_date=session_date.strip(), meeting_id=meeting_id.strip())
+        )
+    if attendees_md.strip():
+        sections.append(attendees_md.strip())
+    sections.append(summary_md.strip())
+    return "\n\n".join(section for section in sections if section)
+
+
+def _build_entity_maps(utterances: Sequence[Tuple[str | None, str]]) -> PlaceholderMap:
+    """
+    Create deterministic placeholder maps from known speaker names.
+
+    `people` maps each unique speaker label to PERSON_XX in first-seen order.
+    `orgs` and `misc` are reserved for future entity classes.
+    """
+    people: Dict[str, str] = {}
+    orgs: Dict[str, str] = {}
+    misc: Dict[str, str] = {}
+
+    for speaker, _ in utterances:
+        if speaker and speaker not in people:
+            people[speaker] = f"PERSON_{len(people) + 1:02d}"
+
+    return PlaceholderMap(people=people, orgs=orgs, misc=misc)
+
+
+def _replace_pattern(text: str, pattern: re.Pattern[str], label: str) -> str:
+    """Replace every match in `text` with sequential LABEL_XX placeholders."""
+    index = 0
+
+    def _repl(_: re.Match[str]) -> str:
+        nonlocal index
+        index += 1
+        return f"{label}_{index:02d}"
+
+    return pattern.sub(_repl, text)
+
+
+def _name_aliases(full_name: str) -> List[str]:
+    """
+    Return replaceable aliases for a speaker name.
+
+    We include the full label and meaningful tokens (for example first/last name)
+    so that in-text mentions such as "Alice" are anonymized, not only
+    exact full-name matches like "Alice Smith".
+    """
+    aliases: List[str] = [full_name]
+    for part in re.split(r"[\s.\-']+", full_name):
+        token = part.strip()
+        if len(token) < MIN_ALIAS_LEN:
+            continue
+        lowered = token.lower()
+        if lowered in NAME_STOPWORDS:
+            continue
+        aliases.append(token)
+    # Preserve insertion order while deduplicating.
+    return list(dict.fromkeys(aliases))
+
+
+def _build_people_patterns(mapping: PlaceholderMap) -> List[Tuple[str, re.Pattern[str], str]]:
+    """
+    Compile regex patterns for speaker name aliases.
+
+    Output items are `(speaker_name, compiled_pattern, alias)` and are ordered
+    by alias length descending to avoid partial replacement collisions.
+    """
+    pattern_rows: List[Tuple[str, re.Pattern[str], str]] = []
+    for speaker_name in mapping.people:
+        for alias in _name_aliases(speaker_name):
+            pattern_rows.append(
+                (
+                    speaker_name,
+                    re.compile(rf"\b{re.escape(alias)}\b", flags=re.IGNORECASE),
+                    alias,
+                )
+            )
+    return sorted(pattern_rows, key=lambda row: len(row[2]), reverse=True)
+
+
+def anonymize_utterances(utterances: Sequence[Tuple[str | None, str]]) -> Tuple[str, PlaceholderMap]:
+    """
+    Anonymize transcript lines while preserving conversational structure.
+
+    - Speaker labels are rewritten to PERSON_XX.
+    - In-text references to known speakers are rewritten using the same PERSON_XX.
+    - Email, phone and URL literals are replaced with type-specific placeholders.
+    """
+    mapping = _build_entity_maps(utterances)
+    lines: List[str] = []
+
+    people_patterns = _build_people_patterns(mapping)
+
+    for speaker, text in utterances:
+        safe = text
+        safe = _replace_pattern(safe, EMAIL_RE, "EMAIL")
+        safe = _replace_pattern(safe, PHONE_RE, "PHONE")
+        safe = _replace_pattern(safe, URL_RE, "URL")
+
+        for speaker_name, pattern, _ in people_patterns:
+            safe = pattern.sub(mapping.people[speaker_name], safe)
+
+        if speaker:
+            line = f"{mapping.people[speaker]}: {safe}"
+        else:
+            line = safe
+        lines.append(_normalize_space(line))
+
+    return "\n".join(lines), mapping
+
+
+def _chunk_text(text: str, max_chars: int = 7000) -> List[str]:
+    """Chunk by paragraphs with a character budget."""
+    paragraphs = [p.strip() for p in text.split("\n") if p.strip()]
+    chunks: List[str] = []
+    current: List[str] = []
+    current_len = 0
+    for p in paragraphs:
+        p_len = len(p) + 1
+        if current and current_len + p_len > max_chars:
+            chunks.append("\n".join(current))
+            current = [p]
+            current_len = p_len
+        else:
+            current.append(p)
+            current_len += p_len
+    if current:
+        chunks.append("\n".join(current))
+    return chunks
+
+
+def _ollama_generate(prompt: str, model: str, ollama_url: str, timeout_s: int) -> str:
+    payload = {"model": model, "prompt": prompt, "stream": False}
+    endpoint = f"{ollama_url.rstrip('/')}/api/generate"
+    with httpx.Client(timeout=timeout_s) as client:
+        response = client.post(endpoint, json=payload)
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as error:
+            body = response.text.strip()
+            if response.status_code == 404 and "model" in body.lower():
+                raise RuntimeError(
+                    f"Ollama model '{model}' is not available locally. "
+                    f"Run: ollama pull {model}"
+                ) from error
+            if response.status_code == 404:
+                raise RuntimeError(
+                    "Received 404 from the Ollama endpoint. "
+                    f"Check that '{ollama_url}' is an Ollama server and that '/api/generate' is available. "
+                    f"Response body: {body}"
+                ) from error
+            raise RuntimeError(
+                f"Ollama request failed with status {response.status_code}. Response body: {body}"
+            ) from error
+        data = response.json()
+    text = data.get("response", "").strip()
+    if not text:
+        raise ValueError("Ollama returned an empty response")
+    return text
+
+
+def summarize_anonymized_text(anonymized_text: str, model: str, ollama_url: str, timeout_s: int) -> str:
+    """
+    Summarize anonymized transcript text using two-stage local LLM prompting.
+
+    Stage 1 summarizes each chunk. Stage 2 merges chunk summaries into the
+    final report shape expected by downstream docs.
+    """
+    chunks = _chunk_text(anonymized_text, max_chars=7000)
+    partial_summaries: List[str] = []
+
+    for i, chunk in enumerate(chunks, start=1):
+        prompt = (
+            "You summarize anonymized Zoom meeting transcripts.\n"
+            "The transcript uses placeholders (PERSON_01, EMAIL_01, etc.).\n"
+            "Never infer or invent real identities.\n"
+            "Do not resolve pronouns to a person unless the same line explicitly names a PERSON_XX.\n"
+            "If attribution is unclear (including quotes), use neutral wording such as 'an attendee stated'.\n"
+            "Return concise bullet points under:\n"
+            "- Key Updates\n- Decisions\n- Risks/Blockers\n- Action Items\n\n"
+            f"Transcript chunk {i}/{len(chunks)}:\n{chunk}\n"
+        )
+        partial_summaries.append(
+            _ollama_generate(prompt=prompt, model=model, ollama_url=ollama_url, timeout_s=timeout_s)
+        )
+
+    final_prompt = (
+        "You are producing the final daily summary from chunk summaries.\n"
+        "Keep all placeholders anonymized exactly as provided.\n"
+        "Do not expand or reinterpret pronouns into named speakers unless explicitly supported by PERSON_XX references.\n"
+        "Output strict markdown with these sections only:\n"
+        "## Daily Summary\n"
+        "## Key Updates\n"
+        "## Decisions\n"
+        "## Risks and Blockers\n"
+        "## Action Items\n"
+        "## Open Questions\n\n"
+        "Chunk summaries:\n"
+        + "\n\n---\n\n".join(partial_summaries)
+    )
+    return _ollama_generate(
+        prompt=final_prompt, model=model, ollama_url=ollama_url, timeout_s=timeout_s
+    )
+
+
+def summarize_transcript_text(transcript_text: str, model: str, ollama_url: str, timeout_s: int) -> str:
+    """
+    Summarize raw transcript text (no anonymization assumptions).
+
+    Uses the same two-stage chunking strategy as anonymized summarization but
+    avoids prompt constraints that require placeholder-style speaker IDs.
+    """
+    chunks = _chunk_text(transcript_text, max_chars=7000)
+    partial_summaries: List[str] = []
+
+    for i, chunk in enumerate(chunks, start=1):
+        prompt = (
+            "You summarize Zoom meeting transcripts.\n"
+            "Return concise bullet points under:\n"
+            "- Key Updates\n- Decisions\n- Risks/Blockers\n- Action Items\n\n"
+            f"Transcript chunk {i}/{len(chunks)}:\n{chunk}\n"
+        )
+        partial_summaries.append(
+            _ollama_generate(prompt=prompt, model=model, ollama_url=ollama_url, timeout_s=timeout_s)
+        )
+
+    final_prompt = (
+        "You are producing the final daily summary from chunk summaries.\n"
+        "Output strict markdown with these sections only:\n"
+        "## Daily Summary\n"
+        "## Key Updates\n"
+        "## Decisions\n"
+        "## Risks and Blockers\n"
+        "## Action Items\n"
+        "## Open Questions\n\n"
+        "Chunk summaries:\n"
+        + "\n\n---\n\n".join(partial_summaries)
+    )
+    return _ollama_generate(
+        prompt=final_prompt, model=model, ollama_url=ollama_url, timeout_s=timeout_s
+    )
+
+
+def _today_date_string() -> str:
+    return datetime.now().strftime("%Y_%m_%d")
+
+
+def _default_output_dir() -> Path:
+    repo_root = Path(__file__).resolve().parents[1]
+    return Path(repo_root, "temp", "zoom_summaries")
+
+
+def verify_ollama_server(ollama_url: str, timeout_s: int) -> None:
+    tags_endpoint = f"{ollama_url.rstrip('/')}/api/tags"
+    try:
+        with httpx.Client(timeout=timeout_s) as client:
+            response = client.get(tags_endpoint)
+    except httpx.HTTPError as error:
+        raise RuntimeError(
+            f"Could not connect to Ollama at '{ollama_url}'. "
+            "Start Ollama and retry (for example: `ollama serve`)."
+        ) from error
+
+    if response.status_code == 404:
+        raise RuntimeError(
+            f"'{ollama_url}' responded but does not expose Ollama '/api/tags'. "
+            "Check --ollama_url and ensure this is an Ollama server."
+        )
+
+    try:
+        response.raise_for_status()
+    except httpx.HTTPStatusError as error:
+        raise RuntimeError(
+            f"Ollama health check failed with status {response.status_code}: {response.text.strip()}"
+        ) from error
+
+
+def run_pipeline(
+    input_path: Path,
+    output_dir: Path,
+    run_date: str,
+    model: str,
+    ollama_url: str,
+    timeout_s: int,
+) -> Tuple[Path, Path]:
+    raw_text = input_path.read_text(encoding="utf-8", errors="replace")
+    lines = clean_caption_lines(raw_text)
+    utterances = parse_speaker_utterances(lines)
+    attendees = collect_session_attendees(utterances)
+    attendees_md = attendees_markdown_table(attendees)
+    anonymized_text, mapping = anonymize_utterances(utterances)
+    summary_md = summarize_anonymized_text(
+        anonymized_text=anonymized_text, model=model, ollama_url=ollama_url, timeout_s=timeout_s
+    )
+    session_dir = input_path.parent
+    meeting_id = extract_zoom_meeting_id(session_dir)
+    session_date = session_date_for_summary(session_dir, input_path)
+    full_summary_md = prepend_warning_and_attendees(
+        summary_md=summary_md,
+        attendees_md=attendees_md,
+        session_date=session_date,
+        meeting_id=meeting_id,
+    )
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    safe_id = sanitize_meeting_id_for_filename(meeting_id)
+    anonymized_path = Path(output_dir, f"{run_date}_anonymized.txt")
+    summary_path = summary_path_for_session(session_dir, meeting_id)
+    mapping_path = Path(output_dir, f"{run_date}_anonymization_map.json")
+
+    summary_path.write_text(full_summary_md.strip() + "\n", encoding="utf-8")
+    mapping_path.write_text(
+        json.dumps({"people": mapping.people, "orgs": mapping.orgs, "misc": mapping.misc}, indent=2),
+        encoding="utf-8",
+    )
+    return anonymized_path, summary_path
+
+
+def build_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Daily local Zoom transcript summarizer (anonymized first)")
+    parser.add_argument("--input", required=True, help="Path to meeting_saved_closed_caption.txt")
+    parser.add_argument(
+        "--output_dir",
+        default=str(_default_output_dir()),
+        help="Directory for anonymization map (summary is written into the Zoom session folder)",
+    )
+    parser.add_argument("--date", default=_today_date_string(), help="Date stamp for output filenames (YYYY_MM_DD)")
+    parser.add_argument("--model", default="qwen2.5:7b-instruct", help="Local Ollama model name")
+    parser.add_argument("--ollama_url", default="http://localhost:11434", help="Base URL for local Ollama")
+    parser.add_argument("--timeout_s", type=int, default=120, help="HTTP timeout for each model call")
+    return parser
+
+
+def main() -> None:
+    parser = build_arg_parser()
+    args = parser.parse_args()
+
+    input_path = Path(args.input)
+    if not input_path.is_file():
+        raise FileNotFoundError(f"Transcript file not found: {input_path}")
+
+    verify_ollama_server(args.ollama_url, args.timeout_s)
+
+    output_dir = Path(args.output_dir)
+    _, summary_path = run_pipeline(
+        input_path=input_path,
+        output_dir=output_dir,
+        run_date=args.date,
+        model=args.model,
+        ollama_url=args.ollama_url,
+        timeout_s=args.timeout_s,
+    )
+    print(f"Daily summary: {summary_path}")
+
+
+if __name__ == "__main__":
+    main()

@@ -4,7 +4,7 @@
 
 Dependencies are listed in the repo-root [`requirements.txt`](requirements.txt). Use a **Python 3.11+** venv for the API.
 
-**Terminal A — API (needs `GROQ_API_KEY`; do not commit the key)**
+**Backend: Terminal A — API (needs `GROQ_API_KEY`; do not commit the key)**
 
 ```bash
 cd /path/to/chatbot
@@ -16,7 +16,7 @@ python -m uvicorn fastapi_app.main:app --host 127.0.0.1 --port 8800
 
 Use `python -m uvicorn`, not necessarily bare `uvicorn`, if your shell’s `uvicorn` points at an older Python (e.g. 3.8 without `tomllib`).
 
-**Terminal B — static web UI (no API key)**
+**Frontend: Terminal B — static web UI (no API key)**
 
 ```bash
 cd /path/to/chatbot/web_client

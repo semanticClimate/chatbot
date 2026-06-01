@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 
 from climate_streamlit.html_sectioning import (
     IndexedChunk,
+    annotate_html_with_numbering,
     annotate_html_with_section_ids,
     parse_book_html,
     parse_html_path_to_chunks,
@@ -65,6 +66,25 @@ def test_parse_html_path_to_chunks_integration():
     chunks = parse_html_path_to_chunks(PROTOTYPE, chunk_size=30, chunk_overlap=5)
     assert len(chunks) >= len(parse_book_html(PROTOTYPE.read_text(encoding="utf-8")))
     assert isinstance(chunks[0], IndexedChunk)
+
+
+def test_annotate_html_with_numbering_adds_section_and_paragraph_numbers():
+    html = PROTOTYPE.read_text(encoding="utf-8")
+    numbered_html = annotate_html_with_numbering(html)
+    assert "data-section-number=\"1\"" in numbered_html
+    assert "data-section-number=\"1.1\"" in numbered_html
+    assert "data-paragraph-number=\"1.1.1\"" in numbered_html
+    assert "id=\"s1\"" in numbered_html
+    assert "id=\"s1-1_p1\"" in numbered_html
+    assert "1 Foundations of climate science" in numbered_html
+
+
+def test_annotate_html_with_numbering_uses_distinct_section_and_paragraph_id_syntax():
+    html = PROTOTYPE.read_text(encoding="utf-8")
+    numbered_html = annotate_html_with_numbering(html)
+    assert "id=\"s1-1\"" in numbered_html
+    assert "id=\"s1-1_p1\"" in numbered_html
+    assert "id=\"s1-1\"" in numbered_html and "id=\"s1-1_p1\"" in numbered_html
 
 
 def test_annotated_format_a_headings_carry_section_numbers():

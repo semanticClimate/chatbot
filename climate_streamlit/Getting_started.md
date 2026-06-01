@@ -43,15 +43,17 @@ Important:
 
 From the repository root (`chatbot`), run:
 
-
 ### Step 2 — Add key to secrets.toml
 
-(Only needed if "GROQ_API_KEY" is not set as environment variable (recommended))
+(Only needed if `GROQ_API_KEY` is not set as an environment variable — recommended)
 
 Edit `.streamlit/secrets.toml`:
+
 ```toml
 GROQ_API_KEY = "gsk_...your_key_here"
 ```
+
+### Windows (PowerShell)
 
 ```powershell
 cd <path-to-your-project>\chatbot
