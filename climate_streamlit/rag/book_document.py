@@ -87,8 +87,9 @@ def inline_local_images(html: str, base_dir: Path) -> str:
 
         clean_src = unquote(src.split("#", 1)[0].split("?", 1)[0])
         image_path = (base_dir / clean_src).resolve()
+        project_root = _PKG_DIR.parent.resolve()
         try:
-            image_path.relative_to(base_dir)
+            image_path.relative_to(project_root)
         except ValueError:
             continue
         if not image_path.is_file():

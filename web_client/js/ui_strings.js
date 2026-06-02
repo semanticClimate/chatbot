@@ -103,7 +103,7 @@ const STRINGS = {
   en: {
     docTitle: "Climate Academy — chat",
     appTitle: "Climate Academy chat",
-    appSubtitle: "Book-grounded answers via your API below.",
+    appSubtitle: "Book-grounded answers from the Climate Academy student book.",
     labelChatLang: "Chat language",
     hintChatLang:
       "Answers use this language only. Ask in the same language. The Climate Academy student book stays in English.",
@@ -120,6 +120,8 @@ const STRINGS = {
     btnSend: "Send",
     ariaSampleMount: "Sample questions",
     sourcesHeading: "Sources",
+    settingsHeading: "Settings",
+    queryHeading: "Query",
     sourcesHint: "Click a citation number on an answer.",
     ariaSources: "Sources",
     bookHeading: "Student book",
@@ -167,13 +169,17 @@ const STRINGS = {
     langName_es: "Español",
     langName_pt: "Português",
     langName_hi: "हिन्दी",
+    helpBtnTitle: "Help",
+    helpModalTitle: "How to use this chatbot",
+    helpCloseLabel: "Close help",
+    helpLoadError: "Could not load help content. Please try again later.",
   },
 
   fr: {
     docTitle: "Climate Academy — chat",
     appTitle: "Chat Climate Academy",
     appSubtitle:
-      "Réponses ancrées dans le livre, via votre URL d’API ci-dessous.",
+      "Réponses ancrées dans le manuel Climate Academy.",
     labelChatLang: "Langue du chat",
     hintChatLang:
       "Les réponses utilisent uniquement cette langue ; posez vos questions dans cette langue. Le manuel Climate Academy reste en anglais.",
@@ -190,6 +196,8 @@ const STRINGS = {
     btnSend: "Envoyer",
     ariaSampleMount: "Exemples de questions",
     sourcesHeading: "Sources",
+    settingsHeading: "Paramètres",
+    queryHeading: "Requête",
     sourcesHint: "Cliquez sur un numéro de citation dans une réponse.",
     ariaSources: "Sources",
     bookHeading: "Manuel étudiant",
@@ -237,12 +245,16 @@ const STRINGS = {
     langName_es: "Espagnol",
     langName_pt: "Portugais",
     langName_hi: "Hindi",
+    helpBtnTitle: "Aide",
+    helpModalTitle: "Comment utiliser ce chatbot",
+    helpCloseLabel: "Fermer l'aide",
+    helpLoadError: "Impossible de charger le contenu d'aide. Réessayez plus tard.",
   },
 
   es: {
     docTitle: "Climate Academy — chat",
     appTitle: "Chat de Climate Academy",
-    appSubtitle: "Respuestas basadas en el libro mediante la URL de la API.",
+    appSubtitle: "Respuestas basadas en el manual Climate Academy.",
     labelChatLang: "Idioma del chat",
     hintChatLang:
       "Las respuestas solo usan este idioma ; pregunte en ese idioma. El libro del estudiante Climate Academy permanece en inglés.",
@@ -259,6 +271,8 @@ const STRINGS = {
     btnSend: "Enviar",
     ariaSampleMount: "Preguntas de ejemplo",
     sourcesHeading: "Fuentes",
+    settingsHeading: "Configuración",
+    queryHeading: "Consulta",
     sourcesHint: "Haz clic en un número de cita en una respuesta.",
     ariaSources: "Fuentes",
     bookHeading: "Libro del estudiante",
@@ -306,12 +320,16 @@ const STRINGS = {
     langName_es: "Español",
     langName_pt: "Portugués",
     langName_hi: "Hindi",
+    helpBtnTitle: "Ayuda",
+    helpModalTitle: "Cómo usar este chatbot",
+    helpCloseLabel: "Cerrar ayuda",
+    helpLoadError: "No se pudo cargar el contenido de ayuda. Inténtelo más tarde.",
   },
 
   pt: {
     docTitle: "Climate Academy — chat",
     appTitle: "Chat Climate Academy",
-    appSubtitle: "Respostas baseadas no livro através do URL da API abaixo.",
+    appSubtitle: "Respostas baseadas no manual Climate Academy.",
     labelChatLang: "Idioma do chat",
     hintChatLang:
       "As respostas usam só este idioma ; faça perguntas nesse idioma. O manual Climate Academy continua em inglês.",
@@ -328,6 +346,8 @@ const STRINGS = {
     btnSend: "Enviar",
     ariaSampleMount: "Perguntas de exemplo",
     sourcesHeading: "Fontes",
+    settingsHeading: "Configurações",
+    queryHeading: "Consulta",
     sourcesHint: "Clique num número de cita numa resposta.",
     ariaSources: "Fontes",
     bookHeading: "Manual do aluno",
@@ -375,12 +395,16 @@ const STRINGS = {
     langName_es: "Espanhol",
     langName_pt: "Português",
     langName_hi: "Hindi",
+    helpBtnTitle: "Ajuda",
+    helpModalTitle: "Como usar este chatbot",
+    helpCloseLabel: "Fechar ajuda",
+    helpLoadError: "Não foi possível carregar o conteúdo de ajuda. Tente mais tarde.",
   },
 
   hi: {
     docTitle: "Climate Academy — चैट",
     appTitle: "Climate Academy चैट",
-    appSubtitle: "आपके API के माध्यम से पुस्तक-आधारित उत्तर।",
+    appSubtitle: "Climate Academy पुस्तक पर आधारित उत्तर।",
     labelChatLang: "चैट की भाषा",
     hintChatLang:
       "उत्तर केवल इसी भाषा में होंगे; प्रश्न भी इसी भाषा में लिखें। Climate Academy पुस्तक अंग्रेज़ी में ही रहती है।",
@@ -397,6 +421,8 @@ const STRINGS = {
     btnSend: "भेजें",
     ariaSampleMount: "नमूना प्रश्न",
     sourcesHeading: "स्रोत",
+    settingsHeading: "सेटिंग्स",
+    queryHeading: "चैट",
     sourcesHint: "उत्तर में उद्धरण संख्या पर क्लिक करें।",
     ariaSources: "स्रोत",
     bookHeading: "छात्र पुस्तक",
@@ -444,5 +470,9 @@ const STRINGS = {
     langName_es: "स्पैनिश",
     langName_pt: "पुर्तगाली",
     langName_hi: "हिन्दी",
+    helpBtnTitle: "सहायता",
+    helpModalTitle: "इस चैटबॉट का उपयोग कैसे करें",
+    helpCloseLabel: "सहायता बंद करें",
+    helpLoadError: "सहायता सामग्री लोड नहीं हो सकी। कृपया बाद में पुनः प्रयास करें।",
   },
 };

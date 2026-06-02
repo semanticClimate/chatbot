@@ -1,0 +1,6 @@
+[
+  {
+    "pattern": "\\bA[l1]ina\\b",
+    "replacement": "Aleena"
+  }
+]

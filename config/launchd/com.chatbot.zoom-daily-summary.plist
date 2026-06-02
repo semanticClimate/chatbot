@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.chatbot.zoom-daily-summary</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>__REPO_ROOT__/scripts/run_zoom_daily_summary_watch.sh</string>
+		<string>--require-slack</string>
+	</array>
+	<key>WorkingDirectory</key>
+	<string>__REPO_ROOT__</string>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+	</dict>
+	<key>StartCalendarInterval</key>
+	<array>
+		<dict>
+			<key>Hour</key>
+			<integer>9</integer>
+			<key>Minute</key>
+			<integer>30</integer>
+			<key>TimeZone</key>
+			<string>UTC</string>
+		</dict>
+		<dict>
+			<key>Hour</key>
+			<integer>11</integer>
+			<key>Minute</key>
+			<integer>0</integer>
+			<key>TimeZone</key>
+			<string>UTC</string>
+		</dict>
+		<dict>
+			<key>Hour</key>
+			<integer>12</integer>
+			<key>Minute</key>
+			<integer>0</integer>
+			<key>TimeZone</key>
+			<string>UTC</string>
+		</dict>
+		<dict>
+			<key>Hour</key>
+			<integer>18</integer>
+			<key>Minute</key>
+			<integer>0</integer>
+			<key>TimeZone</key>
+			<string>UTC</string>
+		</dict>
+	</array>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>StandardOutPath</key>
+	<string>/tmp/zoom_summary_watch.log</string>
+	<key>StandardErrorPath</key>
+	<string>/tmp/zoom_summary_watch.log</string>
+</dict>
+</plist>

@@ -27,7 +27,7 @@ from climate_streamlit.html_sectioning import annotate_html_with_section_ids, pa
 from climate_streamlit.rag.book_document import inject_book_viewer_assets
 
 # Bump when paragraph anchor_ids change so Chroma metadata stays aligned with the book HTML.
-INDEX_SCHEMA_VERSION = "para-anchor-v2"
+INDEX_SCHEMA_VERSION = "para-anchor-v3"
 
 
 def load_embedder():

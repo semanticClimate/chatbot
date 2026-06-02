@@ -1,26 +1,48 @@
 """
 Climate Academy Chatbot — Paragraph-Level RAG + Precise Source Navigation
 =========================================================================
+Author: Udita Agarwal 2026  |  Licence: Apache 2.0
+
+What's new vs the previous version
+────────────────────────────────────
+1. CHUNKING      — Every paragraph is its own chunk (not word-window slices).
+                   Each chunk carries chunk_id + anchor_id.
+
+2. RETRIEVAL     — Returns TOP_K chunks; each one = one answer point.
+
+3. LLM PROMPT    — Strictly enforces one point = one chunk in structured JSON.
+
+4. ANSWER FORMAT — Structured point-by-point cards in the UI, each with its
+                   own "View Source" button that jumps to the EXACT paragraph.
+
+5. NAVIGATION    — postMessage now carries anchor_id so the iframe highlights
+                   the exact <p> / <ul> element, NOT the whole section wrapper.
 
 Run: streamlit run app.py
 """
 
-from __future__ import annotations
+import json
+import os
+import base64
+import mimetypes
+import zipfile
+import fitz
+from pathlib import Path
+from typing import Optional
+from urllib.parse import quote, unquote
+from uuid import uuid4
 
+import chromadb
 import streamlit as st
+import streamlit.components.v1 as components
+from bs4 import BeautifulSoup
+from chromadb.config import Settings
+from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
+from groq import Groq
 
-<<<<<<< HEAD
-from config_loader import get_settings
-from llm.groq_client import load_groq
-from pdf.viewer import load_pdf_data_uri
-from rag.indexing import build_knowledge_base, get_annotated_book_html
-from styling import apply_streamlit_css
-from ui.chat_column import render_book_panel, render_chat_column
-from ui.session import init_session
-from ui.sidebar import render_sidebar
-=======
 try:
     from climate_streamlit.html_sectioning import (
+        annotate_html_with_numbering,
         annotate_html_with_section_ids,
         format_passage_for_prompt,
         parse_html_path_to_chunks,
@@ -36,6 +58,7 @@ try:
     )
 except ModuleNotFoundError:
     from html_sectioning import (
+        annotate_html_with_numbering,
         annotate_html_with_section_ids,
         format_passage_for_prompt,
         parse_html_path_to_chunks,
@@ -43,29 +66,36 @@ except ModuleNotFoundError:
     from rag.book_document import inject_book_viewer_assets
     from rag.indexing import INDEX_SCHEMA_VERSION
     from db import init_db, log_interaction, update_feedback, get_all_logs, get_logs_csv_string
->>>>>>> encyclopedia
 
-settings = get_settings()
+CLIMATE_API_BASE_URL = os.environ.get("CLIMATE_API_BASE_URL", "").strip()
+USE_REMOTE_API = bool(CLIMATE_API_BASE_URL)
 
+# ─────────────────────────────────────────────────────
+# PAGE CONFIG — must be the very first Streamlit call
+# ─────────────────────────────────────────────────────
 st.set_page_config(
-    page_title=settings.page_title,
-    page_icon=settings.page_icon,
-    layout=settings.layout,
-    initial_sidebar_state=settings.initial_sidebar_state,
+    page_title="Climate Academy Chatbot",
+    page_icon="🌍",
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
-apply_streamlit_css()
-init_session(settings)
 
-collection, embedder = build_knowledge_base(settings)
-groq_client = load_groq()
+# ─────────────────────────────────────────────────────
+# CONFIG
+# ─────────────────────────────────────────────────────
+init_db()
+BASE_DIR        = Path(__file__).resolve().parent
+ROOT_DIR        = BASE_DIR.parent
+HTML_PATH       = Path(ROOT_DIR, "input", "full_student_book.html")
+DOCX_PATH       = Path(ROOT_DIR, "input", "2025_10", "full_student_book.docx")
+PDF_PATH        = Path(ROOT_DIR, "input", "2025_10", "climate_academy_book.pdf")
+CHROMA_DIR      = str(Path(ROOT_DIR, "chroma_db"))
+COLLECTION_NAME = "climate_academy_paragraphs_v2"   # new name → forces re-index
+TOP_K           = 14   # retrieve more context for higher answer quality
+EMBED_MODEL     = "all-MiniLM-L6-v2 (ONNX)"
+GROQ_MODEL      = "llama-3.3-70b-versatile"
+BOOK_VIEWER_HEIGHT = 760
 
-<<<<<<< HEAD
-if settings.html_path.is_file():
-    BOOK_HTML = get_annotated_book_html(
-        str(settings.html_path),
-        str(settings.base_dir),
-    )
-=======
 # ─────────────────────────────────────────────────────
 # GLOBAL CSS
 # ─────────────────────────────────────────────────────
@@ -322,8 +352,9 @@ def inline_local_images(html: str, base_dir: Path) -> str:
 
         clean_src = unquote(src.split("#", 1)[0].split("?", 1)[0])
         image_path = (base_dir / clean_src).resolve()
+        project_root = ROOT_DIR.resolve()
         try:
-            image_path.relative_to(base_dir)
+            image_path.relative_to(project_root)
         except ValueError:
             continue
         if not image_path.is_file():
@@ -415,6 +446,7 @@ def build_knowledge_base():
                 {
                     "section_number": c.section_number,
                     "section_title":  c.section_title or "",
+                    "paragraph_number": c.paragraph_number or "",
                     "chunk_index":    str(c.chunk_index),
                     "heading_id":     c.heading_id or "",
                     "chunk_id":       c.chunk_id or "",
@@ -428,6 +460,13 @@ def build_knowledge_base():
     bar.empty()
     st.success(f"✅ Knowledge base ready — {collection.count():,} paragraph chunks indexed!")
     return collection, embedder
+
+
+@st.cache_data
+def get_numbered_html_preview(html_path: Path) -> str:
+    """Load source HTML and annotate it with section/paragraph numbering."""
+    raw_html = html_path.read_text(encoding="utf-8", errors="replace")
+    return annotate_html_with_numbering(raw_html)
 
 
 # ─────────────────────────────────────────────────────
@@ -930,29 +969,307 @@ _init_session()
 # ─────────────────────────────────────────────────────
 if USE_REMOTE_API:
     collection = embedder = groq_client = None
->>>>>>> encyclopedia
 else:
-    BOOK_HTML = (
-        "<p style='color:red;padding:2rem'>⚠️ Book HTML not found. "
-        f"Check paths in config/app.defaults.toml (expected `{settings.html_path}`).</p>"
-    )
+    collection, embedder = build_knowledge_base()
+    groq_client = load_groq()
 
-pdf_path_str = str(settings.pdf_path)
-BOOK_PDF_URI = load_pdf_data_uri(pdf_path_str) if settings.pdf_path.is_file() else ""
+ensure_html_media_assets(HTML_PATH, DOCX_PATH)
 
-render_sidebar(settings)
+BOOK_HTML = (
+    get_annotated_book_html(str(HTML_PATH))
+    if HTML_PATH.is_file()
+    else "<p style='color:red;padding:2rem'>⚠️ Book HTML not found. Check HTML_PATH in app.py.</p>"
+)
+
+BOOK_PDF_URI = load_pdf_data_uri(str(PDF_PATH)) if PDF_PATH.is_file() else ""
+
+
+# ─────────────────────────────────────────────────────
+# SIDEBAR
+# ─────────────────────────────────────────────────────
+show_numbered_preview = False
+with st.sidebar:
+    if USE_REMOTE_API:
+        st.caption(f"RAG backend: {CLIMATE_API_BASE_URL}")
+    st.markdown("### Chats")
+    if st.button("➕ New Chat", use_container_width=True):
+        _create_chat()
+        st.rerun()
+
+    for chat_id in st.session_state.chat_order:
+        is_active = chat_id == st.session_state.current_chat_id
+        prefix = "● " if is_active else ""
+        label = prefix + _chat_preview(chat_id)
+        if st.button(label, key=f"chat_pick_{chat_id}", use_container_width=True):
+            st.session_state.current_chat_id = chat_id
+            st.rerun()
+
+    st.divider()
+    if st.button("🧹 Clear Current Chat", use_container_width=True):
+        current = st.session_state.chats[st.session_state.current_chat_id]
+        current["messages"] = [{"role": "assistant", "content": _welcome_message(), "message_id": "welcome"}]
+        st.session_state.jump_anchor_id = None
+        st.session_state.jump_section = None
+        st.session_state.jump_heading_id = ""
+        st.session_state.jump_type = "section"
+        st.session_state.jump_pdf_query = ""
+        st.session_state.jump_pdf_page = 1
+        st.rerun()
+
+    if st.button("🗑️ Delete Current Chat", use_container_width=True):
+        current_id = st.session_state.current_chat_id
+        if len(st.session_state.chat_order) > 1:
+            st.session_state.chat_order = [cid for cid in st.session_state.chat_order if cid != current_id]
+            st.session_state.chats.pop(current_id, None)
+            st.session_state.current_chat_id = st.session_state.chat_order[0]
+        else:
+            st.session_state.chats[current_id]["messages"] = [
+                {"role": "assistant", "content": _welcome_message(), "message_id": "welcome"}
+            ]
+        st.session_state.jump_anchor_id = None
+        st.session_state.jump_section = None
+        st.session_state.jump_heading_id = ""
+        st.session_state.jump_type = "section"
+        st.session_state.jump_pdf_query = ""
+        st.session_state.jump_pdf_page = 1
+        st.rerun()
+
+    st.divider()
+    if st.button("📊 View Logs / Analytics", use_container_width=True):
+        st.session_state.show_logs = not st.session_state.get("show_logs", False)
+        st.rerun()
+
+    st.markdown("---")
+    show_numbered_preview = st.checkbox("Show numbered HTML preview", value=False)
+
+
+# ─────────────────────────────────────────────────────
+# HEADER
+# ─────────────────────────────────────────────────────
+st.markdown("""
+<div class="header">
+  <h2>🌍 Climate Academy Assistant</h2>
+  <p>Powered by the Climate Academy Student Book · Matthew Pye (2025)</p>
+</div>""", unsafe_allow_html=True)
+
+if show_numbered_preview:
+    if HTML_PATH.is_file():
+        numbered_html = get_numbered_html_preview(HTML_PATH)
+        with st.expander("📑 Numbered HTML Preview", expanded=False):
+            st.caption("Displays section and paragraph numbering injected into the source HTML.")
+            components.html(numbered_html, height=360, scrolling=True)
+            st.download_button(
+                label="Download numbered HTML",
+                data=numbered_html,
+                file_name=f"{HTML_PATH.stem}_numbered.html",
+                mime="text/html",
+            )
+    else:
+        st.warning(f"Numbered HTML preview unavailable: `{HTML_PATH}` not found.")
+
+
+current_chat = st.session_state.chats[st.session_state.current_chat_id]
+messages = current_chat["messages"]
+
+
+if st.session_state.get("show_logs", False):
+    st.markdown("## 📊 Chatbot Logs & Analytics")
+    if st.button("⬅️ Back to Chat"):
+        st.session_state.show_logs = False
+        st.rerun()
+    
+    logs_data = get_all_logs()
+    st.dataframe(logs_data, use_container_width=True)
+    
+    csv_str = get_logs_csv_string()
+    if csv_str:
+        st.download_button(
+            "📥 Download as CSV",
+            csv_str.encode('utf-8'),
+            "chatbot_logs.csv",
+            "text/csv",
+            use_container_width=True
+        )
+    st.stop()
 
 col_chat, col_book = st.columns([5, 7], gap="small")
 
+# ── LEFT: Chat ────────────────────────────────────────
 with col_chat:
-    render_chat_column(
-        settings,
-        collection,
-        embedder,
-        groq_client,
-        pdf_path_str,
-        settings.pdf_path.is_file(),
+    st.markdown("""
+    <div class="panel-header">
+        <p class="panel-title">🌍 Climate Academy Assistant</p>
+        <p class="panel-subtitle">Ask a question and get grounded answers with paragraph-level sources.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<p class="section-label">Conversation</p>', unsafe_allow_html=True)
+
+    message_count = len(messages)
+    chat_history_height = max(360, min(680, 170 + (message_count * 105)))
+    history_box = st.container(height=chat_history_height, border=False)
+    with history_box:
+        for msg_idx, msg in enumerate(messages):
+            if msg["role"] == "assistant":
+                blocks = msg.get("blocks") or []
+                sources = msg.get("sources") or []
+                source_by_id = {s.get("source_id"): s for s in sources}
+
+                if blocks:
+                    for bi, block in enumerate(blocks):
+                        text = block.get("text", "")
+                        citations = block.get("citations", [])
+
+                        st.markdown(
+                            f'<div class="point-card"><div class="point-body">{text}</div></div>',
+                            unsafe_allow_html=True,
+                        )
+
+                        if citations:
+                            chip_cols = st.columns(len(citations))
+                            for ci, source_id in enumerate(citations):
+                                source = source_by_id.get(source_id, {})
+                                sec_num = source.get("section_number", "")
+                                sec_title = source.get("section_title", "")
+                                source_line = f"§ {sec_num}" if sec_num else "Source"
+                                if sec_title:
+                                    source_line += f" — {sec_title}"
+
+                                key = f"cite_{st.session_state.current_chat_id}_{msg_idx}_{bi}_{source_id}"
+                                if chip_cols[ci].button(
+                                    str(source_id),
+                                    key=key,
+                                    help=f"Jump to source {source_id}\n{source_line}",
+                                    use_container_width=True,
+                                ):
+                                    st.session_state.jump_anchor_id = source.get("anchor_id", "")
+                                    st.session_state.jump_section = source.get("section_number", "")
+                                    st.session_state.jump_heading_id = source.get("heading_id", "")
+                                    st.session_state.jump_type = "para" if source.get("anchor_id") else "section"
+                                    st.session_state.jump_pdf_query = source.get("pdf_query", "")
+                                    st.session_state.jump_pdf_page = source.get("pdf_page", 1)
+                                    st.rerun()
+                else:
+                    content = msg.get("content", "")
+                    st.markdown(
+                        f'<div class="msg-row-bot">'
+                        f'<div class="avatar">CA</div>'
+                        f'<div class="bubble-bot">{content.replace(chr(10), "<br>")}</div>'
+                        f'</div>',
+                        unsafe_allow_html=True,
+                    )
+
+                message_id = msg.get("message_id")
+                if message_id and message_id != "welcome":
+                    fb_col1, fb_col2, _ = st.columns([1, 1, 8])
+                    if fb_col1.button("👍", key=f"up_{message_id}", help="Good response"):
+                        update_feedback(message_id, 1)
+                        st.toast("Thanks for your feedback! 👍")
+                    if fb_col2.button("👎", key=f"down_{message_id}", help="Bad response"):
+                        update_feedback(message_id, 0)
+                        st.toast("Thanks for your feedback! 👎")
+            else:
+                content = msg.get("content", "")
+                st.markdown(
+                    f'<div class="msg-row-user">'
+                    f'<div class="bubble-user">{content.replace(chr(10), "<br>")}</div>'
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
+
+    user_input = st.chat_input("Ask about climate change...")
+    if user_input:
+        messages.append({"role": "user", "content": user_input})
+
+        if current_chat["name"].startswith("New Chat"):
+            current_chat["name"] = (user_input[:28] + "...") if len(user_input) > 28 else user_input
+
+        message_id = str(uuid4())
+        with st.spinner("Thinking..."):
+            if USE_REMOTE_API:
+                from api_client import ask_via_api, messages_to_api_conversation
+
+                answer = ask_via_api(
+                    CLIMATE_API_BASE_URL,
+                    user_input,
+                    messages_to_api_conversation(messages[:-1]),
+                    chat_id=st.session_state.current_chat_id,
+                    message_id=message_id,
+                )
+            else:
+                chunks = retrieve(user_input, collection, embedder)
+                pdf_chunk_map = map_chunks_to_pdf(chunks, str(PDF_PATH)) if PDF_PATH.is_file() else {}
+                answer = ask_groq(groq_client, chunks, messages[:-1], user_input, pdf_chunk_map=pdf_chunk_map)
+
+        blocks = answer.get("blocks", [])
+        sources = answer.get("sources", [])
+        first_source = None
+        if blocks and blocks[0].get("citations"):
+            first_source_id = blocks[0]["citations"][0]
+            first_source = next((s for s in sources if s.get("source_id") == first_source_id), None)
+
+        if first_source:
+            st.session_state.jump_anchor_id = first_source.get("anchor_id", "")
+            st.session_state.jump_section = first_source.get("section_number", "")
+            st.session_state.jump_heading_id = first_source.get("heading_id", "")
+            st.session_state.jump_type = "para" if first_source.get("anchor_id") else "section"
+            st.session_state.jump_pdf_query = first_source.get("pdf_query", "")
+            st.session_state.jump_pdf_page = first_source.get("pdf_page", 1)
+
+        assistant_msg = {
+            "role": "assistant",
+            "content": None,
+            "blocks": blocks,
+            "sources": sources,
+            "message_id": message_id,
+        }
+        if answer.get("operator_detail"):
+            assistant_msg["operator_detail"] = answer["operator_detail"]
+        messages.append(assistant_msg)
+
+        bot_resp_text = ""
+        if blocks:
+            bot_resp_text = "\n\n".join(b.get("text", "") for b in blocks)
+        elif answer.get("blocks"):
+            bot_resp_text = answer.get("blocks")[0].get("text", "")
+            
+        log_interaction(message_id, st.session_state.current_chat_id, user_input, bot_resp_text)
+
+        st.rerun()
+
+    st.divider()
+    if st.button("📖 Reset Book View", use_container_width=True):
+        st.session_state.jump_anchor_id = None
+        st.session_state.jump_section = None
+        st.session_state.jump_heading_id = ""
+        st.session_state.jump_type = "section"
+        st.session_state.jump_pdf_query = ""
+        st.session_state.jump_pdf_page = 1
+        st.rerun()
+
+    st.markdown(
+        f'<p class="disclaimer">'
+        f'Answers based solely on the Climate Academy Student Book.<br>'
+        f'Embeddings: {EMBED_MODEL} · LLM: {GROQ_MODEL}'
+        f'</p>',
+        unsafe_allow_html=True,
     )
 
+
+# ── RIGHT: Book viewer ───────────────────────────────
 with col_book:
-    render_book_panel(settings, BOOK_HTML)
+    st.markdown("""
+    <div class="panel-header">
+        <p class="panel-title">📖 Climate Academy Student Book</p>
+        <p class="panel-subtitle">Matthew Pye · 2025 · Click <b>View Source</b> on any answer card to jump to the exact paragraph.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    render_book_viewer(
+        BOOK_HTML,
+        target_anchor_id=st.session_state.jump_anchor_id,
+        target_section=st.session_state.jump_section,
+        heading_id=st.session_state.jump_heading_id,
+        jump_type=st.session_state.jump_type,
+        height=BOOK_VIEWER_HEIGHT,
+    )
