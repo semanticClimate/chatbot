@@ -45,6 +45,15 @@ h4 {
     letter-spacing: 0.02em;
 }
 
+/* Visible paragraph numbers (data-paragraph-number from annotate_html_with_section_ids) */
+[data-paragraph-number]::before {
+    content: attr(data-paragraph-number) " ";
+    color: #4a6a5a;
+    font-weight: 600;
+    font-size: 0.82em;
+    letter-spacing: 0.02em;
+}
+
 p {
     margin: 0.6em 0;
 }

@@ -103,7 +103,7 @@ const STRINGS = {
   en: {
     docTitle: "Climate Academy — chat",
     appTitle: "Climate Academy chat",
-    appSubtitle: "Book-grounded answers via your API below.",
+    appSubtitle: "Book-grounded answers from the Climate Academy student book.",
     labelChatLang: "Chat language",
     hintChatLang:
       "Answers use this language only. Ask in the same language. The Climate Academy student book stays in English.",
@@ -179,7 +179,7 @@ const STRINGS = {
     docTitle: "Climate Academy — chat",
     appTitle: "Chat Climate Academy",
     appSubtitle:
-      "Réponses ancrées dans le livre, via votre URL d’API ci-dessous.",
+      "Réponses ancrées dans le manuel Climate Academy.",
     labelChatLang: "Langue du chat",
     hintChatLang:
       "Les réponses utilisent uniquement cette langue ; posez vos questions dans cette langue. Le manuel Climate Academy reste en anglais.",
@@ -254,7 +254,7 @@ const STRINGS = {
   es: {
     docTitle: "Climate Academy — chat",
     appTitle: "Chat de Climate Academy",
-    appSubtitle: "Respuestas basadas en el libro mediante la URL de la API.",
+    appSubtitle: "Respuestas basadas en el manual Climate Academy.",
     labelChatLang: "Idioma del chat",
     hintChatLang:
       "Las respuestas solo usan este idioma ; pregunte en ese idioma. El libro del estudiante Climate Academy permanece en inglés.",
@@ -329,7 +329,7 @@ const STRINGS = {
   pt: {
     docTitle: "Climate Academy — chat",
     appTitle: "Chat Climate Academy",
-    appSubtitle: "Respostas baseadas no livro através do URL da API abaixo.",
+    appSubtitle: "Respostas baseadas no manual Climate Academy.",
     labelChatLang: "Idioma do chat",
     hintChatLang:
       "As respostas usam só este idioma ; faça perguntas nesse idioma. O manual Climate Academy continua em inglês.",
@@ -404,7 +404,7 @@ const STRINGS = {
   hi: {
     docTitle: "Climate Academy — चैट",
     appTitle: "Climate Academy चैट",
-    appSubtitle: "आपके API के माध्यम से पुस्तक-आधारित उत्तर।",
+    appSubtitle: "Climate Academy पुस्तक पर आधारित उत्तर।",
     labelChatLang: "चैट की भाषा",
     hintChatLang:
       "उत्तर केवल इसी भाषा में होंगे; प्रश्न भी इसी भाषा में लिखें। Climate Academy पुस्तक अंग्रेज़ी में ही रहती है।",

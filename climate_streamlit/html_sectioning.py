@@ -3,8 +3,8 @@ html_sectioning.py  —  Climate Academy RAG · Paragraph-Level Chunking
 ======================================================================
 KEY UPGRADE over the previous version:
   • Every PARAGRAPH is its own chunk (not word-window chunks of a whole section).
-  • Each chunk gets a unique chunk_id  →  "p-{section_number}-{para_index}"
-  • Each chunk gets a unique anchor_id →  "para-{section_number}-{para_index}"
+  • Each chunk gets a unique chunk_id  →  "p-{section_number}-{para_n}"
+  • Each chunk gets a unique anchor_id →  "para-{section_number}-{para_n}"
   • These anchor IDs are written into the annotated HTML so the viewer can
     scroll to and highlight EXACTLY that paragraph, not the whole section.
 
@@ -62,8 +62,8 @@ class ParagraphChunk:
     chunk_id  :  unique stable string  →  stored in ChromaDB metadata
     anchor_id :  HTML element id       →  used by viewer to highlight EXACTLY this ¶
     """
-    chunk_id:       str    # e.g. "p-3.2-0"
-    anchor_id:      str    # e.g. "para-3.2-0"
+    chunk_id:       str    # e.g. "p-3.2-1"
+    anchor_id:      str    # e.g. "para-3.2-1"
     document:       str    # text sent to the LLM (includes section header)
     section_number: str
     section_title:  str
@@ -435,8 +435,9 @@ def parse_html_to_paragraph_chunks(path: Path | str) -> List[ParagraphChunk]:
         for rec in records:
             paras = _split_body_into_paragraphs(rec.body)
             for idx, para in enumerate(paras):
-                chunk_id  = f"p-{rec.section_number}-{idx}"
-                anchor_id = f"para-{rec.section_number}-{idx}"
+                para_n    = idx + 1
+                chunk_id  = f"p-{rec.section_number}-{para_n}"
+                anchor_id = f"para-{rec.section_number}-{para_n}"
                 header    = f"[§ {rec.section_number} — {rec.title}]"
                 chunks.append(ParagraphChunk(
                     chunk_id       = chunk_id,
@@ -452,8 +453,9 @@ def parse_html_to_paragraph_chunks(path: Path | str) -> List[ParagraphChunk]:
         sections = _section_paragraphs_from_format_B(soup)
         for (number, title, heading_id, paras) in sections:
             for idx, para in enumerate(paras):
-                chunk_id  = f"p-{number}-{idx}"
-                anchor_id = f"para-{number}-{idx}"
+                para_n    = idx + 1
+                chunk_id  = f"p-{number}-{para_n}"
+                anchor_id = f"para-{number}-{para_n}"
                 header    = f"[§ {number} — {title}]"
                 chunks.append(ParagraphChunk(
                     chunk_id       = chunk_id,
@@ -474,7 +476,7 @@ def annotate_html_with_section_ids(html: str) -> str:
     Annotate book HTML for RAG citations and iframe navigation.
 
     1. Assigns data-section-number on outline nodes and title headings.
-    2. Injects id="para-{section}-{idx}" on paragraph-level body elements.
+    2. Injects id="para-{section}-{n}" (1-based n) on paragraph-level body elements.
     3. Wraps flat sections in div.ca-section for section-level highlight fallback.
 
     Visible § labels in the iframe come from book_iframe_highlight.css
@@ -503,12 +505,14 @@ def _annotate_format_A(soup: BeautifulSoup) -> str:
         if title_heading is not None:
             title_heading["data-section-number"] = number
 
-        # Inject paragraph anchor IDs on <p> children
+        # Inject paragraph anchor IDs on <p> children (1-based, matches data-paragraph-number)
         p_idx = 0
         for child in _direct_child_tags(section):
             if child.name == "p":
-                child["id"] = f"para-{number}-{p_idx}"
+                para_n = p_idx + 1
+                child["id"] = f"para-{number}-{para_n}"
                 child["data-para-index"] = str(p_idx)
+                child["data-paragraph-number"] = f"{number}.{para_n}"
                 p_idx += 1
             if child.name == "section":
                 _annotate_tree(child, parent_depth=level)
@@ -523,7 +527,7 @@ def _annotate_format_B_para(soup: BeautifulSoup) -> str:
     """
     Format B: flat HTML.
     1. Stamp §-numbers on headings (skip if no body, same as parser).
-    2. Inject  id="para-{sec}-{idx}"  on each block-level body element.
+    2. Inject  id="para-{sec}-{n}"  on each block-level body element (1-based n).
     3. Wrap heading + body in <div class="ca-section"> for section-level highlight.
     """
     root = find_book_root(soup)
@@ -569,9 +573,11 @@ def _annotate_format_B_para(soup: BeautifulSoup) -> str:
                 text = node.get_text(strip=True)
                 if text and node.name in ("p", "ul", "ol", "table",
                                           "blockquote", "figure", "div"):
-                    node["id"]               = f"para-{number}-{para_idx}"
+                    para_n = para_idx + 1
+                    node["id"]               = f"para-{number}-{para_n}"
                     node["data-para-index"]  = str(para_idx)
                     node["data-section-num"] = number
+                    node["data-paragraph-number"] = f"{number}.{para_n}"
                     para_idx += 1
             node = node.next_sibling
 
