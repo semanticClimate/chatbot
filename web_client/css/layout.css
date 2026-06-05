@@ -139,27 +139,69 @@ body {
   height: 100%;
 }
 
-/* ── Sidebar (left, fixed) ── */
+/* ── Sidebar (left, collapsible) ── */
 .sidebar {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  padding: var(--space-xl) var(--space-md) var(--space-lg);
   background: linear-gradient(145deg, var(--color-brand), var(--color-brand-dark));
   border-right: 1px solid var(--color-line);
-  width: 200px;
   height: 100vh;
   box-sizing: border-box;
   flex-shrink: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
 }
 
+/* Expanded state */
+.sidebar.expanded {
+  width: 200px;
+  padding: var(--space-lg) var(--space-md) var(--space-lg);
+}
+
+/* Collapsed state */
+.sidebar.collapsed {
+  width: 56px;
+  padding: var(--space-sm) 4px;
+}
+
+/* ── Hamburger toggle button ── */
+.sidebar-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  padding: var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+  margin-bottom: var(--space-md);
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Title block ── */
 .sidebar-title {
   text-align: center;
   color: #ffffff;
   margin-bottom: var(--space-lg);
   font-weight: 700;
   line-height: 1.25;
+  transition: opacity 0.25s ease;
+}
+
+.sidebar.collapsed .sidebar-title {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
 }
 
 .sidebar-title-word {
@@ -175,6 +217,7 @@ body {
   font-weight: 500;
 }
 
+/* ── Button group ── */
 .sidebar-actions {
   flex: 1;
   display: flex;
@@ -184,6 +227,16 @@ body {
   width: 100%;
   gap: var(--space-md);
   padding-bottom: var(--space-xl);
+  transition: opacity 0.25s ease;
+}
+
+.sidebar.collapsed .sidebar-actions {
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 .sidebar .sidebar-btn {
@@ -432,4 +485,91 @@ body {
   margin: 0 0 var(--space-sm);
   font-size: 0.85rem;
   color: var(--color-muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Mobile Responsive Layout
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .app-content {
+    padding-left: 64px; /* Space for the collapsed hamburger icon */
+    padding-right: var(--space-md);
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+    overflow-y: auto;
+  }
+  
+  .app-header {
+    margin-bottom: var(--space-md);
+  }
+
+  /* Sidebar overlay logic */
+  .sidebar {
+    position: absolute;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  }
+  
+  /* On mobile, swap meaning of expanded/collapsed to match initial HTML state without JS changes */
+  .sidebar.expanded {
+    width: 56px;
+    padding: var(--space-sm) 4px;
+    box-shadow: none;
+  }
+  .sidebar.expanded .sidebar-title,
+  .sidebar.expanded .sidebar-actions {
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar.collapsed {
+    width: 250px;
+    padding: var(--space-lg) var(--space-md) var(--space-lg);
+  }
+  .sidebar.collapsed .sidebar-title,
+  .sidebar.collapsed .sidebar-actions {
+    opacity: 1;
+    pointer-events: auto;
+    height: auto;
+    overflow: visible;
+  }
+  .sidebar.collapsed .sidebar-actions {
+    padding-bottom: var(--space-xl);
+  }
+
+  /* Single column vertical flow */
+  .main-grid {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: var(--space-lg);
+  }
+  
+  .main-middle {
+    display: contents; /* Unwraps chat and sources into the main flex column */
+  }
+  
+  .panel-chat {
+    order: 1;
+    height: 85vh; /* Primary focus, fits mostly in viewport */
+    flex-shrink: 0;
+  }
+  
+  .panel-book {
+    order: 2;
+    height: auto;
+    min-height: 85vh;
+    flex-shrink: 0;
+    overflow: visible;
+  }
+  
+  .panel-sources {
+    order: 3;
+    min-height: auto;
+    flex-shrink: 0;
+  }
 }
