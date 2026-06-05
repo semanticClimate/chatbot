@@ -1,0 +1,74 @@
+/* Sidebar styling */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  /* background: var(--color-surface); */
+  /* New Chnage in june 5th */
+  background: linear-gradient(160deg, #1e3a8a 0%, #2b7fd4 100%);
+  border-right: 1px solid var(--color-line);
+  overflow: hidden;
+  transition: width 0.3s ease;
+  width: var(--sidebar-collapsed-width, 60px);
+  z-index: 10;
+}
+
+.sidebar.expanded {
+  width: var(--sidebar-expanded-width, 200px);
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  padding: var(--space-sm);
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar.expanded .sidebar-content {
+  opacity: 1;
+}
+
+/* Collapse button text, show only icons (if any) */
+.sidebar.collapsed .sidebar-content button {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-indent: -9999px;
+  padding: 0;
+}
+
+/* Ensure the main content does not get hidden behind the fixed sidebar */
+
+/* Sidebar button styling for dark background */
+.sidebar .btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.sidebar .btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.sidebar .sidebar-toggle {
+  color: #ffffff;
+}

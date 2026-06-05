@@ -65,10 +65,22 @@ export function renderThread(threadEl, messages, onPickSource) {
   if (!messages.length) {
     const wrap = document.createElement("div");
     wrap.className = "thread-empty-welcome";
-    const p = document.createElement("p");
-    p.className = "thread-empty-line";
-    p.textContent = t("threadEmptyWelcome");
-    wrap.appendChild(p);
+
+    const title = document.createElement("h3");
+    title.className = "empty-title";
+    title.textContent = "Hi, I'm your Climate Academy AI Assistant";
+
+    const subtitle = document.createElement("p");
+    subtitle.className = "empty-subtitle";
+    subtitle.textContent = "Ask me anything about the Climate Academy student book.";
+
+    const desc = document.createElement("p");
+    desc.className = "empty-desc";
+    desc.textContent = "Every answer is grounded in the student book and includes numbered citation chips. Click a citation chip ([1] [2] [3]) to jump directly to the supporting source in the book.";
+
+    wrap.appendChild(title);
+    wrap.appendChild(subtitle);
+    wrap.appendChild(desc);
     threadEl.appendChild(wrap);
     return;
   }
@@ -90,6 +102,19 @@ export function renderThread(threadEl, messages, onPickSource) {
       row.className = "msg msg-assistant";
       const wrap = document.createElement("div");
       wrap.className = "assistant-wrap";
+
+      if (msg.isThinking) {
+        const card = document.createElement("article");
+        card.className = "card card-thinking";
+        const body = document.createElement("div");
+        body.className = "card-body";
+        body.innerHTML = `<span class="thinking-text">${msg.content}</span><span class="thinking-dots"><span>.</span><span>.</span><span>.</span></span>`;
+        card.appendChild(body);
+        wrap.appendChild(card);
+        row.appendChild(wrap);
+        threadEl.appendChild(row);
+        continue;
+      }
 
       const blocks = msg.blocks || [];
       if (!blocks.length && msg.content) {
@@ -125,7 +150,26 @@ export function renderThread(threadEl, messages, onPickSource) {
             btn.type = "button";
             btn.className = "chip";
             btn.textContent = String(sid);
-            btn.title = t("chipShowSource");
+            // Build a descriptive tooltip from the matching source metadata
+            const src = sources.find(s => s.source_id === sid);
+            let tip = "";
+            if (src) {
+              const label = src.source_label || src.label || src.title;
+              const secNum = src.section_number;
+              const secTitle = src.section_title;
+              if (label) {
+                tip = `Jump to ${label}`;
+                if (secNum) {
+                  tip += ` [§ ${secNum}`;
+                  if (secTitle) tip += ` — ${secTitle}`;
+                  tip += `]`;
+                }
+              } else if (secNum) {
+                tip = `Jump to § ${secNum}`;
+                if (secTitle) tip += ` — ${secTitle}`;
+              }
+            }
+            btn.title = tip || t("chipShowSource");
             btn.addEventListener("click", () => onPickSource(sid, sources));
             chips.appendChild(btn);
           }

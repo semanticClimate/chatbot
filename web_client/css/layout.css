@@ -1,3 +1,7 @@
+/* ═══════════════════════════════════════════════════════════════
+   Climate Academy — Layout
+   ═══════════════════════════════════════════════════════════════ */
+
 *,
 *::before,
 *::after {
@@ -14,26 +18,103 @@ body {
   min-height: 100dvh;
   font-family: var(--font-sans);
   color: var(--color-text);
-  background:
-    radial-gradient(1200px 400px at -20% -10%, #e6f1ea 0%, transparent 65%),
-    radial-gradient(900px 380px at 115% 0%, #f4efe4 0%, transparent 62%),
-    var(--color-bg);
+  background: linear-gradient(135deg, var(--ca-sky-soft) 0%, #DCE8F8 100%);
 }
 
+/* ── App shell: sidebar + content side-by-side ── */
 .app {
-  max-width: min(1680px, 100%);
-  margin: 0 auto;
-  padding: var(--space-md);
-  padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom, 0));
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
+.app-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: var(--space-lg);
+  box-sizing: border-box;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ── Header ── */
 .app-header {
-  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+  flex-shrink: 0;
+}
+
+.app-header-brand {
+  flex: 1;
+  min-width: 0;
+}
+
+.app-header-end {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.app-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1.5px solid var(--color-line);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--ca-sky);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.1s ease;
+}
+
+.app-toolbar-btn:hover {
+  border-color: var(--ca-sky);
+  background: var(--color-bg);
+}
+
+.app-toolbar-btn:active {
+  transform: scale(0.93);
+}
+
+.app-title-container {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.app-logo {
+  height: clamp(24px, 6.5vw, 52px);
+  width: auto;
+}
+
+.app-logo-ca {
+  height: clamp(50px, 5.87vw, 45px);
 }
 
 .app-title {
   margin: 0;
   font-size: clamp(1.25rem, 4vw, 1.5rem);
+  color: var(--ca-navy);
+}
+
+.app-version {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  font-weight: 500;
+  align-self: center;
+  margin-top: 0.2rem;
 }
 
 .app-subtitle {
@@ -47,50 +128,141 @@ body {
   display: none !important;
 }
 
+/* ── Main grid: chat column + right column ── */
 .main-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-md);
-  align-items: start;
+  grid-template-columns: 58% 42%;
+  gap: var(--space-lg);
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
 }
 
+/* ── Sidebar (left, fixed) ── */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: var(--space-xl) var(--space-md) var(--space-lg);
+  background: linear-gradient(145deg, var(--color-brand), var(--color-brand-dark));
+  border-right: 1px solid var(--color-line);
+  width: 200px;
+  height: 100vh;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: var(--space-lg);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.sidebar-title-word {
+  font-size: 1.6rem;
+  display: block;
+}
+
+.sidebar-version {
+  display: block;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: var(--space-xs);
+  font-weight: 500;
+}
+
+.sidebar-actions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-md);
+  padding-bottom: var(--space-xl);
+}
+
+.sidebar .sidebar-btn {
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.sidebar .sidebar-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Left column: chat (88vh) + sources (below fold) ── */
 .main-middle {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-lg);
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
-@media (min-width: 1100px) {
-  .main-grid {
-    grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.15fr);
-    align-items: stretch;
-  }
-
-  .panel-chat {
-    max-height: none;
-  }
-}
-
+/* ── Panels (generic) ── */
 .panel {
   background: var(--color-surface);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
-  padding: var(--space-md);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-lg);
+}
+
+/* ── Panel Color Tints ── */
+.panel-book {
+  background: linear-gradient(180deg, var(--ca-white) 0%, #FFF7F0 100%);
+  border-color: #F0D7C5;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  height: 88vh;
+  /* Make right panel match the left column height */
+}
+
+.panel-sources {
+  background: linear-gradient(180deg, var(--ca-white) 0%, #F0F6FC 100%);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  border-top: 3px solid var(--ca-sky);
 }
 
 .panel-heading {
   margin: 0 0 var(--space-sm);
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ca-navy);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+/* ── Chat panel: takes ~88% of viewport height ── */
 .panel-chat {
   display: flex;
   flex-direction: column;
-  min-height: min(48dvh, 480px);
-  max-height: 78dvh;
+  min-height: 88vh;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAFCFF 100%);
 }
 
+/* ── Thread (message area) ── */
 .thread {
   flex: 1;
   overflow-y: auto;
@@ -99,10 +271,19 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+/* ── Composer (input area) ── */
 .composer {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.composer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  flex-shrink: 0;
 }
 
 @media (min-width: 600px) {
@@ -110,8 +291,15 @@ body {
     flex-direction: row;
     align-items: flex-end;
   }
+
+  .composer-input {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
+
+/* ── Accessibility ── */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -124,6 +312,7 @@ body {
   border: 0;
 }
 
+/* ── Settings / developer tools ── */
 .row-actions {
   display: flex;
   flex-wrap: wrap;
@@ -154,7 +343,7 @@ body {
 
 .settings-more-summary::before {
   content: "▸ ";
-  color: var(--color-brand-dark);
+  color: var(--ca-navy);
 }
 
 .settings-more[open] .settings-more-summary::before {
@@ -174,9 +363,10 @@ body {
 }
 
 .status-line[data-kind="error"] {
-  color: #8b2e2e;
+  color: var(--ca-red);
 }
 
+/* ── Form fields ── */
 .field {
   display: flex;
   flex-direction: column;
@@ -242,14 +432,4 @@ body {
   margin: 0 0 var(--space-sm);
   font-size: 0.85rem;
   color: var(--color-muted);
-}
-
-@media (max-width: 1099px) {
-  .panel-sources {
-    position: sticky;
-    bottom: 0;
-    z-index: 2;
-    max-height: 40dvh;
-    overflow-y: auto;
-  }
 }

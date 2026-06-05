@@ -452,21 +452,23 @@ async function wire() {
 
   btnHealth.addEventListener("click", async () => {
     const base = apiInput.value.trim();
+    const healthStatusLine = document.getElementById("healthStatusLine");
+    const targetStatusEl = healthStatusLine || statusLine;
     if (!base) {
-      setStatus(statusLine, t("errSetApiFirst"), "error");
+      setStatus(targetStatusEl, t("errSetApiFirst"), "error");
       return;
     }
-    setStatus(statusLine, t("checkingHealth"));
+    setStatus(targetStatusEl, t("checkingHealth"));
     try {
       const h = await getHealth(base);
       const r = await getReady(base);
       setStatus(
-        statusLine,
+        targetStatusEl,
         `${t("labelHealth")}: ${JSON.stringify(h)} | ${t("labelReady")}: ${JSON.stringify(r)}`,
         "info"
       );
     } catch (e) {
-      setStatus(statusLine, String(e.message || e), "error");
+      setStatus(targetStatusEl, String(e.message || e), "error");
     }
   });
 
@@ -485,6 +487,7 @@ async function wire() {
     try {
       const tempConv = prior.slice();
       tempConv.push({ role: "user", content: q });
+      tempConv.push({ role: "assistant", content: "Thinking...", isThinking: true });
       renderThread($("thread"), tempConv, () => {});
       scrollThreadToBottom();
 
@@ -515,6 +518,14 @@ async function wire() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('btnSidebarToggle');
+  if (sidebar && toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('expanded');
+      sidebar.classList.toggle('collapsed');
+    });
+  }
   wire().catch((err) => {
     console.error(err);
     try {

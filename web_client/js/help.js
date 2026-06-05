@@ -237,22 +237,11 @@ function init() {
     return;
   }
 
-  // Make header a flex container so the button sits on the right
-  // Only add flex if not already set (safe additive style tweak)
-  const headerStyle = window.getComputedStyle(header);
-  if (headerStyle.display !== "flex") {
-    header.style.display = "flex";
-    header.style.alignItems = "flex-start";
-    header.style.justifyContent = "space-between";
-    header.style.gap = "var(--space-sm)";
+  let headerEnd = header.querySelector(".app-header-end");
+  if (!headerEnd) {
+    headerEnd = el("div", "app-header-end");
+    header.appendChild(headerEnd);
   }
-
-  // Wrap existing header children in a div to preserve layout
-  const headerContent = el("div");
-  while (header.firstChild) {
-    headerContent.appendChild(header.firstChild);
-  }
-  header.appendChild(headerContent);
 
   // -- 2. Create the help button --
   const btn = el("button", "help-btn", {
@@ -262,7 +251,7 @@ function init() {
     "aria-label": t("helpBtnTitle"),
   });
   btn.textContent = "?";
-  header.appendChild(btn);
+  headerEnd.appendChild(btn);
 
   // -- 3. Find the app container to append overlay + modal --
   const app = document.querySelector(".app");
