@@ -44,66 +44,81 @@ function bindAppModal(triggerId, overlayId, dialogId) {
 }
 
 function initExternalModal() {
-  const overlay = document.getElementById("externalOverlay");
-  const dialog = document.getElementById("externalModal");
-  const iframe = document.getElementById("externalFrame");
-  const btnBack = document.getElementById("btnExternalBack");
-  if (!overlay || !dialog) return;
+  const extOverlay = document.getElementById("externalOverlay");
+  const extDialog  = document.getElementById("externalModal");
+  const extIframe  = document.getElementById("externalFrame");
+  const btnBack    = document.getElementById("btnExternalBack");
+  if (!extOverlay || !extDialog) return;
 
-  const closeModal = () => {
-    overlay.classList.remove("help-visible");
-    dialog.classList.remove("help-visible");
-    if (iframe) iframe.src = "";
+  const closeExternal = () => {
+    extOverlay.classList.remove("help-visible");
+    extDialog.classList.remove("help-visible");
+    if (extIframe) extIframe.src = "";
+    delete extDialog.dataset.fromEncyclopedia;
   };
 
-  dialog.querySelectorAll("[data-close-modal]").forEach((btn) => {
-    btn.addEventListener("click", () => closeModal());
+  extDialog.querySelectorAll("[data-close-modal]").forEach((btn) => {
+    btn.addEventListener("click", () => closeExternal());
   });
 
-  overlay.addEventListener("click", () => {
-    closeModal();
-  });
+  extOverlay.addEventListener("click", () => closeExternal());
 
   if (btnBack) {
     btnBack.addEventListener("click", () => {
-      closeModal();
+      const fromEnc = extDialog.dataset.fromEncyclopedia === "1";
+      closeExternal();
+      // ── Hierarchical back: if launched from Encyclopedia, reopen it ──
+      if (fromEnc) {
+        const encOverlay = document.getElementById("encyclopediaOverlay");
+        const encDialog  = document.getElementById("encyclopediaModal");
+        if (encOverlay && encDialog) {
+          encOverlay.classList.add("help-visible");
+          encDialog.classList.add("help-visible");
+        }
+      }
     });
   }
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && dialog.classList.contains("help-visible")) {
-      closeModal();
+    if (e.key === "Escape" && extDialog.classList.contains("help-visible")) {
+      closeExternal();
     }
   });
 }
 
 function initEncyclopediaModal() {
-  const overlay = document.getElementById("encyclopediaOverlay");
-  const dialog = document.getElementById("encyclopediaModal");
-  const iframe = document.getElementById("encyclopediaFrame");
-  if (!overlay || !dialog) return;
+  const encOverlay = document.getElementById("encyclopediaOverlay");
+  const encDialog  = document.getElementById("encyclopediaModal");
+  const encIframe  = document.getElementById("encyclopediaFrame");
+  const btnBack    = document.getElementById("btnEncyclopediaBack");
+  if (!encOverlay || !encDialog) return;
 
-  const closeModal = () => {
-    overlay.classList.remove("help-visible");
-    dialog.classList.remove("help-visible");
+  const closeEncyclopedia = () => {
+    encOverlay.classList.remove("help-visible");
+    encDialog.classList.remove("help-visible");
     // Clear iframe to stop any loading / free resources
-    if (iframe) iframe.removeAttribute("src");
+    if (encIframe) encIframe.removeAttribute("src");
   };
 
-  dialog.querySelectorAll("[data-close-modal]").forEach((btn) => {
-    btn.addEventListener("click", () => closeModal());
+  encDialog.querySelectorAll("[data-close-modal]").forEach((btn) => {
+    btn.addEventListener("click", () => closeEncyclopedia());
   });
 
-  overlay.addEventListener("click", () => {
-    closeModal();
-  });
+  encOverlay.addEventListener("click", () => closeEncyclopedia());
+
+  if (btnBack) {
+    // Back = close encyclopedia, return to chatbot (same as ✕ for now,
+    // but explicitly labelled for hierarchical clarity)
+    btnBack.addEventListener("click", () => closeEncyclopedia());
+  }
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && dialog.classList.contains("help-visible")) {
-      closeModal();
+    if (e.key === "Escape" && encDialog.classList.contains("help-visible")) {
+      closeEncyclopedia();
     }
   });
 }
+
 
 /** ── Global tooltip wiring ─────────────────────────────────────────────── */
 function initButtonTooltips() {

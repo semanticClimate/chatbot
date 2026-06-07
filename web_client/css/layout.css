@@ -293,10 +293,11 @@ body {
   border-color: #F0D7C5;
   display: flex;
   flex-direction: column;
-  /* Takes the full right column — no more encyclopedia section below */
-  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  height: 88vh;
   max-height: 100%;
-  overflow: hidden;
+  /* prevent 88vh from exceeding the available grid row height */
 }
 
 .panel-sources {
@@ -585,11 +586,12 @@ body {
 
   .panel-book {
     order: 2;
-    height: 85vh;
-    min-height: 0;
+    height: auto;
+    min-height: 85vh;
     max-height: none;
+    /* reset desktop max-height cap for mobile stacking */
     flex-shrink: 0;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .panel-sources {

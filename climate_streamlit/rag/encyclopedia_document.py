@@ -111,6 +111,31 @@ def build_encyclopedia_entry_document(entry_id: str, settings: AppSettings) -> s
 
     panel_css = f"<style>\n{_entry_panel_css()}\n</style>"
     title = normalize_entry_id(entry_id)
+    script = """
+<script>
+(function() {
+  document.addEventListener("click", function(e) {
+    var anchor = e.target.closest("a");
+    if (!anchor) return;
+    var href = anchor.getAttribute("href");
+    if (!href) return;
+    var isWikipedia = anchor.classList.contains("ca-wikipedia-link") || anchor.classList.contains("wikipedia-link") || href.indexOf("wikipedia.org") >= 0;
+    var isWikidata = anchor.classList.contains("ca-wikidata-link") || anchor.classList.contains("wikidata-link") || href.indexOf("wikidata.org") >= 0;
+    if (isWikipedia || isWikidata) {
+      e.preventDefault();
+      var source = isWikipedia ? "Wikipedia" : "Wikidata";
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: "ca-external-link-open",
+          url: anchor.href,
+          source: source
+        }, "*");
+      }
+    }
+  });
+})();
+</script>
+"""
     return (
         "<!DOCTYPE html><html lang='en'><head>"
         "<meta charset='utf-8'/>"
@@ -118,7 +143,7 @@ def build_encyclopedia_entry_document(entry_id: str, settings: AppSettings) -> s
         f"{link_css}{panel_css}"
         "</head><body>"
         "<" + "div class='encyclopedia-entry-shell'>" + inner + "</" + "div>"
-        "</body></html>"
+        f"{script}</body></html>"
     )
 
 

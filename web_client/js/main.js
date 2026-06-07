@@ -262,6 +262,19 @@ function openExternalLinkModal(apiBase, url, source) {
   const iframe = document.getElementById("externalFrame");
   if (!overlay || !dialog || !titleEl || !iframe) return;
 
+  // ── Hierarchical navigation: if encyclopedia is open, hide it (don't unload)
+  // and stamp a flag so the Back button can restore it without reloading.
+  const encOverlay = document.getElementById("encyclopediaOverlay");
+  const encDialog  = document.getElementById("encyclopediaModal");
+  if (encDialog && encDialog.classList.contains("help-visible")) {
+    dialog.dataset.fromEncyclopedia = "1";
+    if (encOverlay) encOverlay.classList.remove("help-visible");
+    encDialog.classList.remove("help-visible");
+    // Intentionally NOT clearing encyclopediaFrame src — preserve for instant restore
+  } else {
+    delete dialog.dataset.fromEncyclopedia;
+  }
+
   if (source === "Wikipedia") {
     titleEl.innerHTML = `${WIKIPEDIA_LOGO} Wikipedia Article`;
   } else {

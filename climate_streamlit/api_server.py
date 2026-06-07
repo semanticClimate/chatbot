@@ -233,6 +233,63 @@ def encyclopedia_entry(entry_id: str, request: Request) -> HTMLResponse:
     return HTMLResponse(content=html)
 
 
+@app.get("/proxy", response_class=HTMLResponse)
+async def proxy_external(url: str, request: Request) -> HTMLResponse:
+    """Proxy external Wikipedia/Wikidata requests to bypass iframe restrictions."""
+    import httpx
+    from urllib.parse import urlparse
+    parsed = urlparse(url)
+    domain = parsed.netloc.lower()
+    if not ("wikipedia.org" in domain or "wikidata.org" in domain):
+        raise HTTPException(status_code=400, detail="Only Wikipedia and Wikidata links can be proxied.")
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}
+            response = await client.get(url, headers=headers, follow_redirects=True)
+            content = response.text
+            
+            # Insert a base tag so relative assets resolve to the original site
+            base_url = f"{parsed.scheme}://{parsed.netloc}"
+            base_tag = f'\n<base href="{base_url}/">\n'
+            if "<head>" in content:
+                content = content.replace("<head>", f"<head>{base_tag}", 1)
+            elif "<HEAD>" in content:
+                content = content.replace("<HEAD>", f"<HEAD>{base_tag}", 1)
+            else:
+                content = f"{base_tag}{content}"
+            
+            # Inject link interception script inside the proxied page to rewrite sub-links
+            script_tag = """
+<script>
+(function() {
+  document.addEventListener("click", function(e) {
+    var anchor = e.target.closest("a");
+    if (!anchor) return;
+    var href = anchor.getAttribute("href");
+    if (!href) return;
+    var absoluteUrl = new URL(href, document.baseURI).href;
+    if (absoluteUrl.indexOf("wikipedia.org") >= 0 || absoluteUrl.indexOf("wikidata.org") >= 0) {
+      e.preventDefault();
+      window.location.href = "/proxy?url=" + encodeURIComponent(absoluteUrl);
+    }
+  });
+})();
+</script>
+"""
+            if "</body>" in content:
+                content = content.replace("</body>", f"{script_tag}</body>", 1)
+            elif "</BODY>" in content:
+                content = content.replace("</BODY>", f"{script_tag}</BODY>", 1)
+            else:
+                content = f"{content}{script_tag}"
+                
+            return HTMLResponse(content=content, status_code=response.status_code)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch external resource: {str(e)}")
+
+
+
 @app.post("/retrieve")
 def retrieve_ep(request: Request, body: RetrieveRequest) -> dict[str, Any]:
     if body.top_k is not None and (body.top_k < 1 or body.top_k > 100):
