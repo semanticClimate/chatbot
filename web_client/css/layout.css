@@ -11,11 +11,16 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  height: 100%;
+  /* overflow: hidden; block document-level scrolling that creates blank space */
 }
 
 body {
   margin: 0;
-  min-height: 100dvh;
+  height: 100%;
+  /* exact viewport height — no blank overflow below */
+  overflow: hidden;
+  /* prevent body from growing beyond .app content */
   font-family: var(--font-sans);
   color: var(--color-text);
   background: linear-gradient(135deg, var(--ca-sky-soft) 0%, #DCE8F8 100%);
@@ -25,7 +30,8 @@ body {
 .app {
   display: flex;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
+  /* 100% avoids horizontal overflow; 100vw includes scrollbar width */
   overflow: hidden;
 }
 
@@ -135,8 +141,13 @@ body {
   gap: var(--space-lg);
   align-items: stretch;
   flex: 1;
+  /* fills remaining height inside .app-content flex column */
   min-height: 0;
+  /* allows flex item to shrink below content size */
   height: 100%;
+  /* gives grid a definite height so .main-middle height:100% resolves */
+  overflow: hidden;
+  /* prevent grid children from leaking beyond the container */
 }
 
 /* ── Sidebar (left, collapsible) ── */
@@ -284,7 +295,8 @@ body {
   overflow-y: auto;
   scroll-behavior: smooth;
   height: 88vh;
-  /* Make right panel match the left column height */
+  max-height: 100%;
+  /* prevent 88vh from exceeding the available grid row height */
 }
 
 .panel-sources {
@@ -492,13 +504,18 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
   .app-content {
-    padding-left: 64px; /* Space for the collapsed hamburger icon */
+    padding-left: 64px;
+    /* Space for the collapsed hamburger icon */
     padding-right: var(--space-md);
     padding-top: var(--space-md);
     padding-bottom: var(--space-md);
     overflow-y: auto;
+    /* mobile: stacked panels scroll vertically within app-content */
+    overflow-x: hidden;
+    height: auto;
+    /* let content determine height on mobile */
   }
-  
+
   .app-header {
     margin-bottom: var(--space-md);
   }
@@ -507,15 +524,16 @@ body {
   .sidebar {
     position: absolute;
     z-index: 1000;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
   }
-  
+
   /* On mobile, swap meaning of expanded/collapsed to match initial HTML state without JS changes */
   .sidebar.expanded {
     width: 56px;
     padding: var(--space-sm) 4px;
     box-shadow: none;
   }
+
   .sidebar.expanded .sidebar-title,
   .sidebar.expanded .sidebar-actions {
     opacity: 0;
@@ -525,11 +543,12 @@ body {
     padding: 0;
     margin: 0;
   }
-  
+
   .sidebar.collapsed {
     width: 250px;
     padding: var(--space-lg) var(--space-md) var(--space-lg);
   }
+
   .sidebar.collapsed .sidebar-title,
   .sidebar.collapsed .sidebar-actions {
     opacity: 1;
@@ -537,6 +556,7 @@ body {
     height: auto;
     overflow: visible;
   }
+
   .sidebar.collapsed .sidebar-actions {
     padding-bottom: var(--space-xl);
   }
@@ -546,27 +566,33 @@ body {
     display: flex;
     flex-direction: column;
     height: auto;
+    overflow: visible;
+    /* panels stack and scroll via .app-content on mobile */
     gap: var(--space-lg);
   }
-  
+
   .main-middle {
-    display: contents; /* Unwraps chat and sources into the main flex column */
+    display: contents;
+    /* Unwraps chat and sources into the main flex column */
   }
-  
+
   .panel-chat {
     order: 1;
-    height: 85vh; /* Primary focus, fits mostly in viewport */
+    height: 85vh;
+    /* Primary focus, fits mostly in viewport */
     flex-shrink: 0;
   }
-  
+
   .panel-book {
     order: 2;
     height: auto;
     min-height: 85vh;
+    max-height: none;
+    /* reset desktop max-height cap for mobile stacking */
     flex-shrink: 0;
     overflow: visible;
   }
-  
+
   .panel-sources {
     order: 3;
     min-height: auto;
