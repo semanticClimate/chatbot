@@ -194,27 +194,9 @@
   width: 100%;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-md);
-  flex: 5;
-  min-height: 250px;
-  background: #ffffff;
-}
-
-.encyclopedia-toolbar {
-  margin-top: var(--space-md);
-  margin-bottom: var(--space-sm);
-}
-
-.encyclopedia-toolbar .panel-heading {
-  margin: 0;
-}
-
-.encyclopedia-frame {
-  display: block;
-  width: 100%;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
-  flex: 1.5;
-  min-height: 140px;
+  /* Fills the full panel now that encyclopedia is a modal */
+  flex: 1;
+  min-height: 0;
   background: #ffffff;
 }
 
@@ -352,3 +334,167 @@
   border-radius: var(--radius-md);
   border-left: 4px solid var(--ca-sky);
 }
+
+/* Section header logo styles */
+.header-logo {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logo-ca {
+  margin-right: 4px;
+}
+
+.logo-sc {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+/* External modal customizations */
+.external-modal {
+  width: min(1100px, 92vw);
+  max-height: 92vh;
+  height: 92vh;
+}
+
+.external-modal-header {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.external-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.btn-back-modal {
+  min-height: 32px;
+  height: 32px;
+  padding: 0 var(--space-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+}
+
+.modal-title-logo {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.external-modal-body {
+  padding: 0 !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.external-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  flex: 1;
+  background: #ffffff;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Encyclopedia Modal
+   ══════════════════════════════════════════════════════════════ */
+
+.encyclopedia-modal {
+  width: min(900px, 92vw);
+  max-height: 90vh;
+  height: 90vh;
+}
+
+.encyclopedia-modal-header {
+  padding: var(--space-sm) var(--space-lg);
+  background: linear-gradient(135deg, #fffdf7 0%, #f0f6fc 100%);
+  border-bottom: 2px solid var(--ca-sky-soft);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.encyclopedia-modal-header .help-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  color: var(--ca-navy);
+}
+
+.encyclopedia-modal-body {
+  padding: 0 !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.encyclopedia-frame-modal {
+  width: 100%;
+  height: 100%;
+  border: none;
+  flex: 1;
+  background: #ffffff;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Global App Tooltip  (.app-tooltip)
+   ══════════════════════════════════════════════════════════════ */
+
+.app-tooltip {
+  /* Positioned by JS */
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+
+  max-width: 280px;
+  padding: 6px 11px;
+  border-radius: 7px;
+  background: rgba(15, 30, 48, 0.93);
+  color: #f0f6ff;
+  font-size: 0.78rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.22),
+    0 1px 4px  rgba(0, 0, 0, 0.12);
+
+  /* Initially invisible */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition:
+    opacity 0.16s ease,
+    visibility 0.16s ease,
+    transform 0.16s ease;
+
+  /* Wrap long text gracefully */
+  white-space: normal;
+  word-break: break-word;
+}
+
+.app-tooltip.app-tooltip-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Small decorative arrow stub — a subtle top border highlight */
+.app-tooltip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(100, 170, 255, 0.18);
+  pointer-events: none;
+}

@@ -7,7 +7,6 @@ import {
   getHealth,
   getReady,
   bookDocumentUrl,
-  encyclopediaEmptyUrl,
   encyclopediaEntryUrl,
   exportConversationCsv,
   fetchLogsCsvBlob,
@@ -164,7 +163,7 @@ async function syncBookPanel(apiBase, statusLine) {
 
 /**
  * @param {string} apiBase
- * @param {string | null} entryId
+ * @param {string | null} entryId  — if null, resets (closes) modal frame src
  */
 function syncEncyclopediaPanel(apiBase, entryId) {
   const iframe = document.getElementById("encyclopediaFrame");
@@ -173,25 +172,107 @@ function syncEncyclopediaPanel(apiBase, entryId) {
     iframe.removeAttribute("src");
     return;
   }
+  // When resetting (entryId null), clear the modal iframe so it doesn't linger
+  if (!entryId) {
+    iframe.removeAttribute("src");
+    return;
+  }
   try {
-    iframe.src = entryId
-      ? encyclopediaEntryUrl(apiBase, entryId)
-      : encyclopediaEmptyUrl(apiBase);
+    iframe.src = encyclopediaEntryUrl(apiBase, entryId);
   } catch {
     iframe.removeAttribute("src");
   }
 }
 
 /**
+ * Opens the Encyclopedia modal overlay with the given entry.
  * @param {string} apiBase
  * @param {string} entryId
  */
 function openEncyclopediaEntry(apiBase, entryId) {
   const id = String(entryId || "").trim();
   if (!id || !apiBase || !isAcceptableApiBase(apiBase)) return;
+
+  // Load the entry into the modal iframe
   syncEncyclopediaPanel(apiBase, id);
-  const iframe = document.getElementById("encyclopediaFrame");
-  iframe?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+  // Open the modal
+  const overlay = document.getElementById("encyclopediaOverlay");
+  const dialog = document.getElementById("encyclopediaModal");
+  if (overlay && dialog) {
+    overlay.classList.add("help-visible");
+    dialog.classList.add("help-visible");
+    dialog.focus();
+  }
+}
+
+/**
+ * Show/hide the global term-preview tooltip.
+ * Coordinates come from the book iframe's postMessage and are in viewport space.
+ * @param {string} text   — preview text to show
+ * @param {number} x      — viewport X (px) from left of book iframe rect
+ * @param {number} y      — viewport Y (px) from top  of book iframe rect
+ * @param {boolean} visible
+ */
+function showTermPreviewTooltip(text, x, y, visible) {
+  const tip = document.getElementById("appTooltip");
+  if (!tip) return;
+  if (!visible || !text) {
+    tip.classList.remove("app-tooltip-visible");
+    return;
+  }
+  const bookFrame = document.getElementById("bookFrame");
+  const frameRect = bookFrame ? bookFrame.getBoundingClientRect() : { left: 0, top: 0 };
+
+  // Position the tooltip relative to the viewport, offset slightly from cursor
+  const vx = frameRect.left + x;
+  const vy = frameRect.top  + y;
+
+  tip.textContent = text;
+  // Place above the hovered term; shift right a little
+  const GAP = 12;
+  tip.style.left = `${vx + GAP}px`;
+  tip.style.top  = `${vy - GAP}px`;
+  tip.classList.add("app-tooltip-visible");
+
+  // Auto-position: if the tip would overflow right, flip left
+  requestAnimationFrame(() => {
+    const tw = tip.offsetWidth;
+    if (vx + GAP + tw > window.innerWidth - 16) {
+      tip.style.left = `${vx - tw - GAP}px`;
+    }
+    // If it would overflow top, show below instead
+    const th = tip.offsetHeight;
+    if (vy - GAP - th < 8) {
+      tip.style.top = `${vy + GAP + 16}px`;
+    } else {
+      tip.style.top = `${vy - th - GAP}px`;
+    }
+  });
+}
+
+const WIKIPEDIA_LOGO = `<img src="images/wikipedia.png" alt="Wikipedia" class="modal-title-logo" />`;
+
+const WIKIDATA_LOGO = `<img src="images/wikidata.svg" alt="Wikidata" class="modal-title-logo" />`;
+
+function openExternalLinkModal(apiBase, url, source) {
+  const overlay = document.getElementById("externalOverlay");
+  const dialog = document.getElementById("externalModal");
+  const titleEl = document.getElementById("externalModalTitle");
+  const iframe = document.getElementById("externalFrame");
+  if (!overlay || !dialog || !titleEl || !iframe) return;
+
+  if (source === "Wikipedia") {
+    titleEl.innerHTML = `${WIKIPEDIA_LOGO} Wikipedia Article`;
+  } else {
+    titleEl.innerHTML = `${WIKIDATA_LOGO} Wikidata Entry`;
+  }
+
+  const proxyUrl = `${trimBaseUrl(apiBase)}/proxy?url=${encodeURIComponent(url)}`;
+  iframe.src = proxyUrl;
+
+  overlay.classList.add("help-visible");
+  dialog.classList.add("help-visible");
 }
 
 async function fetchTunnelHintApiBase() {
@@ -404,6 +485,17 @@ async function wire() {
     if (!origin || ev.origin !== origin) return;
     if (ev.data?.type === "ca-encyclopedia-open" && ev.data.entry_id) {
       openEncyclopediaEntry(base, ev.data.entry_id);
+    }
+    if (ev.data?.type === "ca-external-link-open" && ev.data.url) {
+      openExternalLinkModal(base, ev.data.url, ev.data.source || "Wikipedia");
+    }
+    if (ev.data?.type === "ca-encyclopedia-preview") {
+      showTermPreviewTooltip(
+        ev.data.text || "",
+        ev.data.x ?? 0,
+        ev.data.y ?? 0,
+        ev.data.visible ?? false
+      );
     }
   });
 

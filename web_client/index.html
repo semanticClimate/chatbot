@@ -29,10 +29,10 @@
         <div class="sidebar-version">v1.1.0</div>
       </div>
       <div class="sidebar-actions">
-        <button type="button" id="btnClear" class="btn btn-secondary sidebar-btn" data-i18n="btnClear">Clear chat</button>
-        <button type="button" id="btnExportChat" class="btn btn-secondary sidebar-btn" data-i18n="btnExportChat">Download
+        <button type="button" id="btnClear" class="btn btn-secondary sidebar-btn" data-i18n="btnClear" data-tooltip="Clear all chat messages and reset the conversation.">Clear chat</button>
+        <button type="button" id="btnExportChat" class="btn btn-secondary sidebar-btn" data-i18n="btnExportChat" data-tooltip="Download exported conversation data as CSV.">Download
           chat</button>
-        <button type="button" id="btnExportLogs" class="btn btn-secondary sidebar-btn" data-i18n="btnExportLogs">Server
+        <button type="button" id="btnExportLogs" class="btn btn-secondary sidebar-btn" data-i18n="btnExportLogs" data-tooltip="Download server logs as CSV.">Server
           logs</button>
       </div>
     </nav>
@@ -49,7 +49,7 @@
         </div>
         <div class="app-header-end">
           <button type="button" id="btnSettingsToggle" class="help-btn" aria-haspopup="dialog"
-            aria-controls="settingsModal">
+            aria-controls="settingsModal" data-tooltip="Open language and display settings.">
             <span class="sr-only" data-i18n="settingsHeading">Settings</span>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -60,7 +60,7 @@
             </svg>
           </button>
           <button type="button" id="btnDevToolsToggle" class="help-btn" aria-haspopup="dialog"
-            aria-controls="healthModal">
+            aria-controls="healthModal" data-tooltip="Open developer tools and advanced settings.">
             <span class="sr-only" data-i18n="btnHealth">Developer Tools</span>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -104,6 +104,40 @@
         </div>
       </div>
 
+      <div id="externalOverlay" class="help-overlay"></div>
+      <div id="externalModal" class="help-modal external-modal" role="dialog" aria-modal="true" aria-labelledby="externalModalTitle">
+        <div class="help-modal-header external-modal-header">
+          <div class="external-header-left">
+            <button type="button" id="btnExternalBack" class="btn btn-secondary btn-back-modal" aria-label="Back">← Back</button>
+            <h2 class="help-modal-title" id="externalModalTitle"></h2>
+          </div>
+          <button type="button" class="help-close-btn" data-close-modal aria-label="Close">✕</button>
+        </div>
+        <div class="help-modal-body external-modal-body">
+          <iframe id="externalFrame" class="external-frame" title="External Source" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+      </div>
+
+
+      <!-- Encyclopedia Modal -->
+      <div id="encyclopediaOverlay" class="help-overlay"></div>
+      <div id="encyclopediaModal" class="help-modal encyclopedia-modal" role="dialog" aria-modal="true" aria-labelledby="encyclopediaModalTitle">
+        <div class="help-modal-header encyclopedia-modal-header">
+          <div class="external-header-left">
+            <button type="button" id="btnEncyclopediaBack" class="btn btn-secondary btn-back-modal" aria-label="Back to chatbot" data-tooltip="Return to the Student Book and chatbot.">← Back</button>
+            <h2 class="help-modal-title" id="encyclopediaModalTitle">
+              🎓 <img src="images/semanticClimateLogo.png" alt="Semantic Climate Logo" class="header-logo logo-sc" />
+              <span data-i18n="encyclopediaHeading">Encyclopedia</span>
+            </h2>
+          </div>
+          <button type="button" class="help-close-btn" id="btnCloseEncyclopedia" data-close-modal aria-label="Close encyclopedia">✕</button>
+        </div>
+        <div class="help-modal-body encyclopedia-modal-body">
+          <iframe id="encyclopediaFrame" class="encyclopedia-frame-modal" title="Climate Academy encyclopedia entry"
+            sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+      </div>
+
       <main class="main-grid">
         <div class="main-middle">
           <section class="panel panel-chat" id="conversationPanel">
@@ -115,7 +149,7 @@
               <textarea id="question" class="composer-input" rows="2" placeholder="Ask about the book…"
                 required></textarea>
               <div class="composer-actions">
-                <button type="submit" class="btn btn-primary" id="btnSend" data-i18n="btnSend">Send</button>
+                <button type="submit" class="btn btn-primary" id="btnSend" data-i18n="btnSend" data-tooltip="Send message.">Send</button>
               </div>
             </form>
             <p id="statusLine" class="status-line" role="status"></p>
@@ -131,22 +165,20 @@
 
         <section class="panel panel-book" id="panelBookShell" aria-label="Student book">
           <div class="book-toolbar">
-            <h2 class="panel-heading" id="bookHeadingEl">📖 <span data-i18n="bookHeading">Student book</span></h2>
-            <button type="button" id="btnResetBook" class="btn btn-secondary" data-i18n="btnResetBook">
+            <h2 class="panel-heading" id="bookHeadingEl"><img src="images/climate_academy.png" alt="Climate Academy Logo" class="header-logo logo-ca" /> 📖 <span data-i18n="bookHeading">Student book</span></h2>
+            <button type="button" id="btnResetBook" class="btn btn-secondary" data-i18n="btnResetBook" data-tooltip="Reset all highlights and return the book to the top.">
               Reset highlight
             </button>
           </div>
           <iframe id="bookFrame" class="book-frame" title="Climate Academy Student Book"
             sandbox="allow-scripts allow-same-origin"></iframe>
-          <div class="encyclopedia-toolbar">
-            <h2 class="panel-heading" id="encyclopediaHeadingEl">🎓 <span data-i18n="encyclopediaHeading">Encyclopedia</span></h2>
-          </div>
-          <iframe id="encyclopediaFrame" class="encyclopedia-frame" title="Climate Academy encyclopedia entry"
-            sandbox="allow-scripts allow-same-origin"></iframe>
         </section>
       </main>
     </div>
   </div>
+
+  <!-- Global tooltip element -->
+  <div id="appTooltip" class="app-tooltip" role="tooltip" aria-hidden="true"></div>
 
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/help.js"></script>
