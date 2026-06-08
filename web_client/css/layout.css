@@ -102,12 +102,19 @@ body {
 }
 
 .app-logo {
-  height: clamp(24px, 6.5vw, 52px);
+  height: clamp(5px, 6.5vw, 52px);
   width: auto;
 }
 
 .app-logo-ca {
   height: clamp(50px, 5.87vw, 45px);
+}
+
+.app-logo-sc {
+  height: clamp(24px, 3vw, 34px);
+  width: auto;
+  object-fit: contain;
+
 }
 
 .app-title {

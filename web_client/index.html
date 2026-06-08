@@ -45,7 +45,7 @@
         <div class="app-header-brand">
           <div class="app-title-container">
             <img src="images/climate_academy.png" alt="Climate Academy Logo" class="app-logo app-logo-ca" />
-            <img src="images/semanticClimateLogo.png" alt="Semantic Climate Logo" class="app-logo" />
+            <img src="images/semanticClimateLogo.png" alt="Semantic Climate Logo" class="app-logo app-logo-sc" />
           </div>
           <p class="app-subtitle" data-i18n="appSubtitle">Book-grounded answers from the Climate Academy student book.
           </p>
@@ -134,16 +134,15 @@
             <button type="button" id="btnEncyclopediaBack" class="btn btn-secondary btn-back-modal"
               aria-label="Back to Student Book">← Back</button>
             <h2 class="help-modal-title" id="encyclopediaModalTitle">
-              🎓 <img src="images/semanticClimateLogo.png" alt="Semantic Climate Logo"
-                class="header-logo logo-sc" />
+              <img src="images/semanticClimateLogo.png" alt="Semantic Climate Logo"
+                class="header-logo logo-sc encyclopedia-sc" />
               <span data-i18n="encyclopediaHeading">Encyclopedia</span>
             </h2>
           </div>
           <button type="button" class="help-close-btn" data-close-modal aria-label="Close encyclopedia">✕</button>
         </div>
         <div class="help-modal-body encyclopedia-modal-body">
-          <iframe id="encyclopediaFrame" class="encyclopedia-frame-modal"
-            title="Climate Academy encyclopedia entry"
+          <iframe id="encyclopediaFrame" class="encyclopedia-frame-modal" title="Climate Academy encyclopedia entry"
             sandbox="allow-scripts allow-same-origin"></iframe>
         </div>
       </div>
@@ -177,7 +176,7 @@
         <section class="panel panel-book" id="panelBookShell" aria-label="Student book">
           <div class="book-toolbar">
             <h2 class="panel-heading" id="bookHeadingEl"><img src="images/climate_academy.png"
-                alt="Climate Academy Logo" class="header-logo logo-ca" /> 📖 <span data-i18n="bookHeading">Student
+                alt="Climate Academy Logo" class="header-logo logo-ca" /><span data-i18n="bookHeading">Student
                 book</span></h2>
             <button type="button" id="btnResetBook" class="btn btn-secondary" data-i18n="btnResetBook">
               Reset highlight
