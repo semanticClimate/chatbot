@@ -35,6 +35,9 @@
         <button type="button" id="btnExportChat" class="btn btn-secondary sidebar-btn"
           data-i18n="btnExportChat">Download
           chat</button>
+        <!-- COMMENTED OUT: Sources button
+        <button type="button" id="btnSourcesView" class="btn btn-secondary sidebar-btn" data-i18n="sourcesHeading">Sources</button>
+        -->
         <button type="button" id="btnExportLogs" class="btn btn-secondary sidebar-btn" data-i18n="btnExportLogs">Server
           logs</button>
       </div>
@@ -165,12 +168,6 @@
             <p id="statusLine" class="status-line" role="status"></p>
             <input type="url" id="apiBaseUrl" class="hidden" />
           </section>
-
-          <aside class="panel panel-sources" id="sourcesPanel">
-            <h2 class="panel-heading" id="sourcesHeading" data-i18n="sourcesHeading">Sources</h2>
-            <p id="sourcesHintEl" class="sources-hint" data-i18n="sourcesHint">Click a citation number on an answer.</p>
-            <div id="sourcesDetail" class="sources-detail"></div>
-          </aside>
         </div>
 
         <section class="panel panel-book" id="panelBookShell" aria-label="Student book">

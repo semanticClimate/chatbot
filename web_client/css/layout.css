@@ -12,15 +12,16 @@ html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
   height: 100%;
-  /* allow document-level scrolling so the page grows with content */
-  overflow: auto;
+  overflow: hidden;
+  /* block document-level scrolling that creates blank space */
 }
 
 body {
   margin: 0;
-  /* let body grow with the document content */
-  min-height: 100%;
-  overflow: auto;
+  height: 100%;
+  /* exact viewport height — no blank overflow below */
+  overflow: hidden;
+  /* prevent body from growing beyond .app content */
   font-family: var(--font-sans);
   color: var(--color-text);
   background: linear-gradient(135deg, var(--ca-sky-soft) 0%, #DCE8F8 100%);
@@ -29,19 +30,20 @@ body {
 /* ── App shell: sidebar + content side-by-side ── */
 .app {
   display: flex;
-  /* let app be at least the viewport height but grow with content */
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
+  /* 100% avoids horizontal overflow; 100vw includes scrollbar width */
+  overflow: hidden;
 }
 
 .app-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* fill available space but allow the column to grow with content */
-  min-height: 100vh;
+  height: 100vh;
   padding: var(--space-lg);
   box-sizing: border-box;
+  overflow: hidden;
   min-width: 0;
 }
 
@@ -143,7 +145,7 @@ body {
 /* ── Main grid: chat column + right column ── */
 .main-grid {
   display: grid;
-  grid-template-columns: 58% 42%;
+  grid-template-columns: 57% 41%;
   gap: var(--space-lg);
   align-items: stretch;
   flex: 1;
@@ -163,8 +165,7 @@ body {
   align-items: center;
   background: linear-gradient(145deg, var(--color-brand), var(--color-brand-dark));
   border-right: 1px solid var(--color-line);
-  /* avoid forcing the sidebar to the viewport height; allow it to grow with content */
-  min-height: 100vh;
+  height: 100vh;
   box-sizing: border-box;
   flex-shrink: 0;
   overflow: hidden;
@@ -237,19 +238,15 @@ body {
 
 /* ── Button group ── */
 .sidebar-actions {
-  /* Do not flex: 1; keep it anchored to the top */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  /* Anchor buttons to the top instead of centering */
+  justify-content: center;
   align-items: center;
   width: 100%;
   gap: var(--space-md);
-  padding-top: var(--space-md);
-  /* Replace padding-bottom with padding-top for top alignment */
+  padding-bottom: var(--space-xl);
   transition: opacity 0.25s ease;
-  flex-shrink: 0;
-  /* Prevent sidebar-actions from shrinking as content grows */
 }
 
 .sidebar.collapsed .sidebar-actions {
@@ -305,9 +302,11 @@ body {
   flex-direction: column;
   overflow-y: auto;
   scroll-behavior: smooth;
-  height: 88vh;
-  max-height: 100%;
-  /* prevent 88vh from exceeding the available grid row height */
+  flex: 1;
+  /* grow to fill available height in the grid */
+  min-height: 0;
+  /* allow flex item to shrink below content size */
+  min-width: 0;
 }
 
 .panel-sources {
@@ -329,12 +328,14 @@ body {
   gap: 8px;
 }
 
-/* ── Chat panel: takes ~88% of viewport height ── */
+/* ── Chat panel: flexible height, takes available space ── */
 .panel-chat {
   display: flex;
   flex-direction: column;
-  min-height: 88vh;
-  flex-shrink: 0;
+  flex: 1;
+  /* grow to fill available space in main-middle */
+  min-height: 0;
+  /* allow flex item to shrink below content size */
   background: linear-gradient(180deg, #FFFFFF 0%, #FAFCFF 100%);
 }
 

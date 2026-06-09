@@ -28,6 +28,9 @@ import { applyShellUiStrings, t } from "./ui_strings.js";
 
 const STORAGE_KEY_API = "climate_web_client_api_base";
 
+/** COMMENTED OUT: Store the current sources for display in the modal */
+// let currentSources = [];
+
 /** Empty default: quick-tunnel run fills web_client/tunnel-api-base.txt (trycloudflare API URL). */
 const DEFAULT_API_BASE = "";
 
@@ -383,16 +386,84 @@ function scrollThreadToBottom() {
 
 async function refreshView(apiBase) {
   const thread = $("thread");
-  const sourcesDetail = $("sourcesDetail");
   const origin = apiOriginFromBase(apiBase);
   renderThread(thread, getConversation(), (sourceId, sources) => {
     const src = sources.find((s) => s.source_id === sourceId);
-    renderSourceDetail(sourcesDetail, src || null);
+    // COMMENTED OUT: Store sources for display in modal
+    // currentSources = sources;
+    // COMMENTED OUT: Open the external modal with the selected source
+    // if (src) {
+    //   showSourceInModal(src);
+    // }
     jumpBookToSource(src, origin);
   });
-  renderSourceDetail(sourcesDetail, null);
   scrollThreadToBottom();
 }
+
+// COMMENTED OUT: Show source in external modal
+/*
+function showSourceInModal(source) {
+  const extOverlay = document.getElementById("externalOverlay");
+  const extDialog = document.getElementById("externalModal");
+  const extModalTitle = document.getElementById("externalModalTitle");
+
+  if (!extOverlay || !extDialog) return;
+
+  // Render source detail as HTML
+  let html = "";
+  if (source) {
+    const escapeHtml = (s) => {
+      const d = document.createElement("div");
+      d.textContent = String(s || "");
+      return d.innerHTML;
+    };
+    const formatLines = (text) =>
+      escapeHtml(String(text || "")).replace(/\n/g, "<br />");
+
+    const rows = [];
+    const addRow = (label, value) => {
+      if (value == null || value === "") return;
+      const labelEsc = escapeHtml(label);
+      const valueEsc = formatLines(String(value));
+      rows.push(`<dt>${labelEsc}</dt><dd>${valueEsc}</dd>`);
+    };
+
+    addRow(t("labelSourceId"), source.source_id);
+    addRow(
+      t("labelSection"),
+      source.section_number
+        ? `§ ${source.section_number} — ${source.section_title || ""}`
+        : ""
+    );
+    addRow(t("labelChunk"), source.chunk_id);
+    addRow(t("labelAnchor"), source.anchor_id);
+    addRow(t("labelPassage"), source.document);
+
+    if (rows.length > 0) {
+      html = `<dl class="source-dl">${rows.join("")}</dl>`;
+    }
+  }
+
+  if (!html) {
+    html = `<p class="sources-empty">${t("sourcesEmpty")}</p>`;
+  }
+
+  // Update modal title and content
+  if (extModalTitle) {
+    extModalTitle.textContent = t("sourcesHeading");
+  }
+
+  // Set the content directly in the modal body
+  const extModalBody = document.querySelector(".external-modal-body");
+  if (extModalBody) {
+    extModalBody.innerHTML = html;
+  }
+
+  // Open the modal
+  extOverlay.classList.add("help-visible");
+  extDialog.classList.add("help-visible");
+}
+*/
 
 function fitSelectToLongestOption(sel) {
   if (!(sel instanceof HTMLSelectElement)) return;
@@ -585,7 +656,8 @@ async function wire() {
 
     const prior = getConversation();
     btnSend.disabled = true;
-    setStatus(statusLine, t("sending"));
+    // Commented out status updates for the input-area debug/status panel.
+    // setStatus(statusLine, t("sending"));
 
     const abort = new AbortController();
     /** Optimistic user bubble — we render user + prior; API will reconcile */
@@ -608,11 +680,11 @@ async function wire() {
         data.timings_ms && data.timings_ms.total != null
           ? t("okMs", { ms: data.timings_ms.total })
           : t("ok");
-      setStatus(statusLine, statusText, "info");
+      // setStatus(statusLine, statusText, "info");
       question.value = "";
       await refreshView(apiInput.value.trim());
     } catch (e) {
-      setStatus(statusLine, String(e.message || e), "error");
+      // setStatus(statusLine, String(e.message || e), "error");
       await refreshView(apiInput.value.trim());
     } finally {
       btnSend.disabled = false;
@@ -620,6 +692,72 @@ async function wire() {
   });
 
   refreshView(apiInput.value.trim());
+
+  // COMMENTED OUT: Handle Sources button click
+  /*
+  const btnSourcesView = document.getElementById("btnSourcesView");
+  if (btnSourcesView) {
+    btnSourcesView.addEventListener("click", () => {
+      const extOverlay = document.getElementById("externalOverlay");
+      const extDialog = document.getElementById("externalModal");
+      const extModalBody = document.querySelector(".external-modal-body");
+      const extModalTitle = document.getElementById("externalModalTitle");
+
+      if (!extOverlay || !extDialog) return;
+
+      if (extModalTitle) {
+        extModalTitle.textContent = t("sourcesHeading");
+      }
+
+      // If no sources, show empty state
+      if (currentSources.length === 0) {
+        if (extModalBody) {
+          extModalBody.innerHTML = `<p class="sources-empty">${t("sourcesEmpty")}</p>`;
+        }
+      } else {
+        // Show all sources
+        let html = `<div class="sources-list">`;
+        for (const src of currentSources) {
+          const escapeHtml = (s) => {
+            const d = document.createElement("div");
+            d.textContent = String(s || "");
+            return d.innerHTML;
+          };
+          const formatLines = (text) =>
+            escapeHtml(String(text || "")).replace(/\n/g, "<br />");
+
+          html += `<div class="source-item">`;
+          if (src.source_id) {
+            html += `<dt>${escapeHtml(t("labelSourceId"))}</dt><dd>${escapeHtml(src.source_id)}</dd>`;
+          }
+          if (src.section_number) {
+            const section = `§ ${src.section_number}${src.section_title ? ` — ${src.section_title}` : ""}`;
+            html += `<dt>${escapeHtml(t("labelSection"))}</dt><dd>${escapeHtml(section)}</dd>`;
+          }
+          if (src.chunk_id) {
+            html += `<dt>${escapeHtml(t("labelChunk"))}</dt><dd>${escapeHtml(src.chunk_id)}</dd>`;
+          }
+          if (src.anchor_id) {
+            html += `<dt>${escapeHtml(t("labelAnchor"))}</dt><dd>${escapeHtml(src.anchor_id)}</dd>`;
+          }
+          if (src.document) {
+            html += `<dt>${escapeHtml(t("labelPassage"))}</dt><dd>${formatLines(src.document)}</dd>`;
+          }
+          html += `</div>`;
+        }
+        html += `</div>`;
+
+        if (extModalBody) {
+          extModalBody.innerHTML = html;
+        }
+      }
+
+      // Open the modal
+      extOverlay.classList.add("help-visible");
+      extDialog.classList.add("help-visible");
+    });
+  }
+  */
 }
 
 document.addEventListener("DOMContentLoaded", () => {
