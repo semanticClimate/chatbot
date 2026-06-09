@@ -363,8 +363,7 @@ def message_when_no_answer_blocks(
 
     if parsed is None:
         return (
-            "The assistant's reply wasn't in the format this app expects, so nothing could be shown. "
-            "Try asking again, or ask in a simpler way."
+            "The chatbot couldn't find an answer in the book"
         )
 
     return (

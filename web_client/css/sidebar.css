@@ -1,9 +1,10 @@
 /* Sidebar styling */
 .sidebar {
-  position: fixed;
+  /* keep sidebar in flow so it grows with page content; allow it to stick to the top when scrolling */
+  position: sticky;
   top: 0;
   left: 0;
-  height: 100vh;
+  min-height: 100vh;
   /* background: var(--color-surface); */
   /* New Chnage in june 5th */
   background: linear-gradient(160deg, #1e3a8a 0%, #2b7fd4 100%);

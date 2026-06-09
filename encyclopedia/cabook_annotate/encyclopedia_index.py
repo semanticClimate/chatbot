@@ -45,38 +45,6 @@ def _href_for_entry(fragment: str, settings: AnnotateSettings) -> str:
     return settings.links.href_template.format(fragment=fragment)
 
 
-def _header_wikipedia_label(entry_elem) -> str:
-    """
-    Entry title link only — the direct-child Wikipedia anchor before body content.
-
-    Body cross-references inside wpage_first_para must not become surface forms.
-    """
-    for child in entry_elem:
-        if not hasattr(child, "tag"):
-            continue
-        if child.tag == "p" and "wpage_first_para" in (child.get("class") or ""):
-            break
-        if child.tag in ("figure", "figcaption"):
-            break
-        if child.tag != "a":
-            continue
-        classes = child.get("class") or ""
-        if "wikipedia-link" not in classes or "mw-file-description" in classes:
-            continue
-        label = (child.text_content() or "").strip()
-        if label:
-            return label
-    return ""
-
-
-def _forms_equal(a: str, b: str, ignore_case: bool) -> bool:
-    left = a.strip()
-    right = b.strip()
-    if ignore_case:
-        return left.lower() == right.lower()
-    return left == right
-
-
 def _collect_surface_forms(entry_elem, settings: AnnotateSettings) -> Set[str]:
     variant_settings = settings.variants
     forms: Set[str] = set()
@@ -84,9 +52,11 @@ def _collect_surface_forms(entry_elem, settings: AnnotateSettings) -> Set[str]:
     if term_attr:
         forms.add(term_attr)
 
-    header = _header_wikipedia_label(entry_elem)
-    if header:
-        forms.add(header)
+    wiki_links = entry_elem.xpath(".//a[contains(@class, 'wikipedia-link')]")
+    for link in wiki_links:
+        label = (link.text_content() or "").strip()
+        if label:
+            forms.add(label)
 
     for li in entry_elem.xpath(".//ul[contains(@class, 'synonym_list')]/li"):
         text = _clean_synonym(
@@ -149,8 +119,6 @@ def build_term_index(
         for form in surface_forms:
             key = form.lower() if ignore_case else form
             if key not in phrase_to_entry_id:
-                phrase_to_entry_id[key] = wikidata_id
-            elif _forms_equal(form, canonical, ignore_case):
                 phrase_to_entry_id[key] = wikidata_id
 
     sorted_phrases = sorted(
