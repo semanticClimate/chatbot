@@ -515,17 +515,29 @@ body {
    Mobile Responsive Layout
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
+  /* Allow the document to scroll naturally on mobile (avoid nested scroll regions). */
+  html,
+  body {
+    height: auto;
+    overflow: auto;
+  }
+
+  .app {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    flex-direction: column;
+  }
+
   .app-content {
     padding-left: 64px;
     /* Space for the collapsed hamburger icon */
     padding-right: var(--space-md);
     padding-top: var(--space-md);
     padding-bottom: var(--space-md);
-    overflow-y: auto;
-    /* mobile: stacked panels scroll vertically within app-content */
-    overflow-x: hidden;
+    overflow: visible;
+    /* Let the document/page handle scrolling */
     height: auto;
-    /* let content determine height on mobile */
   }
 
   .app-header {
@@ -575,33 +587,45 @@ body {
 
   /* Single column vertical flow */
   .main-grid {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    overflow: visible;
-    /* panels stack and scroll via .app-content on mobile */
+    display: block;
+    /* Natural document flow: stacked sections, page scroll moves between them */
     gap: var(--space-lg);
   }
 
   .main-middle {
-    display: contents;
-    /* Unwraps chat and sources into the main flex column */
+    display: block;
   }
 
   .panel-chat {
     order: 1;
-    height: 85vh;
-    /* Primary focus, fits mostly in viewport */
-    flex-shrink: 0;
+    /* Give chat visual priority on mobile; use a large min-height so the
+       conversation and composer are visible without nested scrolling. */
+    display: block;
+    flex: none;
+    min-height: 72vh;
+    box-sizing: border-box;
+  }
+
+  /* Remove nested scrolling: let the page scroll rather than the thread
+     or the book iframe. Ensure thread expands naturally inside the
+     chat panel so messages are readable. */
+  .panel-chat .thread {
+    overflow: visible;
+    min-height: calc(72vh - 160px);
+    box-sizing: border-box;
+  }
+
+  .panel-chat .composer {
+    position: relative;
+    z-index: 1;
   }
 
   .panel-book {
     order: 2;
+    /* Stack below chat; allow natural height and let page scrolling handle overflow */
     height: auto;
-    min-height: 85vh;
+    min-height: 0;
     max-height: none;
-    /* reset desktop max-height cap for mobile stacking */
-    flex-shrink: 0;
     overflow: visible;
   }
 
