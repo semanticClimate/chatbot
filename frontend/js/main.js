@@ -25,7 +25,8 @@ import {
 } from "./lang_prefs.js";
 import { applyShellUiStrings, t } from "./ui_strings.js";
 
-const STORAGE_KEY_API = "climate_web_client_api_base";
+const STORAGE_KEY_API = "climate_frontend_api_base";
+const STORAGE_KEY_API_LEGACY = "climate_web_client_api_base";
 
 const DEFAULT_API_BASE = "http://127.0.0.1:8800";
 
@@ -229,7 +230,14 @@ async function resolveInitialApiBase(statusLine) {
 
 function loadApiBase() {
   try {
-    return localStorage.getItem(STORAGE_KEY_API) || "";
+    const current = localStorage.getItem(STORAGE_KEY_API);
+    if (current) return current;
+    const legacy = localStorage.getItem(STORAGE_KEY_API_LEGACY);
+    if (legacy) {
+      localStorage.setItem(STORAGE_KEY_API, legacy);
+      return legacy;
+    }
+    return "";
   } catch {
     return "";
   }

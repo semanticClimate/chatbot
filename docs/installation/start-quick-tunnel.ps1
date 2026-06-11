@@ -193,7 +193,7 @@ Start-Sleep -Seconds 2  # Allow API startup before starting web.
 
 # Start static web server locally.
 Start-LoggedProcess -Title "Web UI" `
-    -Command ". `"$VenvActivate`"; cd `"$RepoRoot\web_client`"; python -m http.server $WebPort" `
+    -Command ". `"$VenvActivate`"; cd `"$RepoRoot\frontend`"; python -m http.server $WebPort" `
     -LogPath $WebLog -PidFile $WebPidFile
 
 Start-Sleep -Seconds 2  # Allow web server startup before tunnels.

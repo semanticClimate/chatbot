@@ -103,7 +103,7 @@ python -m uvicorn fastapi_app.main:app --host 127.0.0.1 --port 8800
 From repo root:
 
 ```bash
-cd web_client
+cd frontend
 python -m http.server 8081
 ```
 

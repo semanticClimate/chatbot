@@ -1,4 +1,4 @@
-"""Load `config/app.defaults.toml` and expose resolved paths."""
+"""Load config TOML and expose resolved paths for the active corpus profile."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ try:
 except ModuleNotFoundError:  # Python < 3.11
     import tomli as tomllib
 
+import os
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -49,10 +50,14 @@ class MessageCopy:
 class AppSettings:
     root_dir: Path
     base_dir: Path
+    corpus_id: str
+    corpus_label: str
     html_path: Path
     pdf_path: Path
     chroma_dir: str
     collection_name: str
+    html_format: str
+    system_prompt_path: Path
     top_k: int
     max_distance: float
     indexing_batch_size: int
@@ -76,37 +81,74 @@ class AppSettings:
 
 
 def _resolve_path(root: Path, relative: str) -> Path:
+    if not relative:
+        return Path()
     return (root / relative).resolve()
+
+
+def _default_config_path(base_dir: Path) -> Path:
+    return base_dir / "config" / "app.defaults.toml"
+
+
+def _load_toml(path: Path) -> dict:
+    return tomllib.loads(path.read_bytes().decode("utf-8"))
+
+
+def _active_corpus_id(t: dict) -> str:
+    env_profile = os.environ.get("CLIMATE_CORPUS_PROFILE", "").strip()
+    if env_profile:
+        return env_profile
+    corpus = t.get("corpus", {})
+    return str(corpus.get("active", "cabook")).strip() or "cabook"
+
+
+def _corpus_section(t: dict, corpus_id: str) -> dict:
+    corpora = t.get("corpora", {})
+    if corpus_id not in corpora:
+        known = ", ".join(sorted(corpora.keys()))
+        raise KeyError(
+            f"Unknown corpus profile {corpus_id!r}. "
+            f"Set CLIMATE_CORPUS_PROFILE to one of: {known}"
+        )
+    return corpora[corpus_id]
 
 
 @lru_cache(maxsize=1)
 def get_settings() -> AppSettings:
     base_dir = Path(__file__).resolve().parent
     root_dir = base_dir.parent
-    cfg_path = base_dir / "config" / "app.defaults.toml"
-    raw = cfg_path.read_bytes()
-    t = tomllib.loads(raw.decode("utf-8"))
+    cfg_env = os.environ.get("CLIMATE_CONFIG_PATH", "").strip()
+    cfg_path = Path(cfg_env).resolve() if cfg_env else _default_config_path(base_dir)
+    t = _load_toml(cfg_path)
 
-    paths = t["paths"]
-    chroma = t["chroma"]
-    retrieval = t["retrieval"]
-    indexing = t["indexing"]
-    embed = t["embed"]
-    llm = t["llm"]
-    pdf = t["pdf"]
-    ui = t["ui"]
+    corpus_id = _active_corpus_id(t)
+    corpus = _corpus_section(t, corpus_id)
+    ui = corpus["ui"]
     u_side = ui["sidebar"]
     u_pan = ui["panels"]
     u_msg = ui["messages"]
     u_hist = ui["chat_history"]
 
+    retrieval = t["retrieval"]
+    indexing = t["indexing"]
+    embed = t["embed"]
+    llm = t["llm"]
+    pdf = t["pdf"]
+
+    pdf_rel = str(corpus.get("pdf", "")).strip()
+    system_prompt_rel = str(corpus.get("system_prompt", "prompts/system_rag_json.txt")).strip()
+
     return AppSettings(
         root_dir=root_dir,
         base_dir=base_dir,
-        html_path=_resolve_path(root_dir, paths["html"]),
-        pdf_path=_resolve_path(root_dir, paths["pdf"]),
-        chroma_dir=str(_resolve_path(root_dir, paths["chroma_dir"])),
-        collection_name=chroma["collection_name"],
+        corpus_id=corpus_id,
+        corpus_label=str(corpus.get("label", corpus_id)),
+        html_path=_resolve_path(root_dir, str(corpus["html"])),
+        pdf_path=_resolve_path(root_dir, pdf_rel) if pdf_rel else Path(),
+        chroma_dir=str(_resolve_path(root_dir, str(corpus["chroma_dir"]))),
+        collection_name=str(corpus["collection_name"]),
+        html_format=str(corpus.get("html_format", "cabook")),
+        system_prompt_path=(base_dir / system_prompt_rel).resolve(),
         top_k=int(retrieval["top_k"]),
         max_distance=float(retrieval["max_distance"]),
         indexing_batch_size=int(indexing["batch_size"]),

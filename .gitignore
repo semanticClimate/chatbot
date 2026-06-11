@@ -6,7 +6,9 @@ __pycache__/
 *.pyc
 *.db
 chroma_db/
+chroma_db_ipcc_syr/
 .remote-test-runtime/
 .env.remote-test
-web_client/tunnel-api-base.txt
+frontend/tunnel-api-base.txt
 .quick-tunnel-runtime/
+temp

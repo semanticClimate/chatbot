@@ -123,6 +123,94 @@ def _format_section_number(counters: List[int], level: int) -> str:
 
 # ── format detection ──────────────────────────────────────────────────────────
 
+_IPCC_PARA_ID_RE = re.compile(r"^.+_p\d+$")
+_IPCC_CONTAINER_CLASS_RE = re.compile(r"h[123]-container")
+
+
+def _is_ipcc_semantic_format(soup: BeautifulSoup) -> bool:
+    """IPCC SYR HTML: h*-container sections and/or paragraphs with {section}_pN ids."""
+    if soup.select_one('[class*="h1-container"], [class*="h2-container"], [class*="h3-container"]'):
+        return True
+    for p in soup.find_all("p", id=True):
+        if _IPCC_PARA_ID_RE.match(p.get("id", "")):
+            return True
+    return False
+
+
+def _ipcc_section_titles(soup: BeautifulSoup) -> dict[str, str]:
+    titles: dict[str, str] = {}
+    for container in soup.find_all("div", class_=True):
+        classes = " ".join(container.get("class", []))
+        if not _IPCC_CONTAINER_CLASS_RE.search(classes):
+            continue
+        sec_id = container.get("id", "").strip()
+        if not sec_id:
+            continue
+        heading = container.find(["h1", "h2", "h3"])
+        if heading:
+            titles[sec_id] = heading.get_text(separator=" ", strip=True)
+        else:
+            titles.setdefault(sec_id, sec_id)
+    return titles
+
+
+def _parse_ipcc_paragraph_chunks(soup: BeautifulSoup) -> List[ParagraphChunk]:
+    """One chunk per <p id=\"{section}_pN\"> in IPCC semantic HTML."""
+    titles = _ipcc_section_titles(soup)
+    chunks: List[ParagraphChunk] = []
+    seen_ids: set[str] = set()
+
+    for p in soup.find_all("p", id=True):
+        anchor_id = p.get("id", "").strip()
+        if not _IPCC_PARA_ID_RE.match(anchor_id):
+            continue
+        if anchor_id in seen_ids:
+            continue
+        seen_ids.add(anchor_id)
+
+        section, _, idx_raw = anchor_id.rpartition("_p")
+        try:
+            para_index = int(idx_raw) - 1
+        except ValueError:
+            continue
+        if para_index < 0:
+            continue
+
+        text = p.get_text(separator=" ", strip=True)
+        if len(text) < MIN_PARA_CHARS:
+            continue
+
+        title = titles.get(section, section)
+        chunk_id = anchor_id.replace(" ", "_")
+        header = f"[§ {section} — {title}]"
+        chunks.append(ParagraphChunk(
+            chunk_id=chunk_id,
+            anchor_id=anchor_id,
+            document=f"{header}\n{text}",
+            section_number=section,
+            section_title=title,
+            para_index=para_index,
+            heading_id=section,
+        ))
+    return chunks
+
+
+def _annotate_ipcc_format(soup: BeautifulSoup) -> str:
+    """Preserve existing paragraph ids; stamp section markers for viewer fallback."""
+    for container in soup.find_all("div", class_=True):
+        classes = " ".join(container.get("class", []))
+        if not _IPCC_CONTAINER_CLASS_RE.search(classes):
+            continue
+        sec_id = container.get("id", "").strip()
+        if not sec_id:
+            continue
+        container["data-section-number"] = sec_id
+        existing = container.get("class", [])
+        if "ca-section" not in existing:
+            container["class"] = existing + ["ca-section"]
+    return str(soup)
+
+
 def _is_nested_section_format(soup: BeautifulSoup) -> bool:
     root = find_book_root(soup)
     sections_with_level = [
@@ -424,14 +512,24 @@ def _section_paragraphs_from_format_B(soup: BeautifulSoup) -> List[Tuple[str, st
     return results
 
 
-def parse_html_to_paragraph_chunks(path: Path | str) -> List[ParagraphChunk]:
+def parse_html_to_paragraph_chunks(
+    path: Path | str,
+    *,
+    html_format: str | None = None,
+) -> List[ParagraphChunk]:
     """
     Parse the book HTML and return ONE ParagraphChunk per paragraph.
     This is the main entry point for the new RAG pipeline.
+
+    html_format: ``cabook`` (default auto-detect), ``ipcc``, or ``auto``.
     """
-    html  = load_html_file(path)
-    soup  = BeautifulSoup(html, "html.parser")
+    html = load_html_file(path)
+    soup = BeautifulSoup(html, "html.parser")
     chunks: List[ParagraphChunk] = []
+
+    fmt = (html_format or "auto").strip().lower()
+    if fmt == "ipcc" or (fmt == "auto" and _is_ipcc_semantic_format(soup)):
+        return _parse_ipcc_paragraph_chunks(soup)
 
     if _is_nested_section_format(soup):
         # For Format A: fall back to section-level → split by double newline
@@ -473,7 +571,7 @@ def parse_html_to_paragraph_chunks(path: Path | str) -> List[ParagraphChunk]:
 
 # ── ANNOTATE HTML — injects anchor IDs per paragraph ─────────────────────────
 
-def annotate_html_with_section_ids(html: str) -> str:
+def annotate_html_with_section_ids(html: str, *, html_format: str | None = None) -> str:
     """
     1. Assigns §-numbers to headings (same as before).
     2. NEW: Injects   id="para-{section}-{idx}"   on every paragraph element
@@ -481,6 +579,9 @@ def annotate_html_with_section_ids(html: str) -> str:
     3. Wraps each section in a ca-section div for fallback section-level highlighting.
     """
     soup = BeautifulSoup(html, "html.parser")
+    fmt = (html_format or "auto").strip().lower()
+    if fmt == "ipcc" or (fmt == "auto" and _is_ipcc_semantic_format(soup)):
+        return _annotate_ipcc_format(soup)
     if _is_nested_section_format(soup):
         return _annotate_format_A(soup)
     return _annotate_format_B_para(soup)
@@ -634,13 +735,15 @@ def parse_html_path_to_chunks(
     path: Path | str,
     chunk_size: int,
     chunk_overlap: int,
+    *,
+    html_format: str | None = None,
 ) -> List[IndexedChunk]:
     """
     Legacy entry point — returns IndexedChunk list.
     Now backed by paragraph-level chunking; chunk_size / chunk_overlap ignored
     (each paragraph IS one chunk already).
     """
-    para_chunks = parse_html_to_paragraph_chunks(path)
+    para_chunks = parse_html_to_paragraph_chunks(path, html_format=html_format)
     out: List[IndexedChunk] = []
     for i, pc in enumerate(para_chunks):
         out.append(IndexedChunk(

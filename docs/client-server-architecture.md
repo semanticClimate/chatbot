@@ -15,7 +15,7 @@ This diagram shows the end-to-end architecture across the browser client, web UI
 flowchart LR
   subgraph UserSide["Client Side"]
     Browser[Browser]
-    WebClient[Static Web Client<br/>web_client]
+    WebClient[Static Frontend<br/>frontend]
     Browser --> WebClient
   end
 
@@ -40,7 +40,7 @@ flowchart LR
 
 ## User client (browser) detail
 
-This expands the static `web_client/` layer: UI surfaces, modules, persisted API base URL, optional tunnel hint file, and HTTP endpoints used from the configured API base.
+This expands the static `frontend/` layer: UI surfaces, modules, persisted API base URL, optional tunnel hint file, and HTTP endpoints used from the configured API base.
 
 ![User client (browser) detail (PNG)](architecture/architecture-user-client.png)
 
@@ -50,7 +50,7 @@ flowchart TB
     subgraph Runtime["Runtime"]
       Origin["Page origin — where index.html is served<br/>(e.g. http://127.0.0.1:8081 or https://….trycloudflare.com)"]
       Modules["ES modules from same origin<br/>main.js wires UI → api/state/render/examples"]
-      Storage["localStorage key: climate_web_client_api_base<br/>(saved API base URL)"]
+      Storage["localStorage key: climate_frontend_api_base<br/>(saved API base URL)"]
       Hint["Optional fetch: tunnel-api-base.txt<br/>same-origin, cache-busted on tunnel hosts"]
       Origin --> Modules
       Modules --> Storage

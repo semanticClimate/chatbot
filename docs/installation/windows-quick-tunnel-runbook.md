@@ -176,9 +176,9 @@ Start-LoggedProcess -Title "API" `
 
 Start-Sleep -Seconds 2  # Give API a moment to initialize before next steps.
 
-# Start static web server process from web_client directory.
+# Start static frontend server process from frontend directory.
 Start-LoggedProcess -Title "Web UI" `
-    -Command ". `"$VenvActivate`"; cd `"$RepoRoot\web_client`"; python -m http.server $WebPort" `
+    -Command ". `"$VenvActivate`"; cd `"$RepoRoot\frontend`"; python -m http.server $WebPort" `
     -LogPath $WebLog -PidFile $WebPidFile
 
 Start-Sleep -Seconds 2  # Give web server a moment to bind port 8081.

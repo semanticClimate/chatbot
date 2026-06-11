@@ -56,7 +56,7 @@ fi
 
 # Avoid leaving stale copy-paste URL files from a prior run.
 rm -f "${RuntimeDir}/api-public-url.txt" "${RuntimeDir}/web-public-url.txt"
-rm -f "${RepoRoot}/web_client/tunnel-api-base.txt"
+rm -f "${RepoRoot}/frontend/tunnel-api-base.txt"
 
 # Per-process log files for easier troubleshooting.
 ApiLog="${RuntimeDir}/api.log"
@@ -279,7 +279,7 @@ echo "API healthy."
 
 # Start static web server locally using the venv interpreter directly.
 start_logged_process "Web UI" \
-    "cd \"${RepoRoot}/web_client\" && exec \"${VenvPython}\" -m http.server ${WebPort}" \
+    "cd \"${RepoRoot}/frontend\" && exec \"${VenvPython}\" -m http.server ${WebPort}" \
     "${WebLog}" "${WebPidFile}"
 
 sleep 2  # Allow web server startup before tunnels.
@@ -316,7 +316,7 @@ echo ""
 # When cloudflared never prints a URL in time, these contain a clear placeholder (not a valid API URL).
 # Hint file served by the static web root so remote browsers default to the API tunnel URL
 # (127.0.0.1 would point at the viewer's machine, not Team A's API).
-WebTunnelHint="${RepoRoot}/web_client/tunnel-api-base.txt"
+WebTunnelHint="${RepoRoot}/frontend/tunnel-api-base.txt"
 
 if [[ -n "${ApiPublic}" ]]; then
     printf '%s\n' "${ApiPublic}" >"${RuntimeDir}/api-public-url.txt"
@@ -345,7 +345,7 @@ if [[ -z "${WebPublic}" || -z "${ApiPublic}" ]]; then
 else
     # Team B only needs web URL; API URL is prefilled from tunnel-api-base.txt when tunnels succeed.
     echo "Team B should open: ${WebPublic}"
-    echo "API base URL defaults to: ${ApiPublic} (served as web_client/tunnel-api-base.txt)"
+    echo "API base URL defaults to: ${ApiPublic} (served as frontend/tunnel-api-base.txt)"
     echo "(Also saved under ${RuntimeDir}/api-public-url.txt for copying.)"
 fi
 

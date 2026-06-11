@@ -2,7 +2,7 @@
 
 **Canonical index:** [`docs/web-client-guidelines.md`](web-client-guidelines.md) (layout + browser rules + GitHub Issues). This file is the **browser / content / i18n** slice only.
 
-**Read this before changing anything under [`web_client/`](../web_client/)** (HTML, CSS, or JS modules). Treat it as non-negotiable unless the product owner explicitly changes these rules.
+**Read this before changing anything under [`frontend/`](../frontend/)** (HTML, CSS, or JS modules). Treat it as non-negotiable unless the product owner explicitly changes these rules.
 
 ---
 
@@ -41,7 +41,7 @@
 
 ## Internationalization (mandatory shape)
 
-- **No user-visible English-only literals** added in JS/HTML for strings that ship in the chrome (buttons, hints, placeholders, status line, empty states, accessibility labels tied to visuals). Route them through **[`web_client/js/ui_strings.js`](../web_client/js/ui_strings.js)** with entries for **`en`, `fr`, `es`, `pt`, `hi`**.
+- **No user-visible English-only literals** added in JS/HTML for strings that ship in the chrome (buttons, hints, placeholders, status line, empty states, accessibility labels tied to visuals). Route them through **[`frontend/js/ui_strings.js`](../frontend/js/ui_strings.js)** with entries for **`en`, `fr`, `es`, `pt`, `hi`**.
 - **`applyShellUiStrings(lang)`** must run on load and whenever **chat language** changes so labels, placeholders, **`document.title`**, **`html lang`**, and language-select option captions stay coherent.
 - **Chat language selector** persists to **`climate_chat_language`** (`lang_prefs.js`); **`POST /ask`** sends **`response_language`** in sync with it.
 - **The student book** served in **`#bookFrame`** stays **English**; do not automate translation of that HTML asset in the client.
@@ -68,7 +68,8 @@
 | Key | Purpose |
 | --- | --- |
 | `climate_chat_language` | UI + API response language (`lang_prefs.js`) |
-| `climate_web_client_api_base` | Stored API URL (`main.js`) |
+| `climate_frontend_api_base` | Stored API URL (`main.js`) |
+| Legacy **`climate_web_client_api_base`** | Migrated once on read into `climate_frontend_api_base` |
 | Legacy **`climate_web_client_example_lang`** | Migrated once into chat language |
 
 ---

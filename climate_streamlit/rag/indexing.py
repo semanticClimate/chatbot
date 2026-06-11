@@ -55,7 +55,12 @@ def build_knowledge_base_core(
     if not html_path.is_file():
         raise FileNotFoundError(f"HTML book not found at `{html_path}`")
 
-    indexed = parse_html_path_to_chunks(html_path, chunk_size=0, chunk_overlap=0)
+    indexed = parse_html_path_to_chunks(
+        html_path,
+        chunk_size=0,
+        chunk_overlap=0,
+        html_format=settings.html_format,
+    )
     if not indexed:
         raise RuntimeError("No paragraphs extracted from HTML.")
 

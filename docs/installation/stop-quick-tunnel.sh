@@ -82,6 +82,6 @@ cleanup_port_listen "${ApiPort}"
 cleanup_port_listen "${WebPort}"
 
 # Remove tunnel hint so plain local http.server doesn't serve a stale API URL.
-rm -f "${RepoRoot}/web_client/tunnel-api-base.txt"
+rm -f "${RepoRoot}/frontend/tunnel-api-base.txt"
 
 echo "Done."

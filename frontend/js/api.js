@@ -62,6 +62,17 @@ export async function getHealth(baseUrl) {
 /**
  * @param {string} baseUrl
  */
+export async function getCorpus(baseUrl) {
+  const root = trimBaseUrl(baseUrl);
+  const res = await fetch(`${root}/corpus`);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.detail || res.statusText);
+  return data;
+}
+
+/**
+ * @param {string} baseUrl
+ */
 export async function getReady(baseUrl) {
   const root = trimBaseUrl(baseUrl);
   const res = await fetch(`${root}/ready`);

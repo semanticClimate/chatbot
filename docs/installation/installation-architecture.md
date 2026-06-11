@@ -139,7 +139,7 @@ Use this when you only need lightweight verification with yourself or one other 
    - Prefer `python -m uvicorn` over bare `uvicorn` if `which uvicorn` points at an older Python (e.g. missing `tomllib`).
 
 3. **Run web UI locally**  
-   - `cd web_client` → `python -m http.server 8081`.  
+   - `cd frontend` → `python -m http.server 8081`.  
    - Browser: `http://127.0.0.1:8081`, set API base to `http://127.0.0.1:8800`.  
    - If the browser blocks requests: `export CLIMATE_API_CORS_ORIGINS=http://127.0.0.1:8081` and restart the API.
 
@@ -154,11 +154,11 @@ Use this when you only need lightweight verification with yourself or one other 
    - For a full Cloudflare Tunnel walkthrough, see [`docs/installation/cloudflare-tunnel-testing.md`](./cloudflare-tunnel-testing.md).
 
 6. **Version control**  
-   - Commit from a clean branch; tag or document which revision includes `fastapi_app/` and `web_client/` if others will reproduce.
+   - Commit from a clean branch; tag or document which revision includes `fastapi_app/` and `frontend/` if others will reproduce.
 
 ### GitHub Pages (static UI only, optional later)
 
-1. Enable GitHub Pages on the repo (e.g. publish `web_client/` or `docs/` per GitHub settings).  
+1. Enable GitHub Pages on the repo (e.g. publish `frontend/` or `docs/` per GitHub settings).  
 2. Host **FastAPI elsewhere** with **HTTPS** (Pages is HTTPS; mixed `http` API calls are blocked).  
 3. Set **CORS** on the API to your Pages origin.  
 4. Configure or document the **HTTPS API base URL** in the deployed client (no secrets in the repo).

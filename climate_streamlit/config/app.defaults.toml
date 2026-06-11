@@ -1,10 +1,101 @@
-[paths]
+# Shared runtime settings. Corpus-specific paths and UI copy live under [corpora.*].
+# Select active corpus: CLIMATE_CORPUS_PROFILE=cabook|ipcc_syr (default: cabook)
+# Override this file: CLIMATE_CONFIG_PATH=/path/to/custom.toml
+
+[corpus]
+active = "cabook"
+
+[corpora.cabook]
+label = "Climate Academy Student Book"
 html = "input/full_student_book.html"
 pdf = "input/2025_10/climate_academy_book.pdf"
 chroma_dir = "chroma_db"
-
-[chroma]
 collection_name = "climate_academy_paragraphs_v2"
+html_format = "cabook"
+system_prompt = "prompts/system_rag_json.txt"
+
+[corpora.cabook.ui]
+page_title = "Climate Academy Chatbot"
+page_icon = "🌍"
+layout = "wide"
+initial_sidebar_state = "expanded"
+book_viewer_height = 760
+spinner_text = "Thinking..."
+
+[corpora.cabook.ui.chat_history]
+min_height = 360
+max_height = 680
+base = 170
+per_message = 105
+
+[corpora.cabook.ui.sidebar]
+chats_heading = "Chats"
+new_chat = "➕ New Chat"
+clear_chat = "🧹 Clear Current Chat"
+delete_chat = "🗑️ Delete Current Chat"
+
+[corpora.cabook.ui.panels]
+chat_title = "🌍 Climate Academy Assistant"
+chat_subtitle = "Ask a question and get grounded answers with paragraph-level sources."
+book_title = "📖 Climate Academy Student Book"
+book_subtitle = "Matthew Pye · 2025 · Click <b>View Source</b> on any answer card to jump to the exact paragraph."
+section_label_conversation = "Conversation"
+reset_book = "📖 Reset Book View"
+
+[corpora.cabook.ui.messages]
+welcome = """Hello! I'm the Climate Academy Assistant.
+
+Ask me anything about the book. Answers are combined into clear paragraphs, and each paragraph has numbered source chips. Click a chip (1, 2, 3...) to jump to that source in the book."""
+
+disclaimer_template = "Answers based solely on the Climate Academy Student Book.<br>Embeddings: {embed_model} · LLM: {llm_model}"
+
+chat_input_placeholder = "Ask about climate change..."
+
+[corpora.ipcc_syr]
+label = "IPCC AR6 Synthesis Report — Longer Report"
+html = "../amilib/test/resources/ipcc/syr/longer-report/html_with_ids.html"
+pdf = ""
+chroma_dir = "chroma_db_ipcc_syr"
+collection_name = "ipcc_syr_paragraphs_v1"
+html_format = "ipcc"
+system_prompt = "prompts/system_rag_ipcc_json.txt"
+
+[corpora.ipcc_syr.ui]
+page_title = "IPCC SYR Assistant"
+page_icon = "🌡️"
+layout = "wide"
+initial_sidebar_state = "expanded"
+book_viewer_height = 760
+spinner_text = "Thinking..."
+
+[corpora.ipcc_syr.ui.chat_history]
+min_height = 360
+max_height = 680
+base = 170
+per_message = 105
+
+[corpora.ipcc_syr.ui.sidebar]
+chats_heading = "Chats"
+new_chat = "➕ New Chat"
+clear_chat = "🧹 Clear Current Chat"
+delete_chat = "🗑️ Delete Current Chat"
+
+[corpora.ipcc_syr.ui.panels]
+chat_title = "🌡️ IPCC SYR Assistant"
+chat_subtitle = "Ask about the IPCC AR6 Synthesis Report (Longer Report) with paragraph-level citations."
+book_title = "📄 IPCC AR6 SYR — Longer Report"
+book_subtitle = "IPCC · AR6 · Click <b>View Source</b> on any answer card to jump to the cited paragraph."
+section_label_conversation = "Conversation"
+reset_book = "📄 Reset Document View"
+
+[corpora.ipcc_syr.ui.messages]
+welcome = """Hello! I'm the IPCC SYR Assistant.
+
+Ask about the IPCC Sixth Assessment Synthesis Report (Longer Report). Answers cite numbered paragraph sources — click a chip to jump to that paragraph in the document."""
+
+disclaimer_template = "Answers based solely on the IPCC AR6 Synthesis Report (Longer Report).<br>Embeddings: {embed_model} · LLM: {llm_model}"
+
+chat_input_placeholder = "Ask about IPCC climate science..."
 
 [retrieval]
 top_k = 14
@@ -25,40 +116,3 @@ history_turns = 8
 [pdf]
 max_query_words = 14
 keyword_max_words = 24
-
-[ui]
-page_title = "Climate Academy Chatbot"
-page_icon = "🌍"
-layout = "wide"
-initial_sidebar_state = "expanded"
-book_viewer_height = 760
-spinner_text = "Thinking..."
-
-[ui.chat_history]
-min_height = 360
-max_height = 680
-base = 170
-per_message = 105
-
-[ui.sidebar]
-chats_heading = "Chats"
-new_chat = "➕ New Chat"
-clear_chat = "🧹 Clear Current Chat"
-delete_chat = "🗑️ Delete Current Chat"
-
-[ui.panels]
-chat_title = "🌍 Climate Academy Assistant"
-chat_subtitle = "Ask a question and get grounded answers with paragraph-level sources."
-book_title = "📖 Climate Academy Student Book"
-book_subtitle = "Matthew Pye · 2025 · Click <b>View Source</b> on any answer card to jump to the exact paragraph."
-section_label_conversation = "Conversation"
-reset_book = "📖 Reset Book View"
-
-[ui.messages]
-welcome = """Hello! I'm the Climate Academy Assistant.
-
-Ask me anything about the book. Answers are combined into clear paragraphs, and each paragraph has numbered source chips. Click a chip (1, 2, 3...) to jump to that source in the book."""
-
-disclaimer_template = "Answers based solely on the Climate Academy Student Book.<br>Embeddings: {embed_model} · LLM: {llm_model}"
-
-chat_input_placeholder = "Ask about climate change..."

@@ -143,7 +143,7 @@ def ask_groq(
     context = "\n\n---\n\n".join(context_parts)
 
     rl = _normalize_response_language(response_language)
-    template = load_system_prompt_template(settings.base_dir)
+    template = load_system_prompt_template(settings.system_prompt_path)
     system = template.format(context=context) + _language_mode_appendix(rl)
     messages = [{"role": "system", "content": system}]
     for t in history[-settings.llm_history_turns :]:

@@ -201,7 +201,7 @@ echo "API healthy."
 
 # Start static web server locally using the venv interpreter directly.
 start_logged_process "Web UI" \
-    "cd \"${RepoRoot}/web_client\" && \"${VenvPython}\" -m http.server ${WebPort}" \
+    "cd \"${RepoRoot}/frontend\" && \"${VenvPython}\" -m http.server ${WebPort}" \
     "${WebLog}" "${WebPidFile}"
 
 sleep 2  # Allow web server startup before tunnels.

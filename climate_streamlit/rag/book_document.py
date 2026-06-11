@@ -52,7 +52,7 @@ def build_annotated_book_document(settings: AppSettings) -> str:
     """
     html_file = settings.html_path
     raw = html_file.read_text(encoding="utf-8")
-    annotated = annotate_html_with_section_ids(raw)
+    annotated = annotate_html_with_section_ids(raw, html_format=settings.html_format)
     annotated = inline_local_images(annotated, html_file.parent)
 
     pkg_dir = Path(__file__).resolve().parent.parent

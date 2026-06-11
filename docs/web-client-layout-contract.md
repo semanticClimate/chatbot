@@ -2,9 +2,9 @@
 
 **Canonical index:** [`docs/web-client-guidelines.md`](web-client-guidelines.md) (layout + browser rules + GitHub Issues). This file is the **layout** slice only.
 
-This document freezes the **structural layout** of the Climate Academy chat (`web_client/`): named regions, breakpoints, scroll ownership, and min/max sizing. **Do not ship visual tweaks that reshuffle regions or alter these breakpoints unless this file is updated in the same change.**
+This document freezes the **structural layout** of the Climate Academy chat (`frontend/`): named regions, breakpoints, scroll ownership, and min/max sizing. **Do not ship visual tweaks that reshuffle regions or alter these breakpoints unless this file is updated in the same change.**
 
-Implementation lives primarily in [`web_client/css/layout.css`](../web_client/css/layout.css), with book and composer details in [`web_client/css/components.css`](../web_client/css/components.css) and spacing/radii in [`web_client/css/tokens.css`](../web_client/css/tokens.css). Markup: [`web_client/index.html`](../web_client/index.html).
+Implementation lives primarily in [`frontend/css/layout.css`](../frontend/css/layout.css), with book and composer details in [`frontend/css/components.css`](../frontend/css/components.css) and spacing/radii in [`frontend/css/tokens.css`](../frontend/css/tokens.css). Markup: [`frontend/index.html`](../frontend/index.html).
 
 ---
 
@@ -108,7 +108,7 @@ Changing any of these thresholds requires updating this table and validating CHA
 
 ## 6. Design tokens touching layout (subset)
 
-Canonical definitions: [`tokens.css`](../web_client/css/tokens.css).
+Canonical definitions: [`tokens.css`](../frontend/css/tokens.css).
 
 | Token | Typical use in shell |
 | --- | --- |

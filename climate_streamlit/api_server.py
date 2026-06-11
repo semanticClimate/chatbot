@@ -77,7 +77,12 @@ async def lifespan(app: FastAPI):
     logging.basicConfig(level=logging.INFO)
     settings = get_settings()
     app.state.settings = settings
-    logger.info("Loading Chroma index from %s", settings.chroma_dir)
+    logger.info(
+        "Corpus profile %s (%s); Chroma index %s",
+        settings.corpus_id,
+        settings.corpus_label,
+        settings.chroma_dir,
+    )
     collection, embedder = build_knowledge_base_core(
         settings,
         progress_callback=lambda f, t: logger.info("Indexing: %s", t),
@@ -115,7 +120,7 @@ def root() -> HTMLResponse:
 <title>Climate Academy API</title>
 <h1>Climate Academy API</h1>
 <p>This host is the <strong>API server</strong>, not the chat page in your browser.</p>
-<p>Open the <strong>web client</strong> URL you were given (another
+<p>Open the <strong>frontend</strong> URL you were given (another
 <code>*.trycloudflare.com</code> hostname) to use the chat UI.</p>
 <p>Checks: <a href="/health">/health</a> · <a href="/ready">/ready</a></p>
 """,
@@ -125,6 +130,22 @@ def root() -> HTMLResponse:
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/corpus")
+def corpus_info(request: Request) -> dict[str, Any]:
+    """Active source document profile (set via CLIMATE_CORPUS_PROFILE)."""
+    s: AppSettings = request.app.state.settings
+    return {
+        "corpus_id": s.corpus_id,
+        "corpus_label": s.corpus_label,
+        "html_format": s.html_format,
+        "html_path": str(s.html_path),
+        "html_exists": s.html_path.is_file(),
+        "collection_name": s.collection_name,
+        "chroma_dir": s.chroma_dir,
+        "has_pdf": bool(s.pdf_path) and s.pdf_path.is_file(),
+    }
 
 
 @app.get("/logs/export")
@@ -153,6 +174,8 @@ def ready(request: Request) -> dict[str, Any]:
         "ready": bool(html_ok and n > 0),
         "chunk_count": n,
         "html_exists": html_ok,
+        "corpus_id": s.corpus_id,
+        "corpus_label": s.corpus_label,
     }
 
 
