@@ -229,7 +229,7 @@
 
 /* If encyclopedia is inside a modal wrapper */
 .encyclopedia-modal {
-  width: min(1100px, 92vw);
+  width: min(1050px, 92vw);
   max-height: 92vh;
   height: 92vh;
   display: flex;
@@ -405,7 +405,7 @@
 
 /* External modal customizations */
 .external-modal {
-  width: min(1100px, 92vw);
+  width: min(1050px, 92vw);
   max-height: 92vh;
   height: 92vh;
 }
