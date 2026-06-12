@@ -229,13 +229,13 @@ function showTermPreviewTooltip(text, x, y, visible) {
 
   // Position the tooltip relative to the viewport, offset slightly from cursor
   const vx = frameRect.left + x;
-  const vy = frameRect.top  + y;
+  const vy = frameRect.top + y;
 
   tip.textContent = text;
   // Place above the hovered term; shift right a little
   const GAP = 12;
   tip.style.left = `${vx + GAP}px`;
-  tip.style.top  = `${vy - GAP}px`;
+  tip.style.top = `${vy - GAP}px`;
   tip.classList.add("app-tooltip-visible");
 
   // Auto-position: if the tip would overflow right, flip left
@@ -268,7 +268,7 @@ function openExternalLinkModal(apiBase, url, source) {
   // ── Hierarchical navigation: if encyclopedia is open, hide it (don't unload)
   // and stamp a flag so the Back button can restore it without reloading.
   const encOverlay = document.getElementById("encyclopediaOverlay");
-  const encDialog  = document.getElementById("encyclopediaModal");
+  const encDialog = document.getElementById("encyclopediaModal");
   if (encDialog && encDialog.classList.contains("help-visible")) {
     dialog.dataset.fromEncyclopedia = "1";
     if (encOverlay) encOverlay.classList.remove("help-visible");
@@ -389,12 +389,10 @@ async function refreshView(apiBase) {
   const origin = apiOriginFromBase(apiBase);
   renderThread(thread, getConversation(), (sourceId, sources) => {
     const src = sources.find((s) => s.source_id === sourceId);
-    // COMMENTED OUT: Store sources for display in modal
-    // currentSources = sources;
-    // COMMENTED OUT: Open the external modal with the selected source
-    // if (src) {
-    //   showSourceInModal(src);
-    // }
+    const sourcesDetailEl = document.getElementById("sourcesDetail");
+    if (sourcesDetailEl && src) {
+      renderSourceDetail(sourcesDetailEl, src);
+    }
     jumpBookToSource(src, origin);
   });
   scrollThreadToBottom();
@@ -586,6 +584,10 @@ async function wire() {
   btnClear.addEventListener("click", () => {
     clearConversation();
     setStatus(statusLine, t("chatCleared"));
+    const sourcesDetailEl = document.getElementById("sourcesDetail");
+    if (sourcesDetailEl) {
+      renderSourceDetail(sourcesDetailEl, null);
+    }
     refreshView(apiInput.value.trim());
   });
 
@@ -665,7 +667,7 @@ async function wire() {
       const tempConv = prior.slice();
       tempConv.push({ role: "user", content: q });
       tempConv.push({ role: "assistant", content: "Thinking...", isThinking: true });
-      renderThread($("thread"), tempConv, () => {});
+      renderThread($("thread"), tempConv, () => { });
       scrollThreadToBottom();
 
       const lang = langSelect
@@ -767,6 +769,13 @@ document.addEventListener("DOMContentLoaded", () => {
     toggle.addEventListener('click', () => {
       sidebar.classList.toggle('expanded');
       sidebar.classList.toggle('collapsed');
+    });
+  }
+  const overlay = document.getElementById('sidebarOverlay');
+  if (sidebar && overlay) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('collapsed');
+      sidebar.classList.add('expanded');
     });
   }
   wire().catch((err) => {

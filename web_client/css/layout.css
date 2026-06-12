@@ -511,6 +511,10 @@ body {
   color: var(--color-muted);
 }
 
+.sidebar-overlay {
+  display: none;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    Mobile Responsive Layout
    ═══════════════════════════════════════════════════════════════ */
@@ -531,8 +535,7 @@ body {
   }
 
   .app-content {
-    padding-left: 64px;
-    /* Space for the collapsed hamburger icon */
+    padding-left: var(--space-md);
     padding-right: var(--space-md);
     padding-top: var(--space-md);
     padding-bottom: var(--space-md);
@@ -543,13 +546,26 @@ body {
 
   .app-header {
     margin-bottom: var(--space-md);
+    padding-left: 56px;
   }
 
   /* Sidebar overlay logic */
   .sidebar {
-    position: absolute;
+    position: fixed;
     z-index: 1000;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .sidebar.collapsed ~ .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 999;
   }
 
   /* On mobile, swap meaning of expanded/collapsed to match initial HTML state without JS changes */
@@ -578,11 +594,11 @@ body {
   .sidebar.collapsed {
     width: 250px;
     padding: var(--space-lg) var(--space-md) var(--space-lg);
-    height: 100%;
+    height: 100vh;
   }
 
   .sidebar.collapsed .sidebar-toggle {
-    display: none;
+    display: flex;
   }
 
   .sidebar.collapsed .sidebar-title,
@@ -594,6 +610,8 @@ body {
   }
 
   .sidebar.collapsed .sidebar-actions {
+    flex: none;
+    justify-content: flex-start;
     padding-bottom: var(--space-xl);
   }
 
