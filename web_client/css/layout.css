@@ -519,6 +519,7 @@ body {
    Mobile Responsive Layout
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
+
   /* Allow the document to scroll naturally on mobile (avoid nested scroll regions). */
   html,
   body {
@@ -556,7 +557,7 @@ body {
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
   }
 
-  .sidebar.collapsed ~ .sidebar-overlay {
+  .sidebar.collapsed~.sidebar-overlay {
     display: block;
     position: fixed;
     top: 0;
@@ -604,6 +605,7 @@ body {
   .sidebar.collapsed .sidebar-title,
   .sidebar.collapsed .sidebar-actions {
     opacity: 1;
+    margin-bottom: 5rem;
     pointer-events: auto;
     height: auto;
     overflow: visible;
