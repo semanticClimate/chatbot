@@ -480,3 +480,11 @@
   width: auto;
   object-fit: contain;
 }
+
+#btnSend {
+  transition: all 0.2s ease;
+}
+
+#btnSend:hover {
+  opacity: 0.75;
+}

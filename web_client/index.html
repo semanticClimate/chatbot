@@ -29,16 +29,18 @@
         <div class="sidebar-title-word">Bot</div>
         <div class="sidebar-version">v1.1.0</div>
       </div>
-      <div class="sidebar-actions">
-        <button type="button" id="btnClear" class="btn btn-secondary sidebar-btn" data-i18n="btnClear">Clear
+      <div class="sidebar-actions ">
+        <button type="button" id="btnClear" class="btn btn-secondary sidebar-btn"
+          title="Clear the current chat conversation" data-i18n="btnClear">Clear
           chat</button>
         <button type="button" id="btnExportChat" class="btn btn-secondary sidebar-btn"
-          data-i18n="btnExportChat">Download
+          title="Download this conversation as a CSV file" data-i18n="btnExportChat">Download
           chat</button>
         <!-- COMMENTED OUT: Sources button
         <button type="button" id="btnSourcesView" class="btn btn-secondary sidebar-btn" data-i18n="sourcesHeading">Sources</button>
         -->
-        <button type="button" id="btnExportLogs" class="btn btn-secondary sidebar-btn" data-i18n="btnExportLogs">Server
+        <button type="button" id="btnExportLogs" class="btn btn-secondary sidebar-btn"
+          title="Download server diagnostic logs" data-i18n="btnExportLogs">Server
           logs</button>
       </div>
     </nav>
@@ -54,7 +56,7 @@
           </p>
         </div>
         <div class="app-header-end">
-          <button type="button" id="btnSettingsToggle" class="help-btn" aria-haspopup="dialog"
+          <button type="button" id="btnSettingsToggle" class="help-btn" title="Settings" aria-haspopup="dialog"
             aria-controls="settingsModal">
             <span class="sr-only" data-i18n="settingsHeading">Settings</span>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
@@ -65,7 +67,7 @@
               </path>
             </svg>
           </button>
-          <button type="button" id="btnDevToolsToggle" class="help-btn" aria-haspopup="dialog"
+          <button type="button" id="btnDevToolsToggle" class="help-btn" title="Developer Tools" aria-haspopup="dialog"
             aria-controls="healthModal">
             <span class="sr-only" data-i18n="btnHealth">Developer Tools</span>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
@@ -160,12 +162,13 @@
             <form id="composer" class="composer">
               <label class="sr-only" for="question" id="lblQuestionSr" data-i18n="srQuestionLabel">Your question</label>
               <textarea id="question" class="composer-input" rows="2" placeholder="Ask about the book…"
-                required></textarea>
+                title="Type your message" required></textarea>
               <!-- <div class="composer-actions">
                 <button type="submit" class="btn btn-primary" id="btnSend" data-i18n="btnSend">Send</button>
               </div> -->
               <div class="composer-actions">
-                <button type="submit" class="btn btn-primary" id="btnSend" aria-label="Send" title="Send">
+                <button type="submit" class="btn btn-primary" id="btnSend" title="Send a message" aria-label="Send"
+                  title="Send">
 
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -189,7 +192,8 @@
             <h2 class="panel-heading" id="bookHeadingEl"><img src="images/climate_academy.png"
                 alt="Climate Academy Logo" class="header-logo logo-ca" /><span data-i18n="bookHeading">Student
                 book</span></h2>
-            <button type="button" id="btnResetBook" class="btn btn-secondary" data-i18n="btnResetBook">
+            <button type="button" id="btnResetBook" title="Remove all book highlights" class="btn btn-secondary"
+              data-i18n="btnResetBook">
               Reset highlight
             </button>
           </div>
