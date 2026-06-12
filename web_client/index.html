@@ -161,8 +161,22 @@
               <label class="sr-only" for="question" id="lblQuestionSr" data-i18n="srQuestionLabel">Your question</label>
               <textarea id="question" class="composer-input" rows="2" placeholder="Ask about the book…"
                 required></textarea>
-              <div class="composer-actions">
+              <!-- <div class="composer-actions">
                 <button type="submit" class="btn btn-primary" id="btnSend" data-i18n="btnSend">Send</button>
+              </div> -->
+              <div class="composer-actions">
+                <button type="submit" class="btn btn-primary" id="btnSend" aria-label="Send" title="Send">
+
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+
+                    <path d="M22 2L11 13"></path>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+
+                  </svg>
+
+                </button>
               </div>
             </form>
             <p id="statusLine" class="status-line" role="status"></p>
