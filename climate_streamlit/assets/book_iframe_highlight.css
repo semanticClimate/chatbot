@@ -12,7 +12,31 @@ body {
     overflow-x: hidden;
 }
 
-h1 {
+<<<<<<< HEAD h1 {
+    font-size: 1.7em;
+    color: #1a3a2a;
+    margin-bottom: 0.3em;
+}
+
+h2 {
+    font-size: 1.35em;
+    color: #1a3a2a;
+    margin-top: 1.6em;
+}
+
+h3 {
+    font-size: 1.15em;
+    color: #2a4a3a;
+    margin-top: 1.4em;
+}
+
+h4 {
+    font-size: 1.05em;
+    color: #2a4a3a;
+    margin-top: 1.2em;
+}
+
+=======h1 {
     font-size: 1.7em;
     color: #1a3a2a;
     margin-bottom: 0.3em;
@@ -90,7 +114,7 @@ code {
     max-width: 100% !important;
 }
 
-img {
+>>>>>>>frontend img {
     height: auto !important;
     object-fit: contain;
     display: block;
