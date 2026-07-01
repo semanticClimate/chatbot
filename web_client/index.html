@@ -78,42 +78,78 @@
         </div>
       </header>
 
-      <section class="panel panel-settings" aria-label="Connection">
-        <h2 class="panel-heading" id="settingsHeadingEl" data-i18n="settingsHeading">Settings</h2>
-        <label class="field field-compact">
-          <span class="field-label" data-i18n="labelChatLang">Chat language</span>
-          <select id="chatLangSelect" class="field-input field-select field-select-compact"
-            aria-describedby="chatLangHint"></select>
-        </label>
-
-        <p id="chatLangHint" class="field-hint" data-i18n="hintChatLang">
-          Answers use this language only. Ask in the same language. The Climate Academy student book stays in English.
-        </p>
-
-        <!-- ** KEEP HIDDEN ** – the API URL input is intentionally hidden from most users -->
-        <label class="field hidden">
-          <span class="field-label" data-i18n="labelApiUrl">API base URL</span>
-          <input type="url" id="apiBaseUrl" class="field-input" data-i18n="placeholderApiUrl"
-            placeholder="http://127.0.0.1:8800" autocomplete="off" />
-        </label>
-
-        <div class="row-actions row-actions-primary">
-          <button type="button" id="btnHealth" class="btn btn-secondary" data-i18n="btnHealth">Check health</button>
-          <button type="button" id="btnClear" class="btn btn-secondary" data-i18n="btnClear">Clear chat</button>
+      <div id="settingsOverlay" class="help-overlay"></div>
+      <div id="settingsModal" class="help-modal" role="dialog" aria-modal="true" aria-labelledby="settingsHeadingEl">
+        <div class="help-modal-header">
+          <h2 class="help-modal-title" id="settingsHeadingEl" data-i18n="settingsHeading">Settings</h2>
+          <button type="button" class="help-close-btn" data-close-modal aria-label="Close">✕</button>
         </div>
+        <div class="help-modal-body">
+          <label class="field field-compact">
+            <span class="field-label" data-i18n="labelChatLang">Chat language</span>
+            <select id="chatLangSelect" class="field-input field-select field-select-compact"
+              aria-describedby="chatLangHint"></select>
+          </label>
+          <p id="chatLangHint" class="field-hint" data-i18n="hintChatLang">
+            Answers use this language only. Ask in the same language. The Climate Academy student book stays in English.
+          </p>
+        </div>
+      </div>
 
-        <details class="settings-more">
-          <summary class="settings-more-summary" data-i18n="exportCsvSummary">Export CSV…</summary>
-          <div class="row-actions row-actions-secondary">
-            <button type="button" id="btnExportChat" class="btn btn-secondary" data-i18n="btnExportChat">Download
-              chat</button>
-            <button type="button" id="btnExportLogs" class="btn btn-secondary" data-i18n="btnExportLogs">Server
-              logs</button>
+      <div id="healthOverlay" class="help-overlay"></div>
+      <div id="healthModal" class="help-modal" role="dialog" aria-modal="true" aria-labelledby="healthModalTitle">
+        <div class="help-modal-header">
+          <h2 class="help-modal-title" id="healthModalTitle" data-i18n="btnHealth">Developer Tools</h2>
+          <button type="button" class="help-close-btn" data-close-modal aria-label="Close">✕</button>
+        </div>
+        <div class="help-modal-body">
+          <div class="row-actions row-actions-primary">
+            <button type="button" id="btnHealth" class="btn btn-secondary" data-i18n="btnHealth">Check health</button>
           </div>
-        </details>
+          <p id="healthStatusLine" class="status-line" role="status"></p>
+        </div>
+      </div>
 
-        <p id="statusLine" class="status-line" role="status"></p>
-      </section>
+      <div id="externalOverlay" class="help-overlay"></div>
+      <div id="externalModal" class="help-modal external-modal" role="dialog" aria-modal="true"
+        aria-labelledby="externalModalTitle">
+        <div class="help-modal-header external-modal-header">
+          <div class="external-header-left">
+            <button type="button" id="btnExternalBack" class="btn btn-secondary btn-back-modal" aria-label="Back">←
+              Back</button>
+            <h2 class="help-modal-title" id="externalModalTitle"></h2>
+          </div>
+          <button type="button" class="help-close-btn" data-close-modal aria-label="Close">✕</button>
+        </div>
+        <div class="help-modal-body external-modal-body">
+          <iframe id="externalFrame" class="external-frame" title="External Source"
+            sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+      </div>
+
+
+      <!-- ══ Encyclopedia Modal ══════════════════════════════════════════ -->
+      <div id="encyclopediaOverlay" class="help-overlay"></div>
+      <div id="encyclopediaModal" class="help-modal encyclopedia-modal" role="dialog" aria-modal="true"
+        aria-labelledby="encyclopediaModalTitle">
+        <div class="help-modal-header encyclopedia-modal-header">
+          <div class="external-header-left">
+            <button type="button" id="btnEncyclopediaBack" class="btn btn-secondary btn-back-modal"
+              aria-label="Back to Student Book">← Back</button>
+            <h2 class="help-modal-title" id="encyclopediaModalTitle">
+              <img src="images/semanticClimateLogo.png" alt="Semantic Climate Logo"
+                class="header-logo logo-sc encyclopedia-sc" />
+              <span data-i18n="encyclopediaHeading">Encyclopedia</span>
+            </h2>
+          </div>
+          <button type="button" class="help-close-btn" data-close-modal aria-label="Close encyclopedia">✕</button>
+        </div>
+        <div class="help-modal-body encyclopedia-modal-body">
+          <iframe id="encyclopediaFrame" class="encyclopedia-frame-modal" title="Climate Academy encyclopedia entry"
+            sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+      </div>
+      <!-- ════════════════════════════════════════════════════════════════ -->
 
       <main class="main-grid">
         <div class="main-middle">
@@ -125,17 +161,13 @@
               <label class="sr-only" for="question" id="lblQuestionSr" data-i18n="srQuestionLabel">Your question</label>
               <textarea id="question" class="composer-input" rows="2" placeholder="Ask about the book…"
                 required></textarea>
-              <button type="submit" class="btn btn-primary" id="btnSend" data-i18n="btnSend">Send</button>
+              <div class="composer-actions">
+                <button type="submit" class="btn btn-primary" id="btnSend" data-i18n="btnSend">Send</button>
+              </div>
             </form>
+            <p id="statusLine" class="status-line" role="status"></p>
+            <input type="url" id="apiBaseUrl" class="hidden" />
           </section>
-
-          <aside class="panel panel-sources" id="sourcesPanel">
-            <h2 class="panel-heading" id="sourcesHeading" data-i18n="sourcesHeading">Sources</h2>
-            <p id="sourcesHintEl" class="sources-hint" data-i18n="sourcesHint">
-              Click a citation number on an answer.
-            </p>
-            <div id="sourcesDetail" class="sources-detail"></div>
-          </aside>
         </div>
 
         <section class="panel panel-book" id="panelBookShell" aria-label="Student book">
