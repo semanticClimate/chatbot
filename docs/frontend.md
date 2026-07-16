@@ -1,4 +1,3 @@
-# frontend.md
 ## Technical Guide to the Frontend Architecture
 
 ### Purpose
