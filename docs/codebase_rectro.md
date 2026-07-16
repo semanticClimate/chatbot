@@ -1,4 +1,3 @@
-# codebase_rectro.md  
 # Deep Technical Refactor Diary for the Climate Chatbot Codebase
 
 ## Scope and method
