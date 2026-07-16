@@ -1,4 +1,3 @@
-# backend.md
 ## Technical Guide to the Backend Architecture
 
 ### Purpose
