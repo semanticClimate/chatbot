@@ -1,0 +1,669 @@
+/* ═══════════════════════════════════════════════════════════════
+   Climate Academy — Layout
+   ═══════════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* block document-level scrolling that creates blank space */
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  /* exact viewport height — no blank overflow below */
+  overflow: hidden;
+  /* prevent body from growing beyond .app content */
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: linear-gradient(135deg, var(--ca-sky-soft) 0%, #DCE8F8 100%);
+}
+
+/* ── App shell: sidebar + content side-by-side ── */
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  /* 100% avoids horizontal overflow; 100vw includes scrollbar width */
+  overflow: hidden;
+}
+
+.app-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: var(--space-lg);
+  box-sizing: border-box;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ── Header ── */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+  flex-shrink: 0;
+}
+
+.app-header-brand {
+  flex: 1;
+  min-width: 0;
+}
+
+.app-header-end {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.app-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1.5px solid var(--color-line);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--ca-sky);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.1s ease;
+}
+
+.app-toolbar-btn:hover {
+  border-color: var(--ca-sky);
+  background: var(--color-bg);
+}
+
+.app-toolbar-btn:active {
+  transform: scale(0.93);
+}
+
+.app-title-container {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.app-logo {
+  height: clamp(5px, 6.5vw, 52px);
+  width: auto;
+}
+
+.app-logo-ca {
+  height: clamp(50px, 5.87vw, 45px);
+}
+
+.app-logo-sc {
+  height: clamp(24px, 3vw, 34px);
+  width: auto;
+  object-fit: contain;
+
+}
+
+.app-title {
+  margin: 0;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  color: var(--ca-navy);
+}
+
+.app-version {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  font-weight: 500;
+  align-self: center;
+  margin-top: 0.2rem;
+}
+
+.app-subtitle {
+  margin: var(--space-xs) 0 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ── Main grid: chat column + right column ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 57% 41%;
+  gap: var(--space-lg);
+  align-items: stretch;
+  flex: 1;
+  /* fills remaining height inside .app-content flex column */
+  min-height: 0;
+  /* allows flex item to shrink below content size */
+  height: 100%;
+  /* gives grid a definite height so .main-middle height:100% resolves */
+  overflow: hidden;
+  /* prevent grid children from leaking beyond the container */
+}
+
+/* ── Sidebar (left, collapsible) ── */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(145deg, var(--color-brand), var(--color-brand-dark));
+  border-right: 1px solid var(--color-line);
+  height: 100vh;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+/* Expanded state */
+.sidebar.expanded {
+  width: 200px;
+  padding: var(--space-lg) var(--space-md) var(--space-lg);
+}
+
+/* Collapsed state */
+.sidebar.collapsed {
+  width: 56px;
+  padding: var(--space-sm) 4px;
+}
+
+/* ── Hamburger toggle button ── */
+.sidebar-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  padding: var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+  margin-bottom: var(--space-md);
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Title block ── */
+.sidebar-title {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: var(--space-lg);
+  font-weight: 700;
+  line-height: 1.25;
+  transition: opacity 0.25s ease;
+}
+
+.sidebar.collapsed .sidebar-title {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.sidebar-title-word {
+  font-size: 1.6rem;
+  display: block;
+}
+
+.sidebar-version {
+  display: block;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: var(--space-xs);
+  font-weight: 500;
+}
+
+/* ── Button group ── */
+.sidebar-actions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-md);
+  padding-bottom: var(--space-xl);
+  transition: opacity 0.25s ease;
+}
+
+.sidebar.collapsed .sidebar-actions {
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar .sidebar-btn {
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.sidebar .sidebar-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Left column: chat (88vh) + sources (below fold) ── */
+.main-middle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* ── Panels (generic) ── */
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-lg);
+}
+
+/* ── Panel Color Tints ── */
+.panel-book {
+  background: linear-gradient(180deg, var(--ca-white) 0%, #FFF7F0 100%);
+  border-color: #F0D7C5;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  flex: 1;
+  /* grow to fill available height in the grid */
+  min-height: 0;
+  /* allow flex item to shrink below content size */
+  min-width: 0;
+}
+
+.panel-sources {
+  background: linear-gradient(180deg, var(--ca-white) 0%, #F0F6FC 100%);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  border-top: 3px solid var(--ca-sky);
+}
+
+.panel-heading {
+  margin: 0 0 var(--space-sm);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ca-navy);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Chat panel: flexible height, takes available space ── */
+.panel-chat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  /* grow to fill available space in main-middle */
+  min-height: 0;
+  /* allow flex item to shrink below content size */
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAFCFF 100%);
+}
+
+/* ── Thread (message area) ── */
+.thread {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  margin-bottom: var(--space-sm);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Composer (input area) ── */
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.composer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+@media (min-width: 600px) {
+  .composer {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+
+  .composer-input {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+
+/* ── Accessibility ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Settings / developer tools ── */
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.row-actions-primary {
+  margin-top: var(--space-sm);
+}
+
+.settings-more {
+  margin-top: var(--space-xs);
+  font-size: 0.85rem;
+}
+
+.settings-more-summary {
+  cursor: pointer;
+  color: var(--color-muted);
+  font-weight: 600;
+  list-style: none;
+  user-select: none;
+}
+
+.settings-more-summary::-webkit-details-marker {
+  display: none;
+}
+
+.settings-more-summary::before {
+  content: "▸ ";
+  color: var(--ca-navy);
+}
+
+.settings-more[open] .settings-more-summary::before {
+  content: "▾ ";
+}
+
+.row-actions-secondary {
+  margin-top: var(--space-xs);
+  margin-bottom: 0;
+}
+
+.status-line {
+  margin: var(--space-sm) 0 0;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  word-break: break-word;
+}
+
+.status-line[data-kind="error"] {
+  color: var(--ca-red);
+}
+
+/* ── Form fields ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.field-input {
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  font: inherit;
+}
+
+.field-select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--color-muted) 50%),
+    linear-gradient(135deg, var(--color-muted) 50%, transparent 50%);
+  background-position: calc(100% - 1.1rem) 50%, calc(100% - 0.75rem) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+  cursor: pointer;
+}
+
+.field-compact {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.field-compact .field-label {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.field-select-compact {
+  width: auto;
+  max-width: 100%;
+  flex: 0 1 auto;
+  min-width: 0;
+  padding-right: 1.5rem;
+  background-position: calc(100% - 0.55rem) 50%, calc(100% - 0.3rem) 50%;
+}
+
+.field-hint {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.sources-hint {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Mobile Responsive Layout
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+
+  /* Allow the document to scroll naturally on mobile (avoid nested scroll regions). */
+  html,
+  body {
+    height: auto;
+    overflow: auto;
+  }
+
+  .app {
+    position: relative;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    flex-direction: column;
+  }
+
+  .app-content {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+    overflow: visible;
+    /* Let the document/page handle scrolling */
+    height: auto;
+  }
+
+  .app-header {
+    margin-bottom: var(--space-md);
+    padding-left: 56px;
+  }
+
+  /* Sidebar overlay logic */
+  .sidebar {
+    position: fixed;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .sidebar.collapsed~.sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+  }
+
+  /* On mobile, swap meaning of expanded/collapsed to match initial HTML state without JS changes */
+  .sidebar.expanded {
+    width: 56px;
+    padding: var(--space-sm) 4px;
+    box-shadow: none;
+    height: 56px;
+    min-height: auto;
+  }
+
+  .sidebar.expanded .sidebar-title,
+  .sidebar.expanded .sidebar-actions {
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar.expanded .sidebar-toggle {
+    display: flex;
+  }
+
+  .sidebar.collapsed {
+    width: 250px;
+    padding: var(--space-lg) var(--space-md) var(--space-lg);
+    height: 100vh;
+  }
+
+  .sidebar.collapsed .sidebar-toggle {
+    display: flex;
+  }
+
+  .sidebar.collapsed .sidebar-title,
+  .sidebar.collapsed .sidebar-actions {
+    opacity: 1;
+    margin-bottom: 5rem;
+    pointer-events: auto;
+    height: auto;
+    overflow: visible;
+  }
+
+  .sidebar.collapsed .sidebar-actions {
+    flex: none;
+    justify-content: flex-start;
+    padding-bottom: var(--space-xl);
+  }
+
+  /* Single column vertical flow */
+  .main-grid {
+    display: block;
+    /* Natural document flow: stacked sections, page scroll moves between them */
+    gap: var(--space-lg);
+  }
+
+  .main-middle {
+    display: block;
+  }
+
+  .panel-chat {
+    order: 1;
+    /* Give chat visual priority on mobile; use a large min-height so the
+       conversation and composer are visible without nested scrolling. */
+    display: block;
+    flex: none;
+    min-height: 72vh;
+    box-sizing: border-box;
+  }
+
+  /* Remove nested scrolling: let the page scroll rather than the thread
+     or the book iframe. Ensure thread expands naturally inside the
+     chat panel so messages are readable. */
+  .panel-chat .thread {
+    overflow: visible;
+    min-height: calc(72vh - 160px);
+    box-sizing: border-box;
+  }
+
+  .panel-chat .composer {
+    position: relative;
+    z-index: 1;
+  }
+
+  .panel-book {
+    order: 2;
+    /* Stack below chat; allow natural height and let page scrolling handle overflow */
+    height: auto;
+    min-height: 550px;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .panel-sources {
+    order: 3;
+    min-height: auto;
+    flex-shrink: 0;
+  }
+}

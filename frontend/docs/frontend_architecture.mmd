@@ -1,0 +1,59 @@
+flowchart TB
+
+    User["User"]
+
+    subgraph Frontend["Frontend (Browser)"]
+        direction LR
+
+        Main["main.js
+        UI Controller"]
+
+        State["state.js
+        Conversation State"]
+
+        API["api.js
+        FastAPI Communication"]
+
+        Render["render.js
+        Chat & Citation Rendering"]
+
+        UI["Sidebar, Modals,
+        Help Panels"]
+
+        Book["Climate Academy
+        Book iframe"]
+
+        Enc["Encyclopedia
+        iframe"]
+
+        Main --> State
+        Main --> API
+        State --> Render
+        Render --> Book
+        Render --> Enc
+        Main --> UI
+    end
+
+    subgraph Access["Access Layer"]
+        Cloudflared["Cloudflared Tunnel"]
+    end
+
+    subgraph Backend["Backend Services"]
+        direction LR
+
+        FastAPI["FastAPI"]
+
+        RAG["RAG Pipeline"]
+
+        LLM["Llama"]
+
+        Vector["ChromaDB"]
+    end
+
+    User --> Frontend
+    API --> Cloudflared
+    Cloudflared --> FastAPI
+
+    FastAPI --> RAG
+    RAG --> LLM
+    RAG --> Vector

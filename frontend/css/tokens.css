@@ -1,0 +1,63 @@
+/* ═══════════════════════════════════════════════════════════════
+   Climate Academy — Design Tokens
+   Premium educational palette: navy · sky blue · peach · white
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── Typography ── */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', Menlo, monospace;
+
+  /* ── Climate Academy Palette ── */
+  --ca-navy:        #243B53;   /* headings, strong UI, header bar        */
+  --ca-navy-light:  #334E68;   /* softer navy for hover / secondary text */
+  --ca-sky:         #4DA8FF;   /* AI interactions, buttons, links        */
+  --ca-sky-dark:    #2B7FD4;   /* sky button hover / pressed             */
+  --ca-sky-soft:    #EAF2FB;   /* backgrounds, panel tints               */
+  --ca-sky-ring:    rgba(77, 168, 255, 0.35); /* focus ring glow         */
+  --ca-peach:       #E88A5A;   /* Student Book accent                    */
+  --ca-peach-light: #F2D5BD;   /* educational highlights, card bg        */
+  --ca-red:         #D74A4A;   /* logo-inspired accent (danger, sparse)  */
+  --ca-white:       #FFFFFF;
+  --ca-off-white:   #F7F9FC;   /* very subtle alt-surface                */
+
+  /* ── Semantic mappings ── */
+  --color-bg:           var(--ca-sky-soft);
+  --color-surface:      var(--ca-white);
+  --color-surface-alt:  var(--ca-off-white);
+  --color-text:         var(--ca-navy);
+  --color-muted:        var(--ca-navy-light);
+  --color-line:         #DAE3EE;
+  --color-brand:        var(--ca-sky);
+  --color-brand-dark:   var(--ca-sky-dark);
+  --color-brand-soft:   var(--ca-sky-soft);
+  --color-accent:       var(--ca-peach);
+  --color-accent-surface: var(--ca-peach-light);
+  --color-accent-border: var(--ca-peach);
+  --color-success:      #22C55E;
+  --color-danger:       var(--ca-red);
+
+  /* ── Radii — generous 20px per spec ── */
+  --radius-xl: 20px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  /* ── Shadows — layered for premium depth ── */
+  --shadow-card:  0 1px 3px rgba(36,59,83,0.06), 0 8px 24px rgba(36,59,83,0.08);
+  --shadow-soft:  0 2px 8px rgba(36,59,83,0.05);
+  --shadow-hover: 0 4px 16px rgba(36,59,83,0.12);
+  --shadow-header: 0 4px 20px rgba(36,59,83,0.12);
+
+  /* ── Spacing ── */
+  --space-xs:  0.35rem;
+  --space-sm:  0.65rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+
+  /* ── Touch target ── */
+  --touch-min: 44px;
+}

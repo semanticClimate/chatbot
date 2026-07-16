@@ -1,0 +1,18 @@
+/* App shell modals (settings, developer health) layout overrides — aligned with help modal tokens */
+
+.help-modal-body .field-compact {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.help-modal-body .field-select-compact {
+  width: 100%;
+}
+
+.help-modal-body .field-hint {
+  margin-bottom: 0;
+}
+
+.help-modal-body .row-actions {
+  margin-top: 0;
+}

@@ -1,0 +1,20 @@
+.DS_Store
+.streamlit/secrets.toml
+venv/
+.venv/
+.venv-pdf/
+__pycache__/
+*.pyc
+*.db
+chroma_db/
+.remote-test-runtime/
+.env.remote-test
+web_client/tunnel-api-base.txt
+.quick-tunnel-runtime/
+config/zoom_daily_summary/slack.env
+config/zoom_daily_summary/slack.json
+.idea/
+temp/
+# encyclopedia/output/
+encyclopedia/temp/
+# encyclopedia/source/
